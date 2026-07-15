@@ -11,6 +11,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": "20"
+  },
   "type": "commonjs",
   "dependencies": {
     "firebase-admin": "^13.10.0",
