@@ -1,6 +1,6 @@
 # AirGap Paste landing page
 
-English pre-launch marketing site and private Firebase waitlist for the AirGap Paste concept. The site intentionally labels the product as concept hardware and does not promise price, shipment, certification, or error-free transfer.
+English pre-launch marketing site and private Firebase waitlist for AirGap Paste, currently in prototype development. The site does not promise price, shipment, certification, or error-free transfer.
 
 ## Local development
 

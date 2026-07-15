@@ -123,15 +123,15 @@ function App() {
 
       <section id="top" className="hero section-shell">
         <div className="hero-copy">
-          <p className="eyebrow"><span /> Concept hardware for isolated systems</p>
+          <p className="eyebrow"><span /> Prototype in development for isolated systems</p>
           <h1>Your isolated machine should not mean manual retyping.</h1>
           <p className="hero-lede">AI generated a long command or script. Your isolated machine needs it—without retyping every character.</p>
           <WaitlistForm />
           <p className="fine-print">Early access and a limited Kickstarter launch discount. No price or ship date announced yet.</p>
         </div>
-        <div className="hero-visual" aria-label="AirGap Paste concept workflow">
-          <img src={productHero} alt="Concept render: AirGap Paste, with a labelled SEND button, transfers reviewed text by Bluetooth from an online workstation and appears as a USB keyboard to an isolated computer." />
-          <div className="visual-label visual-label--top">Concept hardware<br /><strong>55 × 32 × 17 mm</strong></div>
+        <div className="hero-visual" aria-label="AirGap Paste prototype workflow">
+          <img src={productHero} alt="Prototype render: AirGap Paste, with a labelled SEND button, transfers reviewed text by Bluetooth from an online workstation and appears as a USB keyboard to an isolated computer." />
+          <div className="visual-label visual-label--top">Prototype enclosure<br /><strong>55 × 32 × 17 mm</strong></div>
           <div className="visual-label visual-label--bottom"><span className="status-dot" /> Review. Queue. Confirm physically.</div>
         </div>
       </section>
@@ -173,14 +173,14 @@ function App() {
       </section>
 
       <section className="roadmap section-shell" aria-labelledby="roadmap-heading">
-        <div><p className="section-kicker">What happens next</p><h2 id="roadmap-heading">From concept enclosure to a credible hardware launch.</h2></div>
+        <div><p className="section-kicker">What happens next</p><h2 id="roadmap-heading">From prototype enclosure to a credible hardware launch.</h2></div>
         <ol><li><span>Now</span><strong>Prototype validation</strong><p>Confirm USB HID, Bluetooth transfer, physical confirmation, and layout behavior.</p></li><li><span>Next</span><strong>Field feedback</strong><p>Put the workflow in front of developers, sysadmins, and lab operators.</p></li><li><span>Then</span><strong>Kickstarter pre-launch</strong><p>Publish transparent build status, reward details, and a realistic production plan.</p></li></ol>
       </section>
 
       <section id="faq" className="faq section-shell" aria-labelledby="faq-heading">
         <div><p className="section-kicker">FAQ</p><h2 id="faq-heading">The useful constraints.</h2></div>
         <div className="faq-list">
-          <details><summary>Is AirGap Paste a finished product?</summary><p>No. This is concept hardware and a pre-launch waitlist. The enclosure shown is a visual reference for the intended 55 × 32 × 17 mm form factor.</p></details>
+          <details><summary>Is AirGap Paste a finished product?</summary><p>Not yet. AirGap Paste is in prototype development and this is a pre-launch waitlist. The enclosure shown is a prototype render for the intended 55 × 32 × 17 mm form factor.</p></details>
           <details><summary>Does it automatically run a command?</summary><p>No. The intended default is text-only input. A physical confirmation starts typing, and the device does not append Enter to single-line commands.</p></details>
           <details><summary>Can it transfer multi-line scripts?</summary><p>That is an intended workflow for text editors and reviewed shell inputs. Because a line break may execute a terminal command, the focused application and process remain your responsibility.</p></details>
           <details><summary>Will it support my keyboard layout?</summary><p>The first target is US keyboard layout. Layout support is a key product-validation area, and other layouts are planned rather than promised.</p></details>
@@ -194,7 +194,7 @@ function App() {
 
       <footer>
         <a className="wordmark" href="#top">AirGap <span>Paste</span></a>
-        <p>Concept hardware for deliberate offline text transfer.</p>
+        <p>Prototype hardware for deliberate offline text transfer.</p>
         <a href="/privacy.html">Privacy</a>
         <p>© {new Date().getFullYear()} AirGap Paste</p>
       </footer>
