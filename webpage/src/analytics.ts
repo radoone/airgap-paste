@@ -10,21 +10,28 @@ declare global {
 
 export function enableGoogleAnalytics() {
   window[`ga-disable-${measurementId}`] = false;
-  if (document.getElementById("google-analytics")) return;
 
   window.dataLayer = window.dataLayer || [];
   window.gtag = (...args) => window.dataLayer?.push(args);
-  window.gtag("js", new Date());
-  window.gtag("config", measurementId, {
-    anonymize_ip: true,
-    allow_google_signals: false,
-    allow_ad_personalization_signals: false,
-  });
+  const configure = () => {
+    window.gtag?.("js", new Date());
+    window.gtag?.("config", measurementId, {
+      anonymize_ip: true,
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false,
+    });
+  };
+
+  if (document.getElementById("google-analytics")) {
+    configure();
+    return;
+  }
 
   const script = document.createElement("script");
   script.id = "google-analytics";
   script.async = true;
   script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+  script.onload = configure;
   document.head.appendChild(script);
 }
 
