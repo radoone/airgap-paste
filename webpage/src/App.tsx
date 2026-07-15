@@ -141,7 +141,7 @@ function App() {
           <h1>Your isolated machine should not mean manual retyping.</h1>
           <p className="hero-lede">AI generated a long command or script. Your isolated machine needs it—without retyping every character. Send it from an online workstation or directly from your phone, then confirm the transfer physically. On the target device, AirGap Paste appears as a standard USB keyboard.</p>
           <WaitlistForm />
-          <p className="fine-print">Early access and a limited Kickstarter launch discount. No price or ship date announced yet.</p>
+          <p className="fine-print">Early access and future crowdfunding launch updates. No price or ship date announced yet.</p>
         </div>
         <button className="hero-visual" type="button" aria-label="Open an enlarged AirGap Paste prototype render" onClick={() => setIsProductPreviewOpen(true)}>
           <img src={productHero} alt="Prototype render: AirGap Paste, with a labelled SEND button, transfers reviewed text by Bluetooth from an online workstation or phone and appears as a USB keyboard to an isolated computer." />
@@ -199,7 +199,7 @@ function App() {
 
       <section className="roadmap section-shell" aria-labelledby="roadmap-heading">
         <div><p className="section-kicker">What happens next</p><h2 id="roadmap-heading">From prototype enclosure to a credible hardware launch.</h2></div>
-        <ol><li><span>Now</span><strong>Prototype validation</strong><p>Confirm USB HID, Bluetooth transfer, physical confirmation, and layout behavior.</p></li><li><span>Next</span><strong>Field feedback</strong><p>Put the workflow in front of developers, sysadmins, and lab operators.</p></li><li><span>Then</span><strong>Kickstarter pre-launch</strong><p>Publish transparent build status, reward details, and a realistic production plan.</p></li></ol>
+        <ol><li><span>Now</span><strong>Prototype validation</strong><p>Confirm USB HID, Bluetooth transfer, physical confirmation, and layout behavior.</p></li><li><span>Next</span><strong>Field feedback</strong><p>Put the workflow in front of developers, sysadmins, and lab operators.</p></li><li><span>Then</span><strong>Crowdfunding pre-launch</strong><p>Publish transparent build status, reward details, and a realistic production plan.</p></li></ol>
       </section>
 
       <section id="faq" className="faq section-shell" aria-labelledby="faq-heading">
@@ -213,7 +213,7 @@ function App() {
       </section>
 
       <section id="waitlist" className="waitlist section-shell" aria-labelledby="waitlist-heading">
-        <div><p className="section-kicker">Be early, not noisy</p><h2 id="waitlist-heading">Get the first working-demo updates and Kickstarter launch access.</h2></div>
+        <div><p className="section-kicker">Be early, not noisy</p><h2 id="waitlist-heading">Get the first working-demo updates and future crowdfunding launch access.</h2></div>
         <WaitlistForm compact />
       </section>
 

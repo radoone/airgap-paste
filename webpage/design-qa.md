@@ -21,7 +21,7 @@
 - **Spacing and layout rhythm:** the desktop hero uses the target’s broad two-column composition; mobile collapses to a single, non-overflowing flow.
 - **Colors and visual tokens:** black/graphite base, off-white text, and controlled orange confirmation accent match the selected design direction.
 - **Image quality and asset fidelity:** the visual uses a dedicated high-resolution, dark prototype render and is explicitly labelled as a render rather than a production photograph.
-- **Copy and content:** all required safety boundaries, script warning, planned integrity checks, waitlist offer, prototype-development status, and Kickstarter readiness content are present.
+- **Copy and content:** all required safety boundaries, script warning, planned integrity checks, waitlist offer, prototype-development status, and future crowdfunding readiness content are present.
 
 ### Interaction checks
 

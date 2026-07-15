@@ -4,4 +4,5 @@ webpage/functions/node_modules/
 webpage/dist/
 webpage/functions/lib/
 webpage/.env.local
+webpage/.firebase/
 .playwright-mcp/
