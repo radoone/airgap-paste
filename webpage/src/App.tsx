@@ -16,7 +16,7 @@ import {
 } from "@phosphor-icons/react";
 import { getToken } from "firebase/app-check";
 import { appCheck } from "./firebase";
-import productReference from "./assets/airgap-paste-concept-reference.png";
+import productHero from "./assets/airgap-paste-hero-dark.png";
 import "./styles.css";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
@@ -129,10 +129,10 @@ function App() {
           <WaitlistForm />
           <p className="fine-print">Early access and a limited Kickstarter launch discount. No price or ship date announced yet.</p>
         </div>
-        <div className="hero-visual" aria-label="AirGap Paste concept hardware, 55 by 32 by 17 millimetres">
-          <div className="visual-label visual-label--top">Concept enclosure<br /><strong>55 × 32 × 17 mm</strong></div>
-          <img src={productReference} alt="AirGap Paste concept device with a USB-C port, status LED, and SEND button" />
-          <div className="visual-label visual-label--bottom"><span className="status-dot" /> Physical confirmation built in</div>
+        <div className="hero-visual" aria-label="AirGap Paste concept workflow">
+          <img src={productHero} alt="Concept render: AirGap Paste, with a labelled SEND button, transfers reviewed text by Bluetooth from an online workstation and appears as a USB keyboard to an isolated computer." />
+          <div className="visual-label visual-label--top">Concept hardware<br /><strong>55 × 32 × 17 mm</strong></div>
+          <div className="visual-label visual-label--bottom"><span className="status-dot" /> Review. Queue. Confirm physically.</div>
         </div>
       </section>
 
