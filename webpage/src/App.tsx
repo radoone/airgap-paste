@@ -13,6 +13,7 @@ import {
   ShieldCheck,
   UploadSimple,
   Warning,
+  X,
 } from "@phosphor-icons/react";
 import { getToken } from "firebase/app-check";
 import { appCheck } from "./firebase";
@@ -103,11 +104,24 @@ function WaitlistForm({ compact = false }: { compact?: boolean }) {
 }
 
 function App() {
+  const [isProductPreviewOpen, setIsProductPreviewOpen] = useState(false);
+  const closePreviewRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     const onHashChange = () => document.querySelector(window.location.hash)?.scrollIntoView({ behavior: "smooth" });
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
+
+  useEffect(() => {
+    if (!isProductPreviewOpen) return;
+    closePreviewRef.current?.focus();
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsProductPreviewOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isProductPreviewOpen]);
 
   return (
     <main>
@@ -129,12 +143,23 @@ function App() {
           <WaitlistForm />
           <p className="fine-print">Early access and a limited Kickstarter launch discount. No price or ship date announced yet.</p>
         </div>
-        <div className="hero-visual" aria-label="AirGap Paste prototype workflow">
+        <button className="hero-visual" type="button" aria-label="Open an enlarged AirGap Paste prototype render" onClick={() => setIsProductPreviewOpen(true)}>
           <img src={productHero} alt="Prototype render: AirGap Paste, with a labelled SEND button, transfers reviewed text by Bluetooth from an online workstation or phone and appears as a USB keyboard to an isolated computer." />
           <div className="visual-label visual-label--top">Prototype enclosure<br /><strong>55 × 32 × 17 mm</strong></div>
           <div className="visual-label visual-label--bottom"><span className="status-dot" /> Review. Queue. Confirm physically.</div>
-        </div>
+          <span className="visual-expand">Click to enlarge</span>
+        </button>
       </section>
+
+      {isProductPreviewOpen && (
+        <div className="product-preview" role="dialog" aria-modal="true" aria-label="Enlarged AirGap Paste prototype render" onMouseDown={() => setIsProductPreviewOpen(false)}>
+          <div className="product-preview__content" onMouseDown={(event) => event.stopPropagation()}>
+            <button ref={closePreviewRef} className="product-preview__close" type="button" onClick={() => setIsProductPreviewOpen(false)} aria-label="Close enlarged render"><X size={22} /></button>
+            <img src={productHero} alt="Enlarged prototype render of AirGap Paste and its transfer workflow." />
+            <p>Prototype render · 55 × 32 × 17 mm target enclosure</p>
+          </div>
+        </div>
+      )}
 
       <section className="proof-bar" aria-label="Product principles">
         <p><LockKey size={20} /> No network path to the target machine</p>
