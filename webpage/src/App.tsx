@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
+import CookieConsent, { getCookieConsentValue, resetCookieConsentValue } from "react-cookie-consent";
 import {
   ArrowDownRight,
   ArrowRight,
@@ -17,12 +18,14 @@ import {
 } from "@phosphor-icons/react";
 import { getToken } from "firebase/app-check";
 import { appCheck } from "./firebase";
+import { disableGoogleAnalytics, enableGoogleAnalytics } from "./analytics";
 import productHero from "./assets/airgap-paste-hero-dark.png";
 import "./styles.css";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
 const waitlistEndpoint = import.meta.env.VITE_WAITLIST_ENDPOINT || "/waitlist";
+const analyticsConsentCookie = "airgap-analytics-consent";
 
 function WaitlistForm({ compact = false }: { compact?: boolean }) {
   const [status, setStatus] = useState<FormStatus>("idle");
@@ -105,12 +108,18 @@ function WaitlistForm({ compact = false }: { compact?: boolean }) {
 
 function App() {
   const [isProductPreviewOpen, setIsProductPreviewOpen] = useState(false);
+  const [cookieBannerRevision, setCookieBannerRevision] = useState(0);
   const closePreviewRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onHashChange = () => document.querySelector(window.location.hash)?.scrollIntoView({ behavior: "smooth" });
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
+  useEffect(() => {
+    if (getCookieConsentValue(analyticsConsentCookie) === "accepted") enableGoogleAnalytics();
+    else disableGoogleAnalytics();
   }, []);
 
   useEffect(() => {
@@ -122,6 +131,12 @@ function App() {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [isProductPreviewOpen]);
+
+  function openCookieSettings() {
+    disableGoogleAnalytics();
+    resetCookieConsentValue(analyticsConsentCookie);
+    setCookieBannerRevision((revision) => revision + 1);
+  }
 
   return (
     <main>
@@ -221,8 +236,37 @@ function App() {
         <a className="wordmark" href="#top">AirGap <span>Paste</span></a>
         <p>Prototype hardware for deliberate offline text transfer.</p>
         <a href="/privacy.html">Privacy</a>
+        <button className="footer-button" type="button" onClick={openCookieSettings}>Cookie settings</button>
         <p>© {new Date().getFullYear()} AirGap Paste</p>
       </footer>
+
+      <CookieConsent
+        key={cookieBannerRevision}
+        cookieName={analyticsConsentCookie}
+        cookieValue="accepted"
+        declineCookieValue="rejected"
+        setDeclineCookie
+        enableDeclineButton
+        buttonText="Accept analytics"
+        declineButtonText="Decline analytics"
+        onAccept={() => enableGoogleAnalytics()}
+        onDecline={() => disableGoogleAnalytics()}
+        disableStyles
+        location="bottom"
+        expires={180}
+        sameSite="Lax"
+        containerClasses="airgap-cookie-banner"
+        contentClasses="airgap-cookie-content"
+        buttonWrapperClasses="airgap-cookie-actions"
+        buttonClasses="airgap-cookie-accept"
+        declineButtonClasses="airgap-cookie-decline"
+        ariaAcceptLabel="Accept analytics cookies"
+        ariaDeclineLabel="Decline analytics cookies"
+      >
+        <span className="section-kicker">Privacy choice</span>
+        <strong>Help us understand visits?</strong>
+        <span>With your permission, we use Google Analytics for aggregated site measurement. Analytics is off until you choose; we do not use advertising or personalised signals. <a href="/privacy.html">Read privacy &amp; cookies</a></span>
+      </CookieConsent>
     </main>
   );
 }

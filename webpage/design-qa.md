@@ -27,11 +27,13 @@
 
 - Navigation anchors, FAQ expansion, focusable waitlist controls, privacy route, and primary CTAs were checked in the rendered page.
 - Browser console: no application errors observed after adding the local favicon; the earlier missing-favicon development request is resolved.
-- Form submission is wired to the Firebase endpoint. End-to-end persistence is intentionally not run here because no Firebase project, emulator process, or test credentials were supplied; without configuration it does not store data outside Firebase.
+- Form submission is wired to the Firebase endpoint. Production endpoint behaviour should be monitored after enabling App Check and conducting a controlled waitlist signup test.
+- Analytics is gated with `react-cookie-consent`: no Google Analytics script is present before an affirmative choice; accepting loads the configured measurement tag, and declining keeps it disabled after reload. Cookie settings in the footer reopens the equal-choice controls.
 
 ### Follow-up polish
 
 - Add real prototype photography and a short demonstration video once hardware validation is complete.
 - Add a real Firebase project ID, App Check key, and custom domain before public launch.
+- Publish the final legal controller identity, postal address, privacy-contact email, retention schedule and counsel-reviewed notices before a public commercial launch.
 
 **final result: passed**
