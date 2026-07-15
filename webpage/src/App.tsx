@@ -125,7 +125,7 @@ function App() {
         <div className="hero-copy">
           <p className="eyebrow"><span /> Prototype in development for isolated systems</p>
           <h1>Your isolated machine should not mean manual retyping.</h1>
-          <p className="hero-lede">AI generated a long command or script. Your isolated machine needs it—without retyping every character. Send it from an online workstation or directly from your phone, then confirm the transfer physically.</p>
+          <p className="hero-lede">AI generated a long command or script. Your isolated machine needs it—without retyping every character. Send it from an online workstation or directly from your phone, then confirm the transfer physically. On the target device, AirGap Paste appears as a standard USB keyboard.</p>
           <WaitlistForm />
           <p className="fine-print">Early access and a limited Kickstarter launch discount. No price or ship date announced yet.</p>
         </div>
