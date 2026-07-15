@@ -12,18 +12,19 @@ export function enableGoogleAnalytics() {
   window[`ga-disable-${measurementId}`] = false;
 
   window.dataLayer = window.dataLayer || [];
-  window.gtag = (...args) => window.dataLayer?.push(args);
-  const configure = () => {
-    window.gtag?.("js", new Date());
-    window.gtag?.("config", measurementId, {
-      anonymize_ip: true,
-      allow_google_signals: false,
-      allow_ad_personalization_signals: false,
-    });
+  // Keep the queue in Google's documented format: each call is stored as its
+  // `arguments` object until gtag.js has loaded and processes the queue.
+  window.gtag = function gtag() {
+    window.dataLayer?.push(arguments);
   };
+  window.gtag("js", new Date());
+  window.gtag("config", measurementId, {
+    anonymize_ip: true,
+    allow_google_signals: false,
+    allow_ad_personalization_signals: false,
+  });
 
   if (document.getElementById("google-analytics")) {
-    configure();
     return;
   }
 
@@ -31,7 +32,6 @@ export function enableGoogleAnalytics() {
   script.id = "google-analytics";
   script.async = true;
   script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
-  script.onload = configure;
   document.head.appendChild(script);
 }
 
