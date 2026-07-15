@@ -125,12 +125,12 @@ function App() {
         <div className="hero-copy">
           <p className="eyebrow"><span /> Prototype in development for isolated systems</p>
           <h1>Your isolated machine should not mean manual retyping.</h1>
-          <p className="hero-lede">AI generated a long command or script. Your isolated machine needs it—without retyping every character.</p>
+          <p className="hero-lede">AI generated a long command or script. Your isolated machine needs it—without retyping every character. Send it from an online workstation or directly from your phone, then confirm the transfer physically.</p>
           <WaitlistForm />
           <p className="fine-print">Early access and a limited Kickstarter launch discount. No price or ship date announced yet.</p>
         </div>
         <div className="hero-visual" aria-label="AirGap Paste prototype workflow">
-          <img src={productHero} alt="Prototype render: AirGap Paste, with a labelled SEND button, transfers reviewed text by Bluetooth from an online workstation and appears as a USB keyboard to an isolated computer." />
+          <img src={productHero} alt="Prototype render: AirGap Paste, with a labelled SEND button, transfers reviewed text by Bluetooth from an online workstation or phone and appears as a USB keyboard to an isolated computer." />
           <div className="visual-label visual-label--top">Prototype enclosure<br /><strong>55 × 32 × 17 mm</strong></div>
           <div className="visual-label visual-label--bottom"><span className="status-dot" /> Review. Queue. Confirm physically.</div>
         </div>
@@ -154,7 +154,7 @@ function App() {
           <article><span>02</span><ShieldCheck size={38} weight="thin" /><h3>Position</h3><p>Choose the intended window on the isolated machine before anything types.</p></article>
           <article><span>03</span><Fingerprint size={38} weight="thin" /><h3>Confirm</h3><p>Press the physical SEND button to start keyboard input—never automatically.</p></article>
         </div>
-        <div className="flow-line" aria-hidden="true"><span>Online workstation</span><ArrowRight /><span>AirGap Paste</span><ArrowRight /><span>Isolated computer</span></div>
+        <div className="flow-line" aria-hidden="true"><span>Online workstation or phone</span><ArrowRight /><span>AirGap Paste</span><ArrowRight /><span>Isolated computer</span></div>
       </section>
 
       <section className="command section-shell" aria-labelledby="command-heading">
