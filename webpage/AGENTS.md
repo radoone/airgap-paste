@@ -9,3 +9,7 @@ When implementing from a selected generated mock, treat that image as the source
 ## Durable product-stage decision
 
 AirGap Paste is now communicated as **in prototype development**, not as a concept. Use “prototype render” for generated visuals until real prototype photography is available; do not imply that it is a finished or shipping product.
+
+## Durable mobile-communication decision
+
+The mobile landing page must make the product category and transfer direction understandable in the first viewport. Keep a recognizable product render above the waitlist form, use concise outcome-led hero copy, and preserve the explicit source → AirGap Paste → isolated computer story.

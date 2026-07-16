@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, lazy, Suspense, useEffect, useRef, useState } from "react";
 import CookieConsent, { getCookieConsentValue, resetCookieConsentValue } from "react-cookie-consent";
 import {
   ArrowDownRight,
@@ -19,13 +19,14 @@ import {
 import { getToken } from "firebase/app-check";
 import { appCheck } from "./firebase";
 import { disableGoogleAnalytics, enableGoogleAnalytics } from "./analytics";
-import productHero from "./assets/airgap-paste-hero-dark.png";
+import productHero from "./assets/airgap-paste-hero-dark.jpg";
 import "./styles.css";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
 
 const waitlistEndpoint = import.meta.env.VITE_WAITLIST_ENDPOINT || "/waitlist";
 const analyticsConsentCookie = "airgap-analytics-consent";
+const EditorApp = lazy(() => import("./EditorApp"));
 
 function WaitlistForm({ compact = false }: { compact?: boolean }) {
   const [status, setStatus] = useState<FormStatus>("idle");
@@ -94,7 +95,7 @@ function WaitlistForm({ compact = false }: { compact?: boolean }) {
       <input ref={emailRef} id={compact ? "email-bottom" : "email-hero"} name="email" type="email" autoComplete="email" placeholder="you@company.com" required />
       <input className="trap-field" type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" />
       <button type="submit" disabled={status === "submitting"}>
-        {status === "submitting" ? <CircleNotch className="spin" size={20} /> : "Join the waitlist"}
+        {status === "submitting" ? <CircleNotch className="spin" size={20} /> : compact ? "Join the waitlist" : "Get prototype updates"}
         {status !== "submitting" && <ArrowRight size={18} weight="bold" />}
       </button>
       <label className="consent">
@@ -106,7 +107,7 @@ function WaitlistForm({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function App() {
+function LandingPage() {
   const [isProductPreviewOpen, setIsProductPreviewOpen] = useState(false);
   const [cookieBannerRevision, setCookieBannerRevision] = useState(0);
   const closePreviewRef = useRef<HTMLButtonElement>(null);
@@ -147,16 +148,14 @@ function App() {
           <a href="#safety">Safety</a>
           <a href="#faq">FAQ</a>
         </nav>
-        <a className="nav-cta" href="#waitlist">Get early access <ArrowDownRight size={16} /></a>
+        <a className="nav-cta" href="/app">Try the prototype <ArrowDownRight size={16} /></a>
       </header>
 
       <section id="top" className="hero section-shell">
         <div className="hero-copy">
           <p className="eyebrow"><span /> Prototype in development for isolated systems</p>
-          <h1>Your isolated machine should not mean manual retyping.</h1>
-          <p className="hero-lede">AI generated a long command or script. Your isolated machine needs it—without retyping every character. Send it from an online workstation or directly from your phone, then confirm the transfer physically. On the target device, AirGap Paste appears as a standard USB keyboard.</p>
-          <WaitlistForm />
-          <p className="fine-print">Early access and future crowdfunding launch updates. No price or ship date announced yet.</p>
+          <h1>Send text to air‑gapped computers. No retyping.</h1>
+          <p className="hero-lede">AirGap Paste is a pocket-size hardware bridge. Send reviewed text from a phone or online workstation, then press SEND; it types into the isolated computer as a USB keyboard.</p>
         </div>
         <button className="hero-visual" type="button" aria-label="Open an enlarged AirGap Paste prototype render" onClick={() => setIsProductPreviewOpen(true)}>
           <img src={productHero} alt="Prototype render: AirGap Paste, with a labelled SEND button, transfers reviewed text by Bluetooth from an online workstation or phone and appears as a USB keyboard to an isolated computer." />
@@ -164,6 +163,16 @@ function App() {
           <div className="visual-label visual-label--bottom"><span className="status-dot" /> Review. Queue. Confirm physically.</div>
           <span className="visual-expand">Click to enlarge</span>
         </button>
+        <div className="hero-conversion">
+          <ul className="hero-signals" aria-label="Key product principles">
+            <li><LockKey size={17} /> No target network</li>
+            <li><Keyboard size={17} /> USB keyboard output</li>
+            <li><Fingerprint size={17} /> Physical confirmation</li>
+          </ul>
+          <p className="hero-conversion__label">Get the first working-demo updates</p>
+          <WaitlistForm />
+          <p className="fine-print">Early access and future crowdfunding launch updates. No price or ship date announced yet.</p>
+        </div>
       </section>
 
       {isProductPreviewOpen && (
@@ -263,11 +272,17 @@ function App() {
         ariaDeclineLabel="Decline analytics cookies"
       >
         <span className="section-kicker">Privacy choice</span>
-        <strong>Help us understand visits?</strong>
-        <span>With your permission, we use Google Analytics for aggregated site measurement. Analytics is off until you choose; we do not use advertising or personalised signals. <a href="/privacy.html">Read privacy &amp; cookies</a></span>
+        <strong>Allow anonymous analytics?</strong>
+        <span>Analytics is off by default. With permission, we measure aggregate visits only—no ads or personalised signals. <a href="/privacy.html">Privacy &amp; cookies</a></span>
       </CookieConsent>
     </main>
   );
+}
+
+function App() {
+  return window.location.pathname.replace(/\/+$/, "") === "/app"
+    ? <Suspense fallback={<main className="app-loading">Loading the editor…</main>}><EditorApp /></Suspense>
+    : <LandingPage />;
 }
 
 export default App;
