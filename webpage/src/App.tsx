@@ -3,6 +3,7 @@ import CookieConsent, { getCookieConsentValue, resetCookieConsentValue } from "r
 import {
   ArrowDownRight,
   ArrowRight,
+  Bluetooth,
   CheckCircle,
   CircleNotch,
   ClipboardText,
@@ -193,6 +194,48 @@ function LandingPage() {
         <p><LockKey size={20} /> No network path to the target machine</p>
         <p><Keyboard size={20} /> Standard USB keyboard · no custom driver</p>
         <p><Fingerprint size={20} /> Manual action before typing starts</p>
+      </section>
+
+      <section className="transfer-story section-shell" aria-labelledby="transfer-story-heading">
+        <div className="transfer-story__heading">
+          <div><p className="section-kicker">See the transfer</p><h2 id="transfer-story-heading">Online text in. Keyboard strokes out.</h2></div>
+          <p>The isolated computer never receives a Bluetooth connection. It only sees AirGap Paste as a standard USB keyboard after you confirm the transfer physically.</p>
+        </div>
+        <figure className="transfer-map">
+          <article className="transfer-node transfer-node--source">
+            <div className="transfer-node__top"><Code size={24} weight="thin" /><span>ONLINE + AI</span></div>
+            <strong>Review the script</strong>
+            <div className="transfer-code" aria-hidden="true"><i>#!/bin/sh</i><i>systemctl restart app</i><i>printf "ready\n"</i></div>
+            <small>Phone or workstation</small>
+          </article>
+
+          <div className="transfer-link transfer-link--bluetooth" aria-hidden="true">
+            <span className="transfer-link__track"><i className="transfer-packet" /></span>
+            <Bluetooth size={24} weight="thin" />
+            <small>Bluetooth text</small>
+          </div>
+
+          <article className="transfer-node transfer-node--device">
+            <div className="transfer-device-image"><img src={productHero} alt="AirGap Paste prototype render between an online source and an isolated computer." /></div>
+            <div className="transfer-node__top"><span>AIRGAP PASTE</span><em>Queued</em></div>
+            <strong>Press SEND</strong>
+            <span className="transfer-confirm"><Fingerprint size={18} /> Physical confirmation</span>
+          </article>
+
+          <div className="transfer-link transfer-link--usb" aria-hidden="true">
+            <span className="transfer-link__track"><i className="transfer-packet" /></span>
+            <Keyboard size={24} weight="thin" />
+            <small>USB keyboard</small>
+          </div>
+
+          <article className="transfer-node transfer-node--target">
+            <div className="transfer-node__top"><Desktop size={24} weight="thin" /><span>ISOLATED PC</span></div>
+            <strong>Text appears here</strong>
+            <div className="transfer-terminal" aria-hidden="true"><i>$ systemctl restart app</i><i>ready</i><b /></div>
+            <small>No internet required</small>
+          </article>
+          <figcaption>Reviewed text only · no cloud path to the target · no custom driver</figcaption>
+        </figure>
       </section>
 
       <section className="problem section-shell" aria-labelledby="problem-heading">

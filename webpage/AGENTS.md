@@ -21,3 +21,7 @@ Keep use-case messaging selective and operational rather than exhaustive. Priori
 ## AI-assisted isolated-network use case
 
 One important use case is a group of computers on an isolated local network with no internet access. A user reviews AI-generated commands or scripts on an online workstation and transfers the exact text into a target computer through AirGap Paste instead of manually retyping it. Present it as a concrete example alongside the other use cases, and do not imply that the isolated computers have no internal LAN.
+
+## Durable workflow-visual decision
+
+Explain the transfer with a responsive source → AirGap Paste → target visual that uses the current prototype render. On desktop the flow is horizontal; on mobile it becomes vertical. Animation should clarify Bluetooth input, physical SEND confirmation, and USB keyboard output, remain lightweight, and respect reduced-motion preferences.
