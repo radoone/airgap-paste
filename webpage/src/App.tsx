@@ -9,7 +9,11 @@ import {
   Code,
   Desktop,
   Fingerprint,
+  Flask,
+  Factory,
+  HardDrives,
   Keyboard,
+  Lifebuoy,
   LockKey,
   ShieldCheck,
   UploadSimple,
@@ -155,7 +159,7 @@ function LandingPage() {
         <div className="hero-copy">
           <p className="eyebrow"><span /> Prototype in development for isolated systems</p>
           <h1>Send text to air‑gapped computers. No retyping.</h1>
-          <p className="hero-lede">AirGap Paste is a pocket-size hardware bridge. Send reviewed text from a phone or online workstation, then press SEND; it types into the isolated computer as a USB keyboard.</p>
+          <p className="hero-lede">AirGap Paste is a pocket-size hardware bridge. Review text on a phone or online workstation, then press SEND; it types into an isolated computer as a standard USB keyboard.</p>
         </div>
         <button className="hero-visual" type="button" aria-label="Open an enlarged AirGap Paste prototype render" onClick={() => setIsProductPreviewOpen(true)}>
           <img src={productHero} alt="Prototype render: AirGap Paste, with a labelled SEND button, transfers reviewed text by Bluetooth from an online workstation or phone and appears as a USB keyboard to an isolated computer." />
@@ -166,7 +170,7 @@ function LandingPage() {
         <div className="hero-conversion">
           <ul className="hero-signals" aria-label="Key product principles">
             <li><LockKey size={17} /> No target network</li>
-            <li><Keyboard size={17} /> USB keyboard output</li>
+            <li><Keyboard size={17} /> USB keyboard · no custom driver</li>
             <li><Fingerprint size={17} /> Physical confirmation</li>
           </ul>
           <p className="hero-conversion__label">Get the first working-demo updates</p>
@@ -187,13 +191,27 @@ function LandingPage() {
 
       <section className="proof-bar" aria-label="Product principles">
         <p><LockKey size={20} /> No network path to the target machine</p>
-        <p><Keyboard size={20} /> Appears as a standard USB keyboard</p>
+        <p><Keyboard size={20} /> Standard USB keyboard · no custom driver</p>
         <p><Fingerprint size={20} /> Manual action before typing starts</p>
       </section>
 
       <section className="problem section-shell" aria-labelledby="problem-heading">
         <div><p className="section-kicker">The problem</p><h2 id="problem-heading">A long command is not a copy/paste problem when paste does not exist.</h2></div>
         <div className="problem-copy"><p>Isolated workstations protect critical environments. They also turn an AI-generated command, a configuration block, or a small script into a slow, error-prone retyping task.</p><p>AirGap Paste is being designed to keep the familiar keyboard workflow—while putting a deliberate physical decision between the source text and the focused window.</p></div>
+      </section>
+
+      <section id="use-cases" className="use-cases section-shell" aria-labelledby="use-cases-heading">
+        <div className="use-cases__intro">
+          <div><p className="section-kicker">Where it helps</p><h2 id="use-cases-heading">Built for the moments when paste stops.</h2></div>
+          <p>From AI-assisted administration on isolated local networks to OT maintenance, security labs, and field recovery—transfer reviewed text without opening a network path to the target.</p>
+        </div>
+        <div className="use-cases__grid">
+          <article><HardDrives size={30} weight="thin" /><span>01</span><h3>AI-assisted isolated networks</h3><p>Move reviewed AI-generated commands and scripts into computers on an isolated local network—without connecting it to the internet or manually retyping them.</p></article>
+          <article><Factory size={30} weight="thin" /><span>02</span><h3>OT and industrial maintenance</h3><p>Reviewed configuration text for isolated HMIs, engineering workstations, and appliances that already accept USB keyboard input.</p></article>
+          <article><Flask size={30} weight="thin" /><span>03</span><h3>Security and analysis labs</h3><p>Move known commands into sandboxes or offline analysis machines without enabling a network connection to the target.</p></article>
+          <article><Lifebuoy size={30} weight="thin" /><span>04</span><h3>Recovery and field service</h3><p>Prepare diagnostics on a phone or online workstation, then enter them deliberately on a disconnected or partially restored system.</p></article>
+        </div>
+        <p className="use-cases__policy"><ShieldCheck size={18} /> Intended only for environments where Bluetooth source devices and USB HID peripherals are permitted by local policy.</p>
       </section>
 
       <section id="workflow" className="workflow section-shell" aria-labelledby="workflow-heading">
@@ -231,6 +249,7 @@ function LandingPage() {
         <div className="faq-list">
           <details><summary>Is AirGap Paste a finished product?</summary><p>Not yet. AirGap Paste is in prototype development and this is a pre-launch waitlist. The enclosure shown is a prototype render for the intended 55 × 32 × 17 mm form factor.</p></details>
           <details><summary>Does it automatically run a command?</summary><p>No. The intended default is text-only input. A physical confirmation starts typing, and the device does not append Enter to single-line commands.</p></details>
+          <details><summary>Does the target computer need a driver?</summary><p>No custom driver is intended on the target computer. AirGap Paste is being designed to appear as a standard USB HID keyboard, using the keyboard support already built into the operating system.</p></details>
           <details><summary>Can it transfer multi-line scripts?</summary><p>That is an intended workflow for text editors and reviewed shell inputs. Because a line break may execute a terminal command, the focused application and process remain your responsibility.</p></details>
         </div>
       </section>
