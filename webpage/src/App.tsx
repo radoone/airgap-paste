@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, lazy, Suspense, useEffect, useRef, useState } from "react";
 import CookieConsent, { getCookieConsentValue, resetCookieConsentValue } from "react-cookie-consent";
 import {
   ArrowDownRight,
@@ -26,6 +26,7 @@ type FormStatus = "idle" | "submitting" | "success" | "error";
 
 const waitlistEndpoint = import.meta.env.VITE_WAITLIST_ENDPOINT || "/waitlist";
 const analyticsConsentCookie = "airgap-analytics-consent";
+const EditorApp = lazy(() => import("./EditorApp"));
 
 function WaitlistForm({ compact = false }: { compact?: boolean }) {
   const [status, setStatus] = useState<FormStatus>("idle");
@@ -106,7 +107,7 @@ function WaitlistForm({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function App() {
+function LandingPage() {
   const [isProductPreviewOpen, setIsProductPreviewOpen] = useState(false);
   const [cookieBannerRevision, setCookieBannerRevision] = useState(0);
   const closePreviewRef = useRef<HTMLButtonElement>(null);
@@ -147,7 +148,7 @@ function App() {
           <a href="#safety">Safety</a>
           <a href="#faq">FAQ</a>
         </nav>
-        <a className="nav-cta" href="#waitlist">Get early access <ArrowDownRight size={16} /></a>
+        <a className="nav-cta" href="/app">Try the prototype <ArrowDownRight size={16} /></a>
       </header>
 
       <section id="top" className="hero section-shell">
@@ -223,7 +224,6 @@ function App() {
           <details><summary>Is AirGap Paste a finished product?</summary><p>Not yet. AirGap Paste is in prototype development and this is a pre-launch waitlist. The enclosure shown is a prototype render for the intended 55 × 32 × 17 mm form factor.</p></details>
           <details><summary>Does it automatically run a command?</summary><p>No. The intended default is text-only input. A physical confirmation starts typing, and the device does not append Enter to single-line commands.</p></details>
           <details><summary>Can it transfer multi-line scripts?</summary><p>That is an intended workflow for text editors and reviewed shell inputs. Because a line break may execute a terminal command, the focused application and process remain your responsibility.</p></details>
-          <details><summary>Will it support my keyboard layout?</summary><p>The first target is US keyboard layout. Layout support is a key product-validation area, and other layouts are planned rather than promised.</p></details>
         </div>
       </section>
 
@@ -269,6 +269,12 @@ function App() {
       </CookieConsent>
     </main>
   );
+}
+
+function App() {
+  return window.location.pathname.replace(/\/+$/, "") === "/app"
+    ? <Suspense fallback={<main className="app-loading">Loading the editor…</main>}><EditorApp /></Suspense>
+    : <LandingPage />;
 }
 
 export default App;
