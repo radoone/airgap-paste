@@ -1,4 +1,4 @@
-import { FormEvent, lazy, Suspense, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import CookieConsent, { getCookieConsentValue, resetCookieConsentValue } from "react-cookie-consent";
 import {
   ArrowDownRight,
@@ -26,7 +26,6 @@ type FormStatus = "idle" | "submitting" | "success" | "error";
 
 const waitlistEndpoint = import.meta.env.VITE_WAITLIST_ENDPOINT || "/waitlist";
 const analyticsConsentCookie = "airgap-analytics-consent";
-const EditorApp = lazy(() => import("./EditorApp"));
 
 function WaitlistForm({ compact = false }: { compact?: boolean }) {
   const [status, setStatus] = useState<FormStatus>("idle");
@@ -107,7 +106,7 @@ function WaitlistForm({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function LandingPage() {
+function App() {
   const [isProductPreviewOpen, setIsProductPreviewOpen] = useState(false);
   const [cookieBannerRevision, setCookieBannerRevision] = useState(0);
   const closePreviewRef = useRef<HTMLButtonElement>(null);
@@ -148,7 +147,7 @@ function LandingPage() {
           <a href="#safety">Safety</a>
           <a href="#faq">FAQ</a>
         </nav>
-        <a className="nav-cta" href="/app">Try the prototype <ArrowDownRight size={16} /></a>
+        <a className="nav-cta" href="#waitlist">Get early access <ArrowDownRight size={16} /></a>
       </header>
 
       <section id="top" className="hero section-shell">
@@ -269,12 +268,6 @@ function LandingPage() {
       </CookieConsent>
     </main>
   );
-}
-
-function App() {
-  return window.location.pathname.replace(/\/+$/, "") === "/app"
-    ? <Suspense fallback={<main className="app-loading">Loading the editor…</main>}><EditorApp /></Suspense>
-    : <LandingPage />;
 }
 
 export default App;
