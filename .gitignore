@@ -6,3 +6,8 @@ webpage/functions/lib/
 webpage/.env.local
 webpage/.firebase/
 .playwright-mcp/
+
+# Local PlatformIO runtime, build output, and virtual environment
+controller/.platformio-core/
+controller/.pio/
+controller/.venv/

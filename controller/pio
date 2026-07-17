@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+
+PROJECT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+export PLATFORMIO_CORE_DIR="$PROJECT_DIR/.platformio-core"
+
+if [ ! -x "$PROJECT_DIR/.venv/bin/pio" ]; then
+  echo "PlatformIO is not installed. Run ./setup-platformio first." >&2
+  exit 1
+fi
+
+exec "$PROJECT_DIR/.venv/bin/pio" "$@"
