@@ -20,11 +20,14 @@ namespace {
 constexpr char kServiceUuid[] = "7b7d0001-7a6f-4b4d-9f71-6a14e7a1c001";
 constexpr char kRxUuid[] = "7b7d0002-7a6f-4b4d-9f71-6a14e7a1c001";
 constexpr char kTxUuid[] = "7b7d0003-7a6f-4b4d-9f71-6a14e7a1c001";
+constexpr char kDeviceName[] = "AirGap Paste";
+// Fits alongside the 128-bit service UUID in the primary 31-byte BLE advertisement.
+constexpr char kAdvertisedDeviceName[] = "AirGap";
 
 constexpr uint8_t kExternalSendPin = 2;  // XIAO D1/GPIO2 -> button -> GND
 constexpr uint8_t kBootSendPin = 0;      // On-board BOOT button
 constexpr uint8_t kLedPin = 21;          // On-board user LED, active LOW
-constexpr size_t kMaxPayloadBytes = 4096;
+constexpr size_t kMaxPayloadBytes = 16 * 1024;
 constexpr uint32_t kAuthIdleTimeoutMs = 5 * 60 * 1000UL;
 constexpr uint32_t kButtonDebounceMs = 35;
 constexpr uint32_t kKeystrokeDelayMs = 5;
@@ -201,8 +204,8 @@ bool requireAuthentication() {
 
 void handleQueue(const std::vector<std::string> &parts) {
   if (!requireAuthentication()) return;
-  if ((parts.size() != 4 && parts.size() != 5) || parts[1].size() != 8 || parts[3].size() != 64 ||
-      (parts.size() == 5 && parts[4] != "command" && parts[4] != "text")) {
+  if (parts.size() != 5 || parts[1].size() != 8 || parts[3].size() != 64 ||
+      (parts[4] != "command" && parts[4] != "text")) {
     fail("QUEUE_FORMAT", "Expected QUEUE id length sha256 [command|text]");
     return;
   }
@@ -216,7 +219,7 @@ void handleQueue(const std::vector<std::string> &parts) {
   transfer.id = parts[1];
   transfer.expectedLength = requestedLength;
   transfer.expectedSha256 = parts[3];
-  transfer.textMode = parts.size() == 5 && parts[4] == "text";
+  transfer.textMode = parts[4] == "text";
   transfer.payload.reserve(requestedLength);
   deviceState = DeviceState::kAuthenticated;
 }
@@ -335,7 +338,7 @@ void updateLed() {
 }
 
 void setupBle() {
-  NimBLEDevice::init("AirGap Paste");
+  NimBLEDevice::init(kDeviceName);
   NimBLEDevice::setMTU(247);
   NimBLEDevice::setSecurityAuth(true, false, true);  // Bonding + LE Secure Connections.
   NimBLEDevice::setSecurityIOCap(BLE_HS_IO_NO_INPUT_OUTPUT);
@@ -352,8 +355,8 @@ void setupBle() {
 
   NimBLEAdvertising *advertising = NimBLEDevice::getAdvertising();
   advertising->addServiceUUID(kServiceUuid);
-  advertising->setName("AirGap Paste");
-  advertising->enableScanResponse(true);
+  advertising->setName(kAdvertisedDeviceName);
+  advertising->enableScanResponse(false);
   advertising->start();
 }
 

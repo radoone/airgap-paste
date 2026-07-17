@@ -16,7 +16,7 @@ export interface TransferTransport {
 export const AIRGAP_SERVICE_UUID = "7b7d0001-7a6f-4b4d-9f71-6a14e7a1c001";
 export const AIRGAP_RX_UUID = "7b7d0002-7a6f-4b4d-9f71-6a14e7a1c001";
 export const AIRGAP_TX_UUID = "7b7d0003-7a6f-4b4d-9f71-6a14e7a1c001";
-export const MAX_TRANSFER_BYTES = 4096;
+export const MAX_TRANSFER_BYTES = 16 * 1024;
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -207,7 +207,7 @@ export class WebBluetoothTransport implements TransferTransport {
 
   async confirm(): Promise<void> {
     if (this.stage !== "awaiting-confirmation") throw new Error("The device is not awaiting confirmation.");
-    await this.waitFor((message) => message === `DONE ${this.transferId}`, 120_000);
+    await this.waitFor((message) => message === `DONE ${this.transferId}`, 180_000);
     this.stage = "transferred";
   }
 
