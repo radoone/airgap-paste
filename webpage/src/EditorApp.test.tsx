@@ -17,9 +17,10 @@ describe("EditorApp", () => {
     render(<EditorApp />);
     const editor = screen.getByRole("textbox", { name: "Transfer text" });
     fireEvent.change(editor, { target: { value: '{"reviewed": true}' } });
-    fireEvent.change(screen.getByLabelText("Syntax language"), { target: { value: "json" } });
+    const language = screen.getByLabelText("Syntax language");
+    fireEvent.change(language, { target: { value: "json" } });
     expect(editor).toHaveValue('{"reviewed": true}');
-    expect(screen.getByText("JSON", { selector: "dd" })).toBeInTheDocument();
+    expect(language).toHaveValue("json");
   });
 
   it("offers separate command and text transfer types", () => {

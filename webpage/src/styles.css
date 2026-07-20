@@ -105,3 +105,67 @@ footer { width:min(1180px,calc(100% - 48px)); margin:auto; padding:34px 0 45px; 
 .transfer-format { display:grid; gap:6px; margin:0 0 14px; padding:10px; border:1px solid #303134; background:#1c1d1f; color:#98999c; font:10px "DM Mono",monospace; text-transform:uppercase; letter-spacing:.08em; }.transfer-format select { min-width:0; height:32px; padding:0 8px; border:1px solid #4a4b4d; outline:0; background:#111214; color:var(--ink); font:11px "DM Mono",monospace; text-transform:none; letter-spacing:0; }.transfer-format select:focus { border-color:var(--orange); box-shadow:0 0 0 3px rgba(243,87,56,.18); }.transfer-format select option { background:#17181a; }.transfer-format small { color:#999a9d; font:9px/1.4 "DM Sans",sans-serif; text-transform:none; letter-spacing:0; }
 @media (max-width:760px) { .editor-intro { grid-template-columns:1fr; gap:16px; padding:28px 0 20px; }.editor-intro__note { max-width:560px; }.editor-workspace { grid-template-columns:1fr; }.transfer-panel { position:static; }.editor-code .cm-editor { min-height:300px; } }
 @media (max-width:620px) { .editor-page { width:min(100% - 32px,1180px); }.editor-nav { min-height:56px; }.editor-nav p { display:none; }.editor-nav__back { font-size:0; }.editor-nav__back svg { width:20px; height:20px; }.editor-intro h1 { font-size:38px; }.editor-toolbar { align-items:flex-start; flex-direction:column; gap:8px; }.editor-toolbar__stats { justify-content:flex-start; flex-wrap:wrap; }.editor-code .cm-editor { min-height:270px; font-size:12px; }.transfer-panel { padding:16px; } }
+
+/* Product workspace: make the current device state and next action unmistakable. */
+.editor-intro { padding:24px 0 20px; }
+.editor-workspace { grid-template-columns:minmax(0,1fr) 350px; grid-template-areas:"editor transfer"; }
+.editor-surface { grid-area:editor; }
+.transfer-panel { grid-area:transfer; }
+.transfer-panel__status { --status-accent:var(--orange); display:grid; grid-template-columns:44px minmax(0,1fr); gap:12px; margin-bottom:14px; padding:16px; border:1px solid #393a3d; border-left:4px solid var(--status-accent); background:#202123; box-shadow:0 8px 24px rgba(0,0,0,.18); }
+.transfer-panel__status-icon { width:44px; height:44px; display:grid; place-items:center; border:1px solid color-mix(in srgb,var(--status-accent) 52%,transparent); border-radius:50%; background:color-mix(in srgb,var(--status-accent) 10%,transparent); color:var(--status-accent); }
+.transfer-panel__status-icon svg { margin:0; color:inherit; }
+.transfer-panel__status-label { display:block; margin-bottom:4px; color:var(--status-accent); font:9px "DM Mono",monospace; font-weight:700; letter-spacing:.12em; text-transform:uppercase; }
+.transfer-panel__status strong { display:block; color:#f3f1ee; font-size:15px; line-height:1.25; }
+.transfer-panel__status p { margin:6px 0 0; color:#b8b9bc; font-size:11px; line-height:1.5; }
+.transfer-panel__status--connected,.transfer-panel__status--transferred { --status-accent:#91d1a8; }
+.transfer-panel__status--error { --status-accent:#ff7f68; background:#261d1d; }
+.transfer-panel__status--awaiting-confirmation { --status-accent:#ff7658; border-color:rgba(255,118,88,.55); background:linear-gradient(135deg,#2a211f,#211d1c); box-shadow:0 0 0 1px rgba(255,118,88,.12),0 12px 30px rgba(0,0,0,.24); }
+.confirmation-steps { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; gap:6px; margin:13px 0 0; padding:0; list-style:none; }
+.confirmation-steps li:not(.confirmation-step__arrow) { min-width:0; position:relative; display:grid; justify-items:center; gap:3px; padding:12px 6px 10px; border:1px solid rgba(255,118,88,.32); background:rgba(255,118,88,.07); color:#ece8e5; text-align:center; }
+.confirmation-steps li > svg { color:var(--status-accent); }
+.confirmation-steps li strong { font-size:10px; line-height:1.2; }
+.confirmation-steps li small { color:#aaa7a5; font-size:8px; line-height:1.25; }
+.confirmation-step__number { width:19px; height:19px; display:grid; place-items:center; position:absolute; top:5px; left:5px; border-radius:50%; background:var(--status-accent); color:#211412; font:9px "DM Mono",monospace; font-weight:800; }
+.confirmation-step__arrow { display:grid; place-items:center; color:var(--status-accent); }
+.transfer-error { margin:10px 0 0!important; padding-top:9px; border-top:1px solid rgba(255,127,104,.3); color:#ffab9b!important; font-size:11px!important; font-weight:700; line-height:1.45; }
+.transfer-meta { margin:16px 0 0; }
+.transfer-format { margin-bottom:12px; }
+.action-button { min-height:46px; font-size:13px; }
+
+@media (max-width:760px) {
+  .editor-workspace { grid-template-columns:minmax(0,1fr); grid-template-areas:"editor" "transfer"; }
+  .editor-workspace--disconnected,.editor-workspace--connecting,.editor-workspace--awaiting-confirmation,.editor-workspace--error { grid-template-areas:"transfer" "editor"; }
+  .editor-intro { gap:12px; padding:20px 0 16px; }
+  .transfer-panel { scroll-margin-top:12px; }
+}
+
+@media (max-width:620px) {
+  .editor-intro h1 { font-size:32px; line-height:1.02; }
+  .editor-intro > div > p:last-child { font-size:12px; }
+  .editor-intro__note { padding:11px 12px; }
+  .transfer-device { margin:14px 0; }
+  .transfer-panel__status { grid-template-columns:40px minmax(0,1fr); gap:10px; padding:14px; }
+  .transfer-panel__status-icon { width:40px; height:40px; }
+}
+
+@media (prefers-reduced-motion:reduce) { .transfer-panel__status .spin { animation:none; } }
+
+/* High-visibility device state header, readable at a glance on desktop and mobile. */
+.transfer-panel__top { --device-state:#9fa1a5; align-items:center; margin:-18px -18px 16px; padding:14px 16px; border-bottom:1px solid #3a3b3e; background:#202123; }
+.transfer-panel__top p { display:flex; align-items:center; gap:8px; margin:0; color:#c1c2c5; font:10px "DM Mono",monospace; font-weight:700; letter-spacing:.11em; text-transform:uppercase; }
+.transfer-panel__top > strong { padding:6px 9px; border:1px solid color-mix(in srgb,var(--device-state) 55%,#353638); background:color-mix(in srgb,var(--device-state) 10%,#17181a); color:var(--device-state); font:10px "DM Mono",monospace; line-height:1.15; text-align:right; text-transform:uppercase; }
+.transfer-panel__status-dot { width:10px; height:10px; flex:0 0 auto; border:2px solid var(--device-state); border-radius:50%; box-shadow:0 0 0 3px color-mix(in srgb,var(--device-state) 13%,transparent); }
+.transfer-panel__top--connecting,.transfer-panel__top--queued { --device-state:#ff9a83; }
+.transfer-panel__top--connected,.transfer-panel__top--transferred { --device-state:#91d1a8; }
+.transfer-panel__top--awaiting-confirmation { --device-state:#ff7658; background:#281f1d; border-bottom-color:rgba(255,118,88,.58); }
+.transfer-panel__top--error { --device-state:#ff7f68; background:#2a1e1d; border-bottom-color:rgba(255,127,104,.58); }
+.transfer-panel__top--connecting .transfer-panel__status-dot,.transfer-panel__top--queued .transfer-panel__status-dot,.transfer-panel__top--awaiting-confirmation .transfer-panel__status-dot { background:var(--device-state); animation:device-state-pulse 1.4s ease-in-out infinite; }
+@keyframes device-state-pulse { 50% { box-shadow:0 0 0 7px color-mix(in srgb,var(--device-state) 6%,transparent); } }
+
+@media (max-width:620px) {
+  .transfer-panel__top { margin:-16px -16px 14px; padding:13px 14px; }
+  .transfer-panel__top p { font-size:10px; }
+  .transfer-panel__top > strong { max-width:150px; font-size:9px; }
+}
+
+@media (prefers-reduced-motion:reduce) { .transfer-panel__top .transfer-panel__status-dot { animation:none; } }

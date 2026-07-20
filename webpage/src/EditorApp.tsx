@@ -9,7 +9,7 @@ import { StreamLanguage } from "@codemirror/language";
 import { shell } from "@codemirror/legacy-modes/mode/shell";
 import { oneDark } from "@codemirror/theme-one-dark";
 import type { Extension } from "@codemirror/state";
-import { ArrowLeft, CheckCircle, CircleNotch, ClipboardText, Code, Fingerprint, PaperPlaneTilt, ShieldCheck, Trash } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, CheckCircle, CircleNotch, ClipboardText, Code, CursorClick, Fingerprint, HandTap, PaperPlaneTilt, ShieldCheck, Trash, WarningCircle } from "@phosphor-icons/react";
 import { SimulatedTransport, WebBluetoothTransport, type TransferMode, type TransferStage, type TransferTransport } from "./transport";
 
 type LanguageId = "text" | "bash" | "json" | "javascript" | "python" | "yaml" | "markdown";
@@ -25,14 +25,24 @@ export const languageOptions: LanguageOption[] = [
   { id: "markdown", label: "Markdown", extensions: [markdown()] },
 ];
 
-const stageCopy: Record<TransferStage, [string, string]> = {
-  disconnected: ["Device not connected", "Connect AirGap Paste over Bluetooth to prepare a reviewed transfer."],
-  connecting: ["Connecting device", "Opening and authenticating the AirGap Paste link."],
-  connected: ["Ready to review", "Queue reviewed text. It will not type anywhere automatically."],
-  queued: ["Transfer queued", "The device is verifying the complete buffer."],
-  "awaiting-confirmation": ["Awaiting physical confirmation", "Click the target field, then press BOOT or the external SEND button on AirGap Paste."],
-  transferred: ["Transfer confirmed", "AirGap Paste typed the reviewed text. Your editor text remains visible."],
-  error: ["Transfer needs attention", "Review the message below, then try again."],
+const stageCopy: Record<TransferStage, { label: string; title: string; detail: string }> = {
+  disconnected: { label: "Start here", title: "Connect AirGap Paste", detail: "Enter the device key and connect over Bluetooth." },
+  connecting: { label: "Connecting", title: "Keep the device nearby", detail: "The browser is opening and authenticating the Bluetooth link." },
+  connected: { label: "Next step", title: "Review, then queue the text", detail: "Nothing will be typed until you confirm it on the device." },
+  queued: { label: "Preparing transfer", title: "Sending text to the device", detail: "Keep this tab open while AirGap Paste verifies the complete buffer." },
+  "awaiting-confirmation": { label: "Action required", title: "Press SEND on AirGap Paste", detail: "Choose where the text should appear, then confirm it physically." },
+  transferred: { label: "Completed", title: "Text transfer finished", detail: "The reviewed text was typed. It remains in the editor for review." },
+  error: { label: "Needs attention", title: "The connection needs your help", detail: "Check the message and try the connection again." },
+};
+
+const deviceStateLabel: Record<TransferStage, string> = {
+  disconnected: "Not connected",
+  connecting: "Connecting…",
+  connected: "Connected",
+  queued: "Preparing transfer",
+  "awaiting-confirmation": "Press SEND now",
+  transferred: "Transfer completed",
+  error: "Connection error",
 };
 
 export function byteLength(text: string) { return new TextEncoder().encode(text).byteLength; }
@@ -91,9 +101,20 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
   async function confirm() { setMessage(""); try { await transportRef.current.confirm(); setStage(transportRef.current.getState()); } catch (error) { fail(error); } }
   function disconnect() { window.clearTimeout(queuedTimer.current); transportRef.current.disconnect(); setDeviceName(""); setIsSimulated(false); setMessage(""); setStage("disconnected"); }
 
-  const [title, detail] = stageCopy[stage];
+  const statusCopy = stageCopy[stage];
   const canQueue = stage === "connected" || stage === "transferred";
   const canConfirm = stage === "awaiting-confirmation";
+  const statusIcon = stage === "connecting" || stage === "queued"
+    ? <CircleNotch className="spin" size={25} />
+    : stage === "awaiting-confirmation"
+      ? <Fingerprint size={27} />
+      : stage === "connected"
+        ? <PaperPlaneTilt size={25} />
+        : stage === "error"
+          ? <WarningCircle size={25} />
+          : stage === "disconnected"
+            ? <ClipboardText size={25} />
+            : <CheckCircle size={25} />;
 
   return (
     <main className="editor-page">
@@ -106,7 +127,7 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
         <div><p className="section-kicker">Reviewed text transfer</p><h1>Queue it. Confirm it. Keep control.</h1><p>Review text, send it over encrypted Bluetooth, then confirm typing physically on AirGap Paste.</p></div>
         <div className="editor-intro__note"><ShieldCheck size={21} /><span><strong>Local transfer</strong> · the device key and text stay in this browser tab and are never sent to a backend.</span></div>
       </section>
-      <section className="editor-workspace" aria-label="AirGap Paste transfer workspace">
+      <section className={`editor-workspace editor-workspace--${stage}`} aria-label="AirGap Paste transfer workspace">
         <div className="editor-surface">
           <div className="editor-toolbar">
             <div><label htmlFor="syntax-language">Syntax language</label><select id="syntax-language" value={language} onChange={(event) => setLanguage(event.target.value as LanguageId)}>{languageOptions.map((option) => <option value={option.id} key={option.id}>{option.label}</option>)}</select></div>
@@ -119,11 +140,25 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
           <p className="editor-privacy"><ShieldCheck size={16} /> Text is held in this tab only. Clearing or refreshing removes it.</p>
         </div>
         <aside className="transfer-panel" aria-label="AirGap Paste device transfer">
-          <div className="transfer-panel__top"><p className="section-kicker">Device status</p><span className={`transfer-state transfer-state--${stage}`}>{stage.replace("-", " ")}</span></div>
+          <div className={`transfer-panel__top transfer-panel__top--${stage}`}>
+            <p><span className="transfer-panel__status-dot" aria-hidden="true" /> Device status</p>
+            <strong>{deviceStateLabel[stage]}</strong>
+          </div>
           <div className="transfer-device"><Fingerprint size={35} weight="thin" /><div><strong>{deviceName || "AirGap Paste"}</strong><span>BLE input · USB keyboard output</span></div></div>
-          <div className="transfer-panel__status" role="status" aria-live="polite"><CheckCircle size={22} /><div><strong>{title}</strong><p>{detail}</p></div></div>
-          {message && <p className="transfer-error" role="alert">{message}</p>}
-          <dl className="transfer-meta"><div><dt>Payload</dt><dd>{stats.bytes} UTF-8 bytes</dd></div><div><dt>Syntax</dt><dd>{selectedLanguage.label}</dd></div><div><dt>Destination</dt><dd>Active window</dd></div><div><dt>Confirmation</dt><dd>{canConfirm ? "Required now" : "Not requested"}</dd></div></dl>
+          <div className={`transfer-panel__status transfer-panel__status--${stage}`} role={stage === "error" ? "alert" : "status"} aria-live={stage === "error" ? "assertive" : "polite"}>
+            <span className="transfer-panel__status-icon" aria-hidden="true">{statusIcon}</span>
+            <div>
+              <span className="transfer-panel__status-label">{statusCopy.label}</span>
+              <strong>{statusCopy.title}</strong>
+              <p>{statusCopy.detail}</p>
+              {stage === "awaiting-confirmation" && <ol className="confirmation-steps">
+                <li><span className="confirmation-step__number">1</span><CursorClick size={27} weight="duotone" /><strong>Click target</strong><small>Where text should appear</small></li>
+                <li className="confirmation-step__arrow" aria-hidden="true"><ArrowRight size={17} /></li>
+                <li><span className="confirmation-step__number">2</span><HandTap size={27} weight="duotone" /><strong>Press SEND</strong><small>BOOT or SEND button</small></li>
+              </ol>}
+              {message && <p className="transfer-error">{message}</p>}
+            </div>
+          </div>
           <label className="transfer-format"><span>Transfer type</span><select aria-label="Transfer type" value={transferMode} onChange={(event) => setTransferMode(event.target.value as TransferMode)}><option value="command">Command — one line</option><option value="text">Text — lines allowed</option></select><small>{transferMode === "command" ? "For a single command or short value. It is typed but not automatically submitted." : "For reviewed text with line breaks and tabs. It is typed exactly after confirmation."}</small></label>
           <div className="transfer-actions">
             {(stage === "disconnected" || stage === "error") && <label className="device-key-field"><span>Device key</span><input type="password" value={deviceKey} onChange={(event) => setDeviceKey(event.target.value)} autoComplete="off" placeholder="From controller/include/device_secrets.h" /></label>}
@@ -133,6 +168,7 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
             {canConfirm && isSimulated && <button className="action-button action-button--confirm" type="button" onClick={confirm}><Fingerprint size={18} /> Confirm simulated device</button>}
             {stage !== "disconnected" && stage !== "connecting" && <button className="secondary-button" type="button" onClick={disconnect}>Disconnect device</button>}
           </div>
+          <dl className="transfer-meta"><div><dt>Transfer size</dt><dd>{stats.bytes} UTF-8 bytes</dd></div><div><dt>Confirmation</dt><dd>{canConfirm ? "Required now" : "Not requested"}</dd></div></dl>
           <p className="transfer-disclaimer">Check the text carefully. After physical confirmation, AirGap Paste types it into the active window.</p>
         </aside>
       </section>
