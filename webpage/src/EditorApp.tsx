@@ -61,13 +61,28 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
   const selectedLanguage = languageOptions.find((option) => option.id === language) ?? languageOptions[0];
   const stats = useMemo(() => ({ lines: text ? text.split("\n").length : 0, bytes: byteLength(text) }), [text]);
 
-  useEffect(() => () => window.clearTimeout(queuedTimer.current), []);
+  const listenToTransport = (transport: TransferTransport) => {
+    transport.setStateListener?.((nextStage, nextMessage) => {
+      setStage(nextStage);
+      setMessage(nextMessage ?? "");
+      if (nextStage === "error") setIsSimulated(false);
+    });
+    return transport;
+  };
+
+  useEffect(() => {
+    listenToTransport(transportRef.current);
+    return () => {
+      window.clearTimeout(queuedTimer.current);
+      transportRef.current.setStateListener?.();
+    };
+  }, []);
   const fail = (error: unknown) => { setStage("error"); setMessage(error instanceof Error ? error.message : "The transfer could not be completed."); };
 
   async function connectHardware() {
     setMessage(""); setStage("connecting");
     try {
-      if (!suppliedTransport) transportRef.current = new WebBluetoothTransport();
+      if (!suppliedTransport) transportRef.current = listenToTransport(new WebBluetoothTransport());
       const device = await transportRef.current.connect(deviceKey);
       setDeviceName(device.name); setIsSimulated(device.simulated); setStage(transportRef.current.getState());
     } catch (error) { fail(error); }
@@ -75,7 +90,7 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
   async function connectSimulator() {
     setMessage(""); setStage("connecting");
     try {
-      if (!suppliedTransport) transportRef.current = new SimulatedTransport();
+      if (!suppliedTransport) transportRef.current = listenToTransport(new SimulatedTransport());
       const device = await transportRef.current.connect();
       setDeviceName(device.name); setIsSimulated(device.simulated); setStage(transportRef.current.getState());
     } catch (error) { fail(error); }
@@ -169,7 +184,7 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
             {stage !== "disconnected" && stage !== "connecting" && <button className="secondary-button" type="button" onClick={disconnect}>Disconnect device</button>}
           </div>
           <dl className="transfer-meta"><div><dt>Transfer size</dt><dd>{stats.bytes} UTF-8 bytes</dd></div><div><dt>Confirmation</dt><dd>{canConfirm ? "Required now" : "Not requested"}</dd></div></dl>
-          <p className="transfer-disclaimer">Check the text carefully. After physical confirmation, AirGap Paste types it into the active window.</p>
+          <p className="transfer-disclaimer">Check the text carefully. After physical confirmation, AirGap Paste types it into the active window. Keystrokes are paced for reliable USB keyboard input; the reviewed text is never changed.</p>
         </aside>
       </section>
     </main>

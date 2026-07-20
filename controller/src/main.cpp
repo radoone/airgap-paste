@@ -30,7 +30,8 @@ constexpr uint8_t kLedPin = 21;          // On-board user LED, active LOW
 constexpr size_t kMaxPayloadBytes = 16 * 1024;
 constexpr uint32_t kAuthIdleTimeoutMs = 5 * 60 * 1000UL;
 constexpr uint32_t kButtonDebounceMs = 35;
-constexpr uint32_t kKeystrokeDelayMs = 5;
+constexpr uint32_t kKeystrokeDelayMinMs = 11;
+constexpr uint32_t kKeystrokeDelayJitterMs = 16;
 
 static_assert(sizeof(AIRGAP_DEVICE_KEY) - 1 >= 12, "AIRGAP_DEVICE_KEY must contain at least 12 characters");
 
@@ -202,6 +203,11 @@ bool requireAuthentication() {
   return false;
 }
 
+void handlePing() {
+  if (!requireAuthentication()) return;
+  notify("PONG");
+}
+
 void handleQueue(const std::vector<std::string> &parts) {
   if (!requireAuthentication()) return;
   if (parts.size() != 5 || parts[1].size() != 8 || parts[3].size() != 64 ||
@@ -279,6 +285,7 @@ void processCommand(const std::string &command) {
   const auto parts = split(command);
   if (parts.empty()) return;
   if (parts[0] == "AUTH") handleAuth(parts);
+  else if (parts[0] == "PING") handlePing();
   else if (parts[0] == "QUEUE") handleQueue(parts);
   else if (parts[0] == "DATA") handleData(parts);
   else if (parts[0] == "COMMIT") handleCommit(parts);
@@ -302,6 +309,15 @@ bool buttonPressed(DebouncedButton &button) {
   return button.armed;
 }
 
+uint32_t humanKeystrokeDelayMs(unsigned char character) {
+  // Keep each transfer comfortably fast while avoiding a perfectly mechanical
+  // cadence. Whitespace naturally gets a little more thinking time.
+  uint32_t delayMs = kKeystrokeDelayMinMs + (esp_random() % kKeystrokeDelayJitterMs);
+  if (character == ' ' || character == '\n' || character == '\t') delayMs += 16 + (esp_random() % 18);
+  if ((esp_random() % 100) < 6) delayMs += 35 + (esp_random() % 55);
+  return delayMs;
+}
+
 void typeReadyTransfer() {
   if (!transfer.ready) return;
   const std::string id = transfer.id;
@@ -314,7 +330,7 @@ void typeReadyTransfer() {
     if (textMode && character == '\n') keyboard.write(KEY_RETURN);
     else if (textMode && character == '\t') keyboard.write(KEY_TAB);
     else keyboard.write(character);
-    delay(kKeystrokeDelayMs);
+    delay(humanKeystrokeDelayMs(character));
   }
   keyboard.releaseAll();
   transfer = {};
