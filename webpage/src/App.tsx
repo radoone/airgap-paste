@@ -150,6 +150,7 @@ function LandingPage() {
         <a className="wordmark" href="#top" aria-label="AirGap Paste home">AirGap <span>Paste</span></a>
         <nav aria-label="Primary navigation">
           <a href="#workflow">How it works</a>
+          <a href="#build-update">Build update</a>
           <a href="#safety">Safety</a>
           <a href="#faq">FAQ</a>
         </nav>
@@ -268,7 +269,7 @@ function LandingPage() {
       </section>
 
       <section className="command section-shell" aria-labelledby="command-heading">
-        <div className="command-copy"><p className="section-kicker">Built for the awkward part</p><h2 id="command-heading">Long commands. Config blocks. Reviewed scripts.</h2><p>Move the exact text you have reviewed, not an approximation you have retyped under pressure. The initial keyboard-layout target is US; additional layouts are a planned expansion.</p><a href="#safety" className="text-link">See safety boundaries <ArrowRight size={17} /></a></div>
+        <div className="command-copy"><p className="section-kicker">Built for the awkward part</p><h2 id="command-heading">Long commands. Config blocks. Reviewed scripts.</h2><p>Move the exact text you have reviewed, not an approximation you have retyped under pressure. US ASCII is automatic; the working prototype also supports tested Unicode input on Linux and macOS.</p><a href="#safety" className="text-link">See safety boundaries <ArrowRight size={17} /></a></div>
         <pre aria-label="Example reviewed deployment script"><code><em>01</em> # reviewed-deploy.sh{`\n`}<em>02</em> set -euo pipefail{`\n`}<em>03</em>{`\n`}<em>04</em> export TARGET_ENV=staging{`\n`}<em>05</em> ./deploy --verify --no-input{`\n`}<em>06</em> printf "Deployment prepared\n"</code></pre>
       </section>
 
@@ -287,6 +288,16 @@ function LandingPage() {
         <ol><li><span>Now</span><strong>Prototype validation</strong><p>Confirm USB HID, Bluetooth transfer, physical confirmation, and layout behavior.</p></li><li><span>Next</span><strong>Field feedback</strong><p>Put the workflow in front of developers, sysadmins, and lab operators.</p></li><li><span>Then</span><strong>Crowdfunding pre-launch</strong><p>Publish transparent build status, reward details, and a realistic production plan.</p></li></ol>
       </section>
 
+      <section id="build-update" className="build-update section-shell" aria-labelledby="build-update-heading">
+        <div className="build-update__heading"><p className="section-kicker">Build update · July 2026</p><h2 id="build-update-heading">The hardware prototype works. The enclosure is being made.</h2><p>We are sharing the current state before crowdfunding: proven behavior, the physical work still in progress, and no promises beyond what has been tested.</p></div>
+        <div className="build-update__grid">
+          <article><CheckCircle size={28} weight="thin" /><p>Validated now</p><h3>End-to-end transfer</h3><span>Bluetooth pairing, encrypted text transfer, a physical SEND action, and USB keyboard output work on the prototype.</span></article>
+          <article><Keyboard size={28} weight="thin" /><p>Tested now</p><h3>Unicode on Linux + macOS</h3><span>US ASCII is automatic. Unicode typing has been tested on Linux and on macOS when Unicode Hex Input is selected.</span></article>
+          <article><Factory size={28} weight="thin" /><p>In progress</p><h3>Prototype enclosure</h3><span>The electronics work; the first physical enclosure is currently being produced for fit, feel, and field testing.</span></article>
+        </div>
+        <p className="build-update__note"><strong>What this is not yet:</strong> a finished retail product. Pricing, delivery timing, and final production specifications will be published only after enclosure and field validation.</p>
+      </section>
+
       <section id="faq" className="faq section-shell" aria-labelledby="faq-heading">
         <div><p className="section-kicker">FAQ</p><h2 id="faq-heading">The useful constraints.</h2></div>
         <div className="faq-list">
@@ -294,6 +305,7 @@ function LandingPage() {
           <details><summary>Does it automatically run a command?</summary><p>No. The intended default is text-only input. A physical confirmation starts typing, and the device does not append Enter to single-line commands.</p></details>
           <details><summary>Does the target computer need a driver?</summary><p>No custom driver is intended on the target computer. AirGap Paste is being designed to appear as a standard USB HID keyboard, using the keyboard support already built into the operating system.</p></details>
           <details><summary>Can it transfer multi-line scripts?</summary><p>That is an intended workflow for text editors and reviewed shell inputs. Because a line break may execute a terminal command, the focused application and process remain your responsibility.</p></details>
+          <details><summary>Can it type accented or other Unicode characters?</summary><p>The current prototype has been tested on Linux and macOS. For macOS, add and select the Unicode Hex Input source before transferring Unicode text; the app shows this setup hint when macOS is selected.</p></details>
         </div>
       </section>
 

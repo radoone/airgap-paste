@@ -130,13 +130,35 @@ footer { width:min(1180px,calc(100% - 48px)); margin:auto; padding:34px 0 45px; 
 .transfer-error { margin:10px 0 0!important; padding-top:9px; border-top:1px solid rgba(255,127,104,.3); color:#ffab9b!important; font-size:11px!important; font-weight:700; line-height:1.45; }
 .transfer-meta { margin:16px 0 0; }
 .transfer-format { margin-bottom:12px; }
+.transfer-settings { display:grid; gap:10px; }
+.transfer-settings .transfer-format { margin-bottom:0; }
+.transfer-format--unicode { border-color:rgba(243,87,56,.62); }
+.ascii-output-note { margin:0; padding:10px; border:1px solid #303134; color:#9fa1a5; font-size:10px; line-height:1.45; }
+.action-button:disabled { cursor:not-allowed; opacity:.48; }
 .action-button { min-height:46px; font-size:13px; }
+.macos-unicode-hint { padding:0 10px; border:1px solid #303134; background:#18191b; color:#a9aaad; font-size:10px; line-height:1.5; }
+.macos-unicode-hint summary { padding:9px 0; color:#d8d7d4; cursor:pointer; font:10px "DM Mono",monospace; }
+.macos-unicode-hint p { margin:0 0 10px; }
+.macos-unicode-hint strong { color:#efeeea; font-weight:700; }
+
+/* Pre-launch proof: compact, factual milestone update rather than a campaign promise. */
+.build-update { display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:56px; padding:112px 0; border-top:1px solid var(--line); }
+.build-update__heading > p:not(.section-kicker) { max-width:450px; margin:22px 0 0; color:#a9aaad; font-size:15px; line-height:1.65; }
+.build-update__grid { display:grid; border-top:1px solid #3c3d3f; border-left:1px solid #3c3d3f; }
+.build-update__grid article { min-height:145px; display:grid; grid-template-columns:42px minmax(0,1fr); column-gap:14px; align-content:start; padding:18px; border-right:1px solid #3c3d3f; border-bottom:1px solid #3c3d3f; }
+.build-update__grid svg { grid-row:span 3; color:var(--orange); }
+.build-update__grid p { margin:1px 0 5px; color:var(--orange); font:10px "DM Mono",monospace; letter-spacing:.09em; text-transform:uppercase; }
+.build-update__grid h3 { margin:0 0 7px; font-size:17px; }
+.build-update__grid span { color:#a9aaad; font-size:12px; line-height:1.52; }
+.build-update__note { grid-column:1 / -1; margin:0; padding:13px 15px; border-left:3px solid var(--orange); background:#1b1c1e; color:#aaa; font-size:12px; line-height:1.55; }
+.build-update__note strong { color:#e7e5e1; }
 
 @media (max-width:760px) {
   .editor-workspace { grid-template-columns:minmax(0,1fr); grid-template-areas:"editor" "transfer"; }
   .editor-workspace--disconnected,.editor-workspace--connecting,.editor-workspace--awaiting-confirmation,.editor-workspace--error { grid-template-areas:"transfer" "editor"; }
   .editor-intro { gap:12px; padding:20px 0 16px; }
   .transfer-panel { scroll-margin-top:12px; }
+  .build-update { grid-template-columns:1fr; gap:35px; padding:85px 0; }
 }
 
 @media (max-width:620px) {
@@ -146,6 +168,7 @@ footer { width:min(1180px,calc(100% - 48px)); margin:auto; padding:34px 0 45px; 
   .transfer-device { margin:14px 0; }
   .transfer-panel__status { grid-template-columns:40px minmax(0,1fr); gap:10px; padding:14px; }
   .transfer-panel__status-icon { width:40px; height:40px; }
+  .build-update__grid article { min-height:0; }
 }
 
 @media (prefers-reduced-motion:reduce) { .transfer-panel__status .spin { animation:none; } }

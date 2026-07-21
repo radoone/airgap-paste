@@ -16,7 +16,7 @@ device: OK AUTH
 # The browser keeps the authenticated BLE link active while it is open.
 client: PING
 device: PONG
-client: QUEUE <8-hex-id> <byte-length> <sha256-hex> <command|text>
+client: QUEUE <8-hex-id> <byte-length> <sha256-hex> <command|text> <ascii|linux|macos|windows>
 client: DATA <id> <zero-based-byte-offset> <base64-data>
 client: COMMIT <id>
 device: READY <id>
@@ -25,4 +25,4 @@ device: TYPING <id>
 device: DONE <id>
 ```
 
-Errors use `ERR <CODE> <detail>`. An authenticated browser sends `PING` every 20 seconds and expects `PONG`; this refreshes the five-minute authentication idle timer and detects a lost GATT link. Every transfer must declare its mode: `command` accepts one line of printable US ASCII (`0x20`–`0x7e`), while `text` also accepts LF line breaks and Tab, which are typed as Enter and Tab keys within the transferred text. Both modes accept at most 16 KB per transfer. Neither mode adds an automatic Enter after the payload. DATA chunks must be sequential and the complete payload must match both the declared length and SHA-256 digest.
+Errors use `ERR <CODE> <detail>`. An authenticated browser sends `PING` every 20 seconds and expects `PONG`; this refreshes the five-minute authentication idle timer and detects a lost GATT link. Every transfer declares a typing mode and target keyboard. `ascii` accepts printable US ASCII only; `linux`, `macos`, and `windows` accept valid printable UTF-8. Linux uses `Ctrl+Shift+U`, macOS uses Unicode Hex Input, and Windows uses the EnableHexNumpad Alt+plus sequence. The host must have the corresponding input method enabled. `text` also accepts LF line breaks and Tab, which are typed as Enter and Tab keys within the transferred text. Both modes accept at most 16 KB per transfer. Neither mode adds an automatic Enter after the payload. DATA chunks must be sequential and the complete payload must match both the declared length and SHA-256 digest.

@@ -10,7 +10,7 @@ import { shell } from "@codemirror/legacy-modes/mode/shell";
 import { oneDark } from "@codemirror/theme-one-dark";
 import type { Extension } from "@codemirror/state";
 import { ArrowLeft, ArrowRight, CheckCircle, CircleNotch, ClipboardText, Code, CursorClick, Fingerprint, HandTap, PaperPlaneTilt, ShieldCheck, Trash, WarningCircle } from "@phosphor-icons/react";
-import { SimulatedTransport, WebBluetoothTransport, type TransferMode, type TransferStage, type TransferTransport } from "./transport";
+import { SimulatedTransport, WebBluetoothTransport, type KeyboardTarget, type TransferMode, type TransferStage, type TransferTransport } from "./transport";
 
 type LanguageId = "text" | "bash" | "json" | "javascript" | "python" | "yaml" | "markdown";
 type LanguageOption = { id: LanguageId; label: string; extensions: Extension[] };
@@ -52,6 +52,7 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
   const [text, setText] = useState("docker compose up -d --build");
   const [language, setLanguage] = useState<LanguageId>("bash");
   const [transferMode, setTransferMode] = useState<TransferMode>("command");
+  const [unicodeTarget, setUnicodeTarget] = useState<Exclude<KeyboardTarget, "ascii"> | "">("");
   const [deviceKey, setDeviceKey] = useState("");
   const [stage, setStage] = useState<TransferStage>(transportRef.current.getState());
   const [deviceName, setDeviceName] = useState("");
@@ -60,6 +61,8 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
   const queuedTimer = useRef<number | undefined>();
   const selectedLanguage = languageOptions.find((option) => option.id === language) ?? languageOptions[0];
   const stats = useMemo(() => ({ lines: text ? text.split("\n").length : 0, bytes: byteLength(text) }), [text]);
+  const hasUnicode = useMemo(() => Array.from(text).some((character) => (character.codePointAt(0) ?? 0) > 0x7e), [text]);
+  const keyboardTarget: KeyboardTarget = hasUnicode && unicodeTarget ? unicodeTarget : "ascii";
 
   const listenToTransport = (transport: TransferTransport) => {
     transport.setStateListener?.((nextStage, nextMessage) => {
@@ -97,8 +100,13 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
   }
   async function queue() {
     setMessage("");
+    if (hasUnicode && !unicodeTarget) {
+      setStage("error");
+      setMessage("Unicode characters were found. Choose the target keyboard system before queuing this transfer.");
+      return;
+    }
     try {
-      await transportRef.current.queue({ text, language: selectedLanguage.label, byteLength: stats.bytes, mode: transferMode });
+      await transportRef.current.queue({ text, language: selectedLanguage.label, byteLength: stats.bytes, mode: transferMode, keyboardTarget });
       setStage("queued");
       window.clearTimeout(queuedTimer.current);
       queuedTimer.current = window.setTimeout(async () => {
@@ -174,12 +182,15 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
               {message && <p className="transfer-error">{message}</p>}
             </div>
           </div>
-          <label className="transfer-format"><span>Transfer type</span><select aria-label="Transfer type" value={transferMode} onChange={(event) => setTransferMode(event.target.value as TransferMode)}><option value="command">Command — one line</option><option value="text">Text — lines allowed</option></select><small>{transferMode === "command" ? "For a single command or short value. It is typed but not automatically submitted." : "For reviewed text with line breaks and tabs. It is typed exactly after confirmation."}</small></label>
+          <div className="transfer-settings">
+            <label className="transfer-format"><span>Transfer type</span><select aria-label="Transfer type" value={transferMode} onChange={(event) => setTransferMode(event.target.value as TransferMode)}><option value="command">Command — one line</option><option value="text">Text — lines allowed</option></select><small>{transferMode === "command" ? "For a single command or short value. It is typed but not automatically submitted." : "For reviewed text with line breaks and tabs. It is typed exactly after confirmation."}</small></label>
+            {hasUnicode ? <><label className="transfer-format transfer-format--unicode"><span>Unicode detected · choose target keyboard</span><select aria-label="Target keyboard" value={unicodeTarget} onChange={(event) => setUnicodeTarget(event.target.value as Exclude<KeyboardTarget, "ascii"> | "")}><option value="">Choose target system…</option><option value="linux">Linux — Unicode input</option><option value="macos">macOS — Unicode Hex Input</option><option value="windows">Windows — Unicode Alt code</option></select><small>{unicodeTarget === "linux" ? "Tested on Linux with Ctrl + Shift + U Unicode input." : unicodeTarget === "macos" ? "Requires Unicode Hex Input on the target Mac." : unicodeTarget === "windows" ? "Requires EnableHexNumpad and a numeric keypad on the target Windows system." : "Select the operating system that will receive the text."}</small></label>{unicodeTarget === "macos" && <details className="macos-unicode-hint"><summary>macOS setup hint</summary><p>On the target Mac: System Settings → Keyboard → Text Input → Edit → <strong>+</strong> → add <strong>Unicode Hex Input</strong>. Select it from the Input menu before pressing SEND.</p></details>}</> : <p className="ascii-output-note">US ASCII selected automatically for this text.</p>}
+          </div>
           <div className="transfer-actions">
             {(stage === "disconnected" || stage === "error") && <label className="device-key-field"><span>Device key</span><input type="password" value={deviceKey} onChange={(event) => setDeviceKey(event.target.value)} autoComplete="off" placeholder="From controller/include/device_secrets.h" /></label>}
             {(stage === "disconnected" || stage === "error") && <button className="action-button" type="button" onClick={connectHardware} disabled={stage === "connecting"}>{stage === "connecting" ? <><CircleNotch className="spin" size={18} /> Connecting</> : <><ClipboardText size={18} /> Connect AirGap Paste</>}</button>}
             {(stage === "disconnected" || stage === "error") && <button className="secondary-button" type="button" onClick={connectSimulator}>Run simulator</button>}
-            {canQueue && <button className="action-button" type="button" onClick={queue}><PaperPlaneTilt size={18} /> Queue transfer</button>}
+            {canQueue && <button className="action-button" type="button" onClick={queue} disabled={hasUnicode && !unicodeTarget} title={hasUnicode && !unicodeTarget ? "Choose a target keyboard system for Unicode text first." : undefined}><PaperPlaneTilt size={18} /> Queue transfer</button>}
             {canConfirm && isSimulated && <button className="action-button action-button--confirm" type="button" onClick={confirm}><Fingerprint size={18} /> Confirm simulated device</button>}
             {stage !== "disconnected" && stage !== "connecting" && <button className="secondary-button" type="button" onClick={disconnect}>Disconnect device</button>}
           </div>

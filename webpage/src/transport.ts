@@ -1,7 +1,8 @@
 export type TransferStage = "disconnected" | "connecting" | "connected" | "queued" | "awaiting-confirmation" | "transferred" | "error";
 
 export type TransferMode = "command" | "text";
-export type TransferPayload = { text: string; language: string; byteLength: number; mode: TransferMode };
+export type KeyboardTarget = "ascii" | "linux" | "macos" | "windows";
+export type TransferPayload = { text: string; language: string; byteLength: number; mode: TransferMode; keyboardTarget: KeyboardTarget };
 export type DeviceInfo = { name: string; simulated: boolean };
 
 export interface TransferTransport {
@@ -88,15 +89,20 @@ async function hmacHex(secret: string, challengeHex: string): Promise<string> {
   return bytesToHex(new Uint8Array(await crypto.subtle.sign("HMAC", key, challenge)));
 }
 
-export function validateTransferText(text: string, mode: TransferMode = "command"): Uint8Array {
+export function validateTransferText(text: string, mode: TransferMode = "command", keyboardTarget: KeyboardTarget = "ascii"): Uint8Array {
   const bytes = encoder.encode(text);
   if (!text.trim()) throw new Error("Add text before queuing a transfer.");
   if (bytes.length > MAX_TRANSFER_BYTES) throw new Error(`The prototype accepts at most ${MAX_TRANSFER_BYTES} bytes per transfer.`);
-  for (const byte of bytes) {
-    const isTextWhitespace = mode === "text" && (byte === 0x09 || byte === 0x0a);
-    if (!isTextWhitespace && (byte < 0x20 || byte > 0x7e)) {
-      if (mode === "command") throw new Error("Commands must be one line of printable US-ASCII text.");
-      throw new Error("Text supports printable US-ASCII characters, line breaks, and tabs only.");
+  for (const symbol of text) {
+    const codePoint = symbol.codePointAt(0) ?? 0;
+    const isTextWhitespace = mode === "text" && (codePoint === 0x09 || codePoint === 0x0a);
+    const isControl = codePoint < 0x20 || (codePoint >= 0x7f && codePoint <= 0x9f);
+    if (isControl && !isTextWhitespace) {
+      if (mode === "command") throw new Error("Commands must be one line of printable text.");
+      throw new Error("Text supports printable characters, line breaks, and tabs only.");
+    }
+    if (keyboardTarget === "ascii" && codePoint > 0x7e) {
+      throw new Error("US ASCII output cannot type Unicode characters. Choose Linux, macOS, or Windows Unicode output.");
     }
   }
   return bytes;
@@ -108,7 +114,7 @@ export class SimulatedTransport implements TransferTransport {
   async connect(): Promise<DeviceInfo> { this.updateStage("connected"); return { name: "AirGap Paste · Simulator", simulated: true }; }
   async queue(payload: TransferPayload): Promise<void> {
     if (this.stage !== "connected" && this.stage !== "transferred") throw new Error("Connect a device before queuing a transfer.");
-    validateTransferText(payload.text, payload.mode);
+    validateTransferText(payload.text, payload.mode, payload.keyboardTarget);
     this.updateStage("queued");
   }
   async awaitConfirmation(): Promise<void> {
@@ -192,10 +198,10 @@ export class WebBluetoothTransport implements TransferTransport {
 
   async queue(payload: TransferPayload): Promise<void> {
     if (this.stage !== "connected" && this.stage !== "transferred") throw new Error("Connect a device before queuing a transfer.");
-    const bytes = validateTransferText(payload.text, payload.mode);
+    const bytes = validateTransferText(payload.text, payload.mode, payload.keyboardTarget);
     this.transferId = bytesToHex(crypto.getRandomValues(new Uint8Array(4)));
     const digest = await sha256Hex(bytes);
-    await this.write(`QUEUE ${this.transferId} ${bytes.length} ${digest} ${payload.mode}`);
+    await this.write(`QUEUE ${this.transferId} ${bytes.length} ${digest} ${payload.mode} ${payload.keyboardTarget}`);
     for (let offset = 0; offset < bytes.length; offset += 120) {
       const chunk = bytes.slice(offset, offset + 120);
       await this.write(`DATA ${this.transferId} ${offset} ${bytesToBase64(chunk)}`);

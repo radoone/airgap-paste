@@ -36,6 +36,7 @@ constexpr uint32_t kKeystrokeDelayJitterMs = 16;
 static_assert(sizeof(AIRGAP_DEVICE_KEY) - 1 >= 12, "AIRGAP_DEVICE_KEY must contain at least 12 characters");
 
 enum class DeviceState { kAdvertising, kConnected, kAuthenticated, kReady, kTyping, kError };
+enum class KeyboardTarget { kAscii, kLinux, kMacOS, kWindows };
 
 struct Transfer {
   std::string id;
@@ -43,6 +44,7 @@ struct Transfer {
   std::string expectedSha256;
   std::string payload;
   bool textMode = false;
+  KeyboardTarget keyboardTarget = KeyboardTarget::kAscii;
   bool ready = false;
 };
 
@@ -109,11 +111,40 @@ bool constantTimeEqual(const std::string &left, const std::string &right) {
   return difference == 0;
 }
 
-bool isSafeAscii(const std::string &value, bool textMode) {
+bool decodeUtf8(const std::string &value, std::vector<uint32_t> &codepoints) {
+  codepoints.clear();
+  for (size_t index = 0; index < value.size();) {
+    const uint8_t first = static_cast<uint8_t>(value[index]);
+    uint32_t codepoint = 0;
+    size_t length = 0;
+    if (first <= 0x7f) { codepoint = first; length = 1; }
+    else if ((first & 0xe0) == 0xc0) { codepoint = first & 0x1f; length = 2; }
+    else if ((first & 0xf0) == 0xe0) { codepoint = first & 0x0f; length = 3; }
+    else if ((first & 0xf8) == 0xf0) { codepoint = first & 0x07; length = 4; }
+    else return false;
+    if (index + length > value.size()) return false;
+    for (size_t offset = 1; offset < length; ++offset) {
+      const uint8_t next = static_cast<uint8_t>(value[index + offset]);
+      if ((next & 0xc0) != 0x80) return false;
+      codepoint = (codepoint << 6) | (next & 0x3f);
+    }
+    if ((length == 2 && codepoint < 0x80) || (length == 3 && codepoint < 0x800) ||
+        (length == 4 && codepoint < 0x10000) || codepoint > 0x10ffff ||
+        (codepoint >= 0xd800 && codepoint <= 0xdfff)) return false;
+    codepoints.push_back(codepoint);
+    index += length;
+  }
+  return true;
+}
+
+bool isSafePayload(const std::string &value, bool textMode, KeyboardTarget keyboardTarget) {
   if (value.empty() || value.size() > kMaxPayloadBytes) return false;
-  for (const unsigned char character : value) {
-    if (textMode && (character == '\n' || character == '\t')) continue;
-    if (character < 0x20 || character > 0x7e) return false;
+  std::vector<uint32_t> codepoints;
+  if (!decodeUtf8(value, codepoints)) return false;
+  for (const uint32_t codepoint : codepoints) {
+    if (textMode && (codepoint == '\n' || codepoint == '\t')) continue;
+    if (codepoint < 0x20 || (codepoint >= 0x7f && codepoint <= 0x9f)) return false;
+    if (keyboardTarget == KeyboardTarget::kAscii && codepoint > 0x7e) return false;
   }
   return true;
 }
@@ -210,9 +241,10 @@ void handlePing() {
 
 void handleQueue(const std::vector<std::string> &parts) {
   if (!requireAuthentication()) return;
-  if (parts.size() != 5 || parts[1].size() != 8 || parts[3].size() != 64 ||
-      (parts[4] != "command" && parts[4] != "text")) {
-    fail("QUEUE_FORMAT", "Expected QUEUE id length sha256 [command|text]");
+  if (parts.size() != 6 || parts[1].size() != 8 || parts[3].size() != 64 ||
+      (parts[4] != "command" && parts[4] != "text") ||
+      (parts[5] != "ascii" && parts[5] != "linux" && parts[5] != "macos" && parts[5] != "windows")) {
+    fail("QUEUE_FORMAT", "Expected QUEUE id length sha256 [command|text] [ascii|linux|macos|windows]");
     return;
   }
   char *end = nullptr;
@@ -226,6 +258,7 @@ void handleQueue(const std::vector<std::string> &parts) {
   transfer.expectedLength = requestedLength;
   transfer.expectedSha256 = parts[3];
   transfer.textMode = parts[4] == "text";
+  transfer.keyboardTarget = parts[5] == "linux" ? KeyboardTarget::kLinux : parts[5] == "macos" ? KeyboardTarget::kMacOS : parts[5] == "windows" ? KeyboardTarget::kWindows : KeyboardTarget::kAscii;
   transfer.payload.reserve(requestedLength);
   deviceState = DeviceState::kAuthenticated;
 }
@@ -258,8 +291,8 @@ void handleCommit(const std::vector<std::string> &parts) {
     fail("HASH_MISMATCH", "Payload integrity check failed");
     return;
   }
-  if (!isSafeAscii(transfer.payload, transfer.textMode)) {
-    fail("UNSUPPORTED_TEXT", transfer.textMode ? "Text supports US ASCII, line breaks, and tabs" : "Commands must be one line of printable US ASCII");
+  if (!isSafePayload(transfer.payload, transfer.textMode, transfer.keyboardTarget)) {
+    fail("UNSUPPORTED_TEXT", transfer.keyboardTarget == KeyboardTarget::kAscii ? "US ASCII output cannot type Unicode characters" : "Text contains invalid Unicode or control characters");
     return;
   }
   transfer.ready = true;
@@ -318,19 +351,83 @@ uint32_t humanKeystrokeDelayMs(unsigned char character) {
   return delayMs;
 }
 
+std::string unicodeHex(uint32_t codepoint) {
+  static constexpr char kHex[] = "0123456789abcdef";
+  std::string value;
+  do {
+    value.insert(value.begin(), kHex[codepoint & 0x0f]);
+    codepoint >>= 4;
+  } while (codepoint != 0 || value.size() < 4);
+  return value;
+}
+
+uint8_t hidUsageForAscii(char character) {
+  if (character >= 'a' && character <= 'z') return 0x04 + (character - 'a');
+  if (character >= '1' && character <= '9') return 0x1e + (character - '1');
+  if (character == '0') return 0x27;
+  return 0;
+}
+
+void sendHidKey(uint8_t modifiers, uint8_t usage, uint32_t holdMs, uint32_t settleMs) {
+  KeyReport pressed{};
+  pressed.modifiers = modifiers;
+  pressed.keys[0] = usage;
+  keyboard.sendReport(&pressed);
+  delay(holdMs);
+
+  KeyReport released{};
+  keyboard.sendReport(&released);
+  delay(settleMs);
+}
+
+void typeUnicodeCodepoint(uint32_t codepoint, KeyboardTarget target) {
+  const std::string hex = unicodeHex(codepoint);
+  if (target == KeyboardTarget::kLinux) {
+    // Send every step as a complete HID report. USBHIDKeyboard::press() keeps
+    // modifier state internally and does not emit a report for modifier-only
+    // changes, which can leave Ctrl/Shift timing dependent on the next key.
+    constexpr uint8_t kCtrlShift = 0x03;
+    sendHidKey(kCtrlShift, hidUsageForAscii('u'), 35, 120);
+    for (const char character : hex) {
+      sendHidKey(0, hidUsageForAscii(character), 22, 38);
+    }
+    sendHidKey(0, 0x28, 35, 120);  // Enter commits the Unicode input sequence.
+  } else if (target == KeyboardTarget::kMacOS) {
+    keyboard.press(KEY_LEFT_ALT);
+    for (const char character : hex) keyboard.write(character);
+    keyboard.releaseAll();
+  } else if (target == KeyboardTarget::kWindows) {
+    // Windows Unicode input requires EnableHexNumpad. HID usage 0x57 is the
+    // keypad '+' key; the remaining hexadecimal digits are normal key presses.
+    keyboard.press(KEY_LEFT_ALT);
+    keyboard.pressRaw(0x57);
+    keyboard.releaseRaw(0x57);
+    for (const char character : hex) keyboard.write(character);
+    keyboard.releaseAll();
+  }
+  delay(4);
+}
+
 void typeReadyTransfer() {
   if (!transfer.ready) return;
   const std::string id = transfer.id;
   const std::string payload = transfer.payload;
   const bool textMode = transfer.textMode;
+  const KeyboardTarget keyboardTarget = transfer.keyboardTarget;
   transfer.ready = false;
   deviceState = DeviceState::kTyping;
   notify("TYPING " + id);
-  for (const unsigned char character : payload) {
-    if (textMode && character == '\n') keyboard.write(KEY_RETURN);
-    else if (textMode && character == '\t') keyboard.write(KEY_TAB);
-    else keyboard.write(character);
-    delay(humanKeystrokeDelayMs(character));
+  std::vector<uint32_t> codepoints;
+  if (!decodeUtf8(payload, codepoints)) {
+    fail("UNSUPPORTED_TEXT", "Text is not valid UTF-8");
+    return;
+  }
+  for (const uint32_t codepoint : codepoints) {
+    if (textMode && codepoint == '\n') keyboard.write(KEY_RETURN);
+    else if (textMode && codepoint == '\t') keyboard.write(KEY_TAB);
+    else if (codepoint <= 0x7e) keyboard.write(static_cast<uint8_t>(codepoint));
+    else typeUnicodeCodepoint(codepoint, keyboardTarget);
+    delay(humanKeystrokeDelayMs(codepoint <= 0x7f ? static_cast<unsigned char>(codepoint) : ' '));
   }
   keyboard.releaseAll();
   transfer = {};
