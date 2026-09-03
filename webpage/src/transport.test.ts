@@ -43,4 +43,21 @@ describe("SimulatedTransport", () => {
     expect(Array.from(validateTransferText("deploy 🚀", "text", "linux"))).toEqual(Array.from(new TextEncoder().encode("deploy 🚀")));
     expect(() => validateTransferText("x".repeat(MAX_TRANSFER_BYTES + 1), "text", "linux")).toThrow("at most");
   });
+
+  it("manages pairing token persistence and unpair", async () => {
+    const { getOrCreateClientId, getSavedPairingToken, savePairingToken, clearSavedPairing } = await import("./transport");
+    clearSavedPairing();
+    expect(getSavedPairingToken()).toBeNull();
+
+    const clientId = getOrCreateClientId();
+    expect(clientId).toMatch(/^[0-9a-f]{16}$/i);
+    expect(getOrCreateClientId()).toBe(clientId);
+
+    savePairingToken("fedcba9876543210fedcba9876543210");
+    expect(getSavedPairingToken()).toBe("fedcba9876543210fedcba9876543210");
+
+    const transport = new SimulatedTransport();
+    await transport.unpair();
+    expect(getSavedPairingToken()).toBeNull();
+  });
 });

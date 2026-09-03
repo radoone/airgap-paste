@@ -10,7 +10,7 @@ import { shell } from "@codemirror/legacy-modes/mode/shell";
 import { oneDark } from "@codemirror/theme-one-dark";
 import type { Extension } from "@codemirror/state";
 import { ArrowLeft, ArrowRight, CheckCircle, CircleNotch, ClipboardText, Code, CursorClick, Fingerprint, HandTap, PaperPlaneTilt, ShieldCheck, Trash, WarningCircle } from "@phosphor-icons/react";
-import { SimulatedTransport, WebBluetoothTransport, validateTransferText, type KeyboardTarget, type TransferMode, type TransferStage, type TransferTransport } from "./transport";
+import { SimulatedTransport, WebBluetoothTransport, clearSavedPairing, getSavedPairingToken, validateTransferText, type KeyboardTarget, type TransferMode, type TransferStage, type TransferTransport } from "./transport";
 
 type LanguageId = "text" | "bash" | "json" | "javascript" | "python" | "yaml" | "markdown";
 type LanguageOption = { id: LanguageId; label: string; extensions: Extension[] };
@@ -26,8 +26,9 @@ export const languageOptions: LanguageOption[] = [
 ];
 
 const stageCopy: Record<TransferStage, { label: string; title: string; detail: string }> = {
-  disconnected: { label: "Start here", title: "Connect AirGap Paste", detail: "Enter the device key and connect over Bluetooth." },
+  disconnected: { label: "Start here", title: "Connect AirGap Paste", detail: "Connect over Bluetooth. First-time connection requires pressing the button on the device." },
   connecting: { label: "Connecting", title: "Keep the device nearby", detail: "The browser is opening and authenticating the Bluetooth link." },
+  pairing: { label: "Action required", title: "Press button on AirGap Paste", detail: "Press the BOOT or SEND button on your device within 30 seconds to authorize." },
   connected: { label: "Next step", title: "Review, then queue the text", detail: "Nothing will be typed until you confirm it on the device." },
   queued: { label: "Preparing transfer", title: "Sending text to the device", detail: "Keep this tab open while AirGap Paste verifies the complete buffer." },
   "awaiting-confirmation": { label: "Action required", title: "Press SEND on AirGap Paste", detail: "Choose where the text should appear, then confirm it physically." },
@@ -39,6 +40,7 @@ const stageCopy: Record<TransferStage, { label: string; title: string; detail: s
 const deviceStateLabel: Record<TransferStage, string> = {
   disconnected: "Not connected",
   connecting: "Connecting…",
+  pairing: "Press button to pair",
   connected: "Connected",
   queued: "Preparing transfer",
   "awaiting-confirmation": "Press SEND now",
@@ -55,8 +57,8 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
   const [language, setLanguage] = useState<LanguageId>("bash");
   const [transferMode, setTransferMode] = useState<TransferMode>("command");
   const [unicodeTarget, setUnicodeTarget] = useState<Exclude<KeyboardTarget, "ascii"> | "">("");
-  const [deviceKey, setDeviceKey] = useState("");
   const [stage, setStage] = useState<TransferStage>(transportRef.current.getState());
+  const [hasPairedDevice, setHasPairedDevice] = useState(() => Boolean(getSavedPairingToken()));
   const [deviceName, setDeviceName] = useState("");
   const [isSimulated, setIsSimulated] = useState(false);
   const [message, setMessage] = useState("");
@@ -91,10 +93,21 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
     setMessage(""); setValidationError(""); setStage("connecting");
     try {
       if (!suppliedTransport) transportRef.current = listenToTransport(new WebBluetoothTransport());
-      const device = await transportRef.current.connect(deviceKey);
+      const device = await transportRef.current.connect();
       setDeviceName(device.name); setIsSimulated(device.simulated); setStage(transportRef.current.getState());
+      setHasPairedDevice(Boolean(getSavedPairingToken()));
     } catch (error) { fail(error); }
   }
+
+  async function forgetDevice() {
+    clearSavedPairing();
+    if (transportRef.current.unpair) {
+      await transportRef.current.unpair();
+    }
+    setHasPairedDevice(false);
+    setMessage("Paired device forgotten from this browser.");
+  }
+
   async function connectSimulator() {
     isDisconnectingRef.current = false;
     setMessage(""); setValidationError(""); setStage("connecting");
@@ -174,15 +187,17 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
   const canConfirm = stage === "awaiting-confirmation";
   const statusIcon = stage === "connecting" || stage === "queued" || stage === "typing"
     ? <CircleNotch className="spin" size={25} />
-    : stage === "awaiting-confirmation"
-      ? <Fingerprint size={27} />
-      : stage === "connected"
-        ? <PaperPlaneTilt size={25} />
-        : stage === "error"
-          ? <WarningCircle size={25} />
-          : stage === "disconnected"
-            ? <ClipboardText size={25} />
-            : <CheckCircle size={25} />;
+    : stage === "pairing"
+      ? <HandTap size={27} weight="duotone" />
+      : stage === "awaiting-confirmation"
+        ? <Fingerprint size={27} />
+        : stage === "connected"
+          ? <PaperPlaneTilt size={25} />
+          : stage === "error"
+            ? <WarningCircle size={25} />
+            : stage === "disconnected"
+              ? <ClipboardText size={25} />
+              : <CheckCircle size={25} />;
 
   return (
     <main className="editor-page">
@@ -233,12 +248,40 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
             {hasUnicode ? <><label className="transfer-format transfer-format--unicode"><span>Unicode detected · choose target keyboard</span><select aria-label="Target keyboard" value={unicodeTarget} onChange={(event) => { setUnicodeTarget(event.target.value as Exclude<KeyboardTarget, "ascii"> | ""); if (validationError) setValidationError(""); }}><option value="">Choose target system…</option><option value="linux">Linux — Unicode input</option><option value="macos">macOS — Unicode Hex Input</option><option value="windows">Windows — Unicode Alt code</option></select><small>{unicodeTarget === "linux" ? "Tested on Linux with Ctrl + Shift + U Unicode input." : unicodeTarget === "macos" ? "Requires Unicode Hex Input on the target Mac." : unicodeTarget === "windows" ? "Requires EnableHexNumpad and a numeric keypad on the target Windows system." : "Select the operating system that will receive the text."}</small></label>{unicodeTarget === "macos" && <details className="macos-unicode-hint"><summary>macOS setup hint</summary><p>On the target Mac: System Settings → Keyboard → Text Input → Edit → <strong>+</strong> → add <strong>Unicode Hex Input</strong>. Select it from the Input menu before pressing SEND.</p></details>}</> : <p className="ascii-output-note">US ASCII selected automatically for this text.</p>}
           </div>
           <div className="transfer-actions">
-            {(stage === "disconnected" || stage === "error") && <label className="device-key-field"><span>Device key</span><input type="password" value={deviceKey} onChange={(event) => setDeviceKey(event.target.value)} autoComplete="off" placeholder="From controller/include/device_secrets.h" /></label>}
-            {(stage === "disconnected" || stage === "error") && <button className="action-button" type="button" onClick={connectHardware} disabled={stage === "connecting"}>{stage === "connecting" ? <><CircleNotch className="spin" size={18} /> Connecting</> : <><ClipboardText size={18} /> Connect AirGap Paste</>}</button>}
-            {(stage === "disconnected" || stage === "error") && <button className="secondary-button" type="button" onClick={connectSimulator}>Run simulator</button>}
+            {(stage === "disconnected" || stage === "error") && (
+              <>
+                <button
+                  className="action-button"
+                  type="button"
+                  onClick={connectHardware}
+                  disabled={stage === "connecting" || stage === "pairing"}
+                >
+                  {stage === "connecting" ? (
+                    <><CircleNotch className="spin" size={18} /> Connecting</>
+                  ) : stage === "pairing" ? (
+                    <><HandTap size={18} /> Press button to pair</>
+                  ) : (
+                    <><ClipboardText size={18} /> Connect AirGap Paste</>
+                  )}
+                </button>
+                {hasPairedDevice && (
+                  <button className="secondary-button" type="button" onClick={forgetDevice}>
+                    Forget paired device
+                  </button>
+                )}
+                <button className="secondary-button" type="button" onClick={connectSimulator}>
+                  Run simulator
+                </button>
+              </>
+            )}
+            {stage === "pairing" && (
+              <button className="secondary-button" type="button" onClick={disconnect}>
+                Cancel pairing
+              </button>
+            )}
             {canQueue && <button className="action-button" type="button" onClick={queue} disabled={hasUnicode && !unicodeTarget} title={hasUnicode && !unicodeTarget ? "Choose a target keyboard system for Unicode text first." : undefined}><PaperPlaneTilt size={18} /> Queue transfer</button>}
             {canConfirm && isSimulated && <button className="action-button action-button--confirm" type="button" onClick={confirm}><Fingerprint size={18} /> Confirm simulated device</button>}
-            {stage !== "disconnected" && stage !== "connecting" && <button className="secondary-button" type="button" onClick={disconnect}>Disconnect device</button>}
+            {stage !== "disconnected" && stage !== "connecting" && stage !== "pairing" && <button className="secondary-button" type="button" onClick={disconnect}>Disconnect device</button>}
           </div>
           <dl className="transfer-meta"><div><dt>Transfer size</dt><dd>{stats.bytes} UTF-8 bytes</dd></div><div><dt>Confirmation</dt><dd>{canConfirm ? "Required now" : "Not requested"}</dd></div></dl>
           <p className="transfer-disclaimer">Check the text carefully. After physical confirmation, AirGap Paste types it into the active window. Keystrokes are paced for reliable USB keyboard input; the reviewed text is never changed.</p>

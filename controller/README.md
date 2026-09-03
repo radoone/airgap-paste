@@ -17,19 +17,22 @@ The on-board orange user LED indicates state: slow pulse while advertising, fast
 ## Build and flash
 
 1. Run `./setup-platformio` once. It creates an ignored project-local environment and keeps the ESP32 toolchain in `controller/.platformio-core` for future builds.
-2. Copy `include/device_secrets.example.h` to `include/device_secrets.h` and replace the key with a unique random value of at least 12 characters. A local prototype key is already present in this workspace and is ignored by git.
-3. Connect the XIAO with a data-capable USB-C cable.
-4. Run `./pio run -t upload` in this directory. If upload cannot find the device, hold BOOT, tap RESET, release BOOT, and upload again.
-5. Open the web app in Chrome or Edge from HTTPS or `localhost`, enter the same device key, and select **Connect AirGap Paste**.
+2. Connect the XIAO with a data-capable USB-C cable.
+3. Run `./pio run -t upload` in this directory. If upload cannot find the device, hold BOOT, tap RESET, release BOOT, and upload again.
+4. Open the web app in Chrome or Edge from HTTPS or `localhost` and select **Connect AirGap Paste**.
+5. When connecting a new browser for the first time, the LED blinks rapidly (5 Hz); tap the BOOT or D1 button within 30 seconds to pair. The device and browser remember each other automatically.
+6. To clear all paired browsers from the device, hold the button for 5 seconds.
 
 The USB port becomes a HID keyboard after firmware startup. Uploading a later build can require manually entering bootloader mode because the same native USB connection is being used for HID.
 
 ## Safety profile
 
+- Dynamic Push-to-Pair: physical button confirmation required to authorize new connections.
+- Persistent token exchange with HMAC-SHA256 challenge-response for remembered connections.
+- Hardware factory reset (hold button for 5 seconds) to revoke all paired devices.
 - BLE pairing/bonding with encryption and LE Secure Connections.
-- HMAC-SHA256 challenge-response; the device key is never transmitted.
 - Full payload length and SHA-256 verification before it becomes ready.
-- Physical confirmation through BOOT or D1/GPIO2.
+- Physical confirmation through BOOT or D1/GPIO2 before typing.
 - Five-minute authentication idle timeout.
 - Command mode: one line of printable text (US ASCII or valid UTF-8 if Linux, macOS, or Windows target is selected), maximum 16 KB.
 - Text mode: printable text (US ASCII or valid UTF-8 if Linux, macOS, or Windows target is selected) plus line breaks and Tab, maximum 16 KB.

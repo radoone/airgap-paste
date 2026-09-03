@@ -1,12 +1,54 @@
-export type TransferStage = "disconnected" | "connecting" | "connected" | "queued" | "awaiting-confirmation" | "typing" | "transferred" | "error";
+export type TransferStage = "disconnected" | "connecting" | "pairing" | "connected" | "queued" | "awaiting-confirmation" | "typing" | "transferred" | "error";
 
 export type TransferMode = "command" | "text";
 export type KeyboardTarget = "ascii" | "linux" | "macos" | "windows";
 export type TransferPayload = { text: string; language: string; byteLength: number; mode: TransferMode; keyboardTarget: KeyboardTarget };
 export type DeviceInfo = { name: string; simulated: boolean };
 
+export const CLIENT_ID_KEY = "airgap_client_id";
+export const PAIRED_TOKEN_KEY = "airgap_pairing_token";
+
+export function getOrCreateClientId(): string {
+  try {
+    let id = localStorage.getItem(CLIENT_ID_KEY);
+    if (!id || !/^[0-9a-f]{16}$/i.test(id)) {
+      const bytes = crypto.getRandomValues(new Uint8Array(8));
+      id = bytesToHex(bytes);
+      localStorage.setItem(CLIENT_ID_KEY, id);
+    }
+    return id;
+  } catch {
+    return "0123456789abcdef";
+  }
+}
+
+export function getSavedPairingToken(): string | null {
+  try {
+    return localStorage.getItem(PAIRED_TOKEN_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function savePairingToken(token: string) {
+  try {
+    localStorage.setItem(PAIRED_TOKEN_KEY, token);
+  } catch {
+    // ignore
+  }
+}
+
+export function clearSavedPairing() {
+  try {
+    localStorage.removeItem(PAIRED_TOKEN_KEY);
+  } catch {
+    // ignore
+  }
+}
+
 export interface TransferTransport {
-  connect(secret?: string): Promise<DeviceInfo>;
+  connect(): Promise<DeviceInfo>;
+  unpair?(): Promise<void>;
   queue(payload: TransferPayload): Promise<void>;
   awaitConfirmation(): Promise<void>;
   confirm(): Promise<void>;
@@ -112,6 +154,7 @@ export class SimulatedTransport implements TransferTransport {
   private stage: TransferStage = "disconnected";
   private stateListener?: (stage: TransferStage, message?: string) => void;
   async connect(): Promise<DeviceInfo> { this.updateStage("connected"); return { name: "AirGap Paste · Simulator", simulated: true }; }
+  async unpair(): Promise<void> { clearSavedPairing(); }
   async queue(payload: TransferPayload): Promise<void> {
     if (this.stage !== "connected" && this.stage !== "transferred") throw new Error("Connect a device before queuing a transfer.");
     validateTransferText(payload.text, payload.mode, payload.keyboardTarget);
@@ -153,11 +196,11 @@ export class WebBluetoothTransport implements TransferTransport {
   private heartbeatTimer?: number;
   private heartbeatInFlight = false;
 
-  async connect(secret = ""): Promise<DeviceInfo> {
+  async connect(): Promise<DeviceInfo> {
     const bluetooth = bluetoothApi();
     if (!bluetooth) throw new Error("Web Bluetooth is unavailable. Use Chrome or Edge on HTTPS or localhost.");
-    if (secret.length < 12) throw new Error("Enter the device key (at least 12 characters) before connecting.");
     this.stage = "connecting";
+    this.stateListener?.("connecting");
     try {
       this.device = await bluetooth.requestDevice({ filters: [{ services: [AIRGAP_SERVICE_UUID] }] });
       const service = await this.openAirGapService();
@@ -179,13 +222,43 @@ export class WebBluetoothTransport implements TransferTransport {
       this.tx.addEventListener("characteristicvaluechanged", this.onNotification);
       this.device.addEventListener("gattserverdisconnected", this.onDisconnected);
 
-      await this.write("HELLO");
-      const challengeMessage = await this.waitFor((message) => message.startsWith("CHALLENGE "), 10_000);
-      const challenge = challengeMessage.slice("CHALLENGE ".length);
-      if (!/^[0-9a-f]{32}$/.test(challenge)) throw new Error("The device returned an invalid authentication challenge.");
-      await this.write(`AUTH ${await hmacHex(secret, challenge)}`);
-      await this.waitFor((message) => message === "OK AUTH", 10_000);
+      const clientId = getOrCreateClientId();
+      const savedToken = getSavedPairingToken();
+      let authenticated = false;
+
+      if (savedToken) {
+        await this.write(`HELLO ${clientId}`);
+        try {
+          const response = await this.waitFor(
+            (msg) => msg.startsWith("CHALLENGE ") || msg.startsWith("ERR UNPAIRED"),
+            10_000,
+          );
+          if (response.startsWith("CHALLENGE ")) {
+            const challenge = response.slice("CHALLENGE ".length);
+            await this.write(`AUTH ${await hmacHex(savedToken, challenge)}`);
+            await this.waitFor((msg) => msg === "OK AUTH", 10_000);
+            authenticated = true;
+          } else {
+            clearSavedPairing();
+          }
+        } catch {
+          clearSavedPairing();
+        }
+      }
+
+      if (!authenticated) {
+        await this.write(`PAIR ${clientId}`);
+        await this.waitFor((msg) => msg.startsWith("PAIR_WAIT"), 10_000);
+        this.stage = "pairing";
+        this.stateListener?.("pairing", "Press the button on AirGap Paste to authorize pairing.");
+
+        const pairOkMsg = await this.waitFor((msg) => msg.startsWith("PAIR_OK "), 35_000);
+        const token = pairOkMsg.slice("PAIR_OK ".length).trim();
+        savePairingToken(token);
+      }
+
       this.stage = "connected";
+      this.stateListener?.("connected");
       this.startHeartbeat();
       return { name: this.device.name || "AirGap Paste", simulated: false };
     } catch (error) {
@@ -195,6 +268,19 @@ export class WebBluetoothTransport implements TransferTransport {
         throw new Error("AirGap Paste is paired, but its Bluetooth link is asleep or disconnected. Wake the device, then connect again.");
       }
       throw error;
+    }
+  }
+
+  async unpair(): Promise<void> {
+    const clientId = getOrCreateClientId();
+    clearSavedPairing();
+    if (this.stage === "connected" && this.rx) {
+      try {
+        await this.write(`UNPAIR ${clientId}`);
+        await this.waitFor((msg) => msg === "OK UNPAIR", 3000);
+      } catch {
+        // Best effort
+      }
     }
   }
 
@@ -316,6 +402,13 @@ export class WebBluetoothTransport implements TransferTransport {
 
   private deliver(message: string) {
     if (message.startsWith("ERR ")) {
+      const waiterIndex = this.waiters.findIndex((waiter) => waiter.predicate(message));
+      if (waiterIndex >= 0) {
+        const [waiter] = this.waiters.splice(waiterIndex, 1);
+        window.clearTimeout(waiter.timer);
+        waiter.resolve(message);
+        return;
+      }
       const error = new Error(message.slice(4));
       const waiters = this.waiters.splice(0);
       for (const waiter of waiters) { window.clearTimeout(waiter.timer); waiter.reject(error); }

@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <NimBLEDevice.h>
+#include <Preferences.h>
 #include <USB.h>
 #include <USBHIDKeyboard.h>
 #include <esp_system.h>
@@ -12,8 +13,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
-
-#include "device_secrets.h"
 
 namespace {
 
@@ -29,13 +28,13 @@ constexpr uint8_t kBootSendPin = 0;      // On-board BOOT button
 constexpr uint8_t kLedPin = 21;          // On-board user LED, active LOW
 constexpr size_t kMaxPayloadBytes = 16 * 1024;
 constexpr uint32_t kAuthIdleTimeoutMs = 5 * 60 * 1000UL;
+constexpr uint32_t kPairingTimeoutMs = 30 * 1000UL;
 constexpr uint32_t kButtonDebounceMs = 35;
 constexpr uint32_t kKeystrokeDelayMinMs = 11;
 constexpr uint32_t kKeystrokeDelayJitterMs = 16;
+constexpr size_t kMaxPairedClients = 8;
 
-static_assert(sizeof(AIRGAP_DEVICE_KEY) - 1 >= 12, "AIRGAP_DEVICE_KEY must contain at least 12 characters");
-
-enum class DeviceState { kAdvertising, kConnected, kAuthenticated, kReady, kTyping, kError };
+enum class DeviceState { kAdvertising, kConnected, kPairing, kAuthenticated, kReady, kTyping, kError };
 enum class KeyboardTarget { kAscii, kLinux, kMacOS, kWindows };
 
 struct Transfer {
@@ -48,12 +47,19 @@ struct Transfer {
   bool ready = false;
 };
 
+Preferences preferences;
+std::string activeAuthToken;
+std::string pendingPairClientId;
+uint32_t pairingStartedAt = 0;
+
 struct DebouncedButton {
   uint8_t pin;
   bool raw = HIGH;
   bool stable = HIGH;
   bool armed = false;
   uint32_t changedAt = 0;
+  uint32_t pressedAt = 0;
+  bool longPressHandled = false;
 
   explicit DebouncedButton(uint8_t pinNumber) : pin(pinNumber) {}
 };
@@ -82,6 +88,80 @@ uint32_t lastAuthenticatedActivity = 0;
 DebouncedButton externalButton{kExternalSendPin};
 DebouncedButton bootButton{kBootSendPin};
 
+bool getPairedToken(const std::string &clientId, std::string &outToken) {
+  if (clientId.empty()) return false;
+  const uint8_t count = preferences.getUChar("count", 0);
+  for (uint8_t i = 0; i < count; ++i) {
+    char keyId[16];
+    snprintf(keyId, sizeof(keyId), "id_%u", i);
+    String id = preferences.getString(keyId, "");
+    if (id.c_str() == clientId) {
+      char keyTok[16];
+      snprintf(keyTok, sizeof(keyTok), "tok_%u", i);
+      String tok = preferences.getString(keyTok, "");
+      if (tok.length() > 0) {
+        outToken = tok.c_str();
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+bool savePairedToken(const std::string &clientId, const std::string &token) {
+  if (clientId.empty() || token.empty()) return false;
+  const uint8_t count = preferences.getUChar("count", 0);
+  for (uint8_t i = 0; i < count; ++i) {
+    char keyId[16];
+    snprintf(keyId, sizeof(keyId), "id_%u", i);
+    if (preferences.getString(keyId, "").c_str() == clientId) {
+      char keyTok[16];
+      snprintf(keyTok, sizeof(keyTok), "tok_%u", i);
+      preferences.putString(keyTok, token.c_str());
+      return true;
+    }
+  }
+  uint8_t slot = count;
+  if (slot >= kMaxPairedClients) {
+    slot = 0;
+  } else {
+    preferences.putUChar("count", count + 1);
+  }
+  char keyId[16], keyTok[16];
+  snprintf(keyId, sizeof(keyId), "id_%u", slot);
+  snprintf(keyTok, sizeof(keyTok), "tok_%u", slot);
+  preferences.putString(keyId, clientId.c_str());
+  preferences.putString(keyTok, token.c_str());
+  return true;
+}
+
+bool removePairedToken(const std::string &clientId) {
+  const uint8_t count = preferences.getUChar("count", 0);
+  for (uint8_t i = 0; i < count; ++i) {
+    char keyId[16];
+    snprintf(keyId, sizeof(keyId), "id_%u", i);
+    if (preferences.getString(keyId, "").c_str() == clientId) {
+      for (uint8_t j = i; j + 1 < count; ++j) {
+        char curId[16], curTok[16], nextId[16], nextTok[16];
+        snprintf(curId, sizeof(curId), "id_%u", j);
+        snprintf(curTok, sizeof(curTok), "tok_%u", j);
+        snprintf(nextId, sizeof(nextId), "id_%u", j + 1);
+        snprintf(nextTok, sizeof(nextTok), "tok_%u", j + 1);
+        preferences.putString(curId, preferences.getString(nextId, ""));
+        preferences.putString(curTok, preferences.getString(nextTok, ""));
+      }
+      preferences.putUChar("count", count - 1);
+      return true;
+    }
+  }
+  return false;
+}
+
+void clearAllPairings() {
+  preferences.clear();
+  preferences.putUChar("count", 0);
+}
+
 std::vector<std::string> split(const std::string &input) {
   std::istringstream stream(input);
   std::vector<std::string> parts;
@@ -107,11 +187,11 @@ std::array<uint8_t, 32> sha256(const uint8_t *data, size_t length) {
   return digest;
 }
 
-std::array<uint8_t, 32> hmacSha256(const uint8_t *data, size_t length) {
+std::array<uint8_t, 32> hmacSha256(const std::string &key, const uint8_t *data, size_t length) {
   std::array<uint8_t, 32> digest{};
   const mbedtls_md_info_t *info = mbedtls_md_info_from_type(MBEDTLS_MD_SHA256);
-  const auto *key = reinterpret_cast<const uint8_t *>(AIRGAP_DEVICE_KEY);
-  mbedtls_md_hmac(info, key, strlen(AIRGAP_DEVICE_KEY), data, length, digest.data());
+  const auto *rawKey = reinterpret_cast<const uint8_t *>(key.data());
+  mbedtls_md_hmac(info, rawKey, key.size(), data, length, digest.data());
   return digest;
 }
 
@@ -182,6 +262,8 @@ void resetSession() {
     typingEngine = {};
   }
   authenticated = false;
+  activeAuthToken.clear();
+  pendingPairClientId.clear();
   transfer = {};
   lastAuthenticatedActivity = 0;
   deviceState = connected ? DeviceState::kConnected : DeviceState::kAdvertising;
@@ -226,11 +308,46 @@ bool decodeBase64(const std::string &encoded, std::string &decoded) {
   return true;
 }
 
-void handleHello() {
+void handleHello(const std::vector<std::string> &parts) {
+  if (parts.size() != 2 || parts[1].empty()) {
+    fail("HELLO_FORMAT", "Expected HELLO <client-id>");
+    return;
+  }
+  const std::string &clientId = parts[1];
+  std::string token;
+  if (!getPairedToken(clientId, token)) {
+    activeAuthToken.clear();
+    notify("ERR UNPAIRED Client not recognized");
+    return;
+  }
   esp_fill_random(challenge.data(), challenge.size());
   authenticated = false;
   transfer = {};
+  activeAuthToken = token;
   notify("CHALLENGE " + hexEncode(challenge.data(), challenge.size()));
+}
+
+void handlePair(const std::vector<std::string> &parts) {
+  if (parts.size() != 2 || parts[1].empty() || parts[1].size() > 32) {
+    fail("PAIR_FORMAT", "Expected PAIR <client-id>");
+    return;
+  }
+  pendingPairClientId = parts[1];
+  pairingStartedAt = millis();
+  deviceState = DeviceState::kPairing;
+  notify("PAIR_WAIT 30");
+}
+
+void handleUnpair(const std::vector<std::string> &parts) {
+  if (parts.size() != 2 || parts[1].empty()) {
+    fail("UNPAIR_FORMAT", "Expected UNPAIR <client-id>");
+    return;
+  }
+  removePairedToken(parts[1]);
+  if (!activeAuthToken.empty()) {
+    resetSession();
+  }
+  notify("OK UNPAIR");
 }
 
 void handleAuth(const std::vector<std::string> &parts) {
@@ -238,9 +355,13 @@ void handleAuth(const std::vector<std::string> &parts) {
     fail("AUTH_FORMAT", "Invalid authentication response");
     return;
   }
-  const auto expected = hmacSha256(challenge.data(), challenge.size());
+  if (activeAuthToken.empty()) {
+    fail("NOT_INITIALIZED", "Initiate HELLO or PAIR first");
+    return;
+  }
+  const auto expected = hmacSha256(activeAuthToken, challenge.data(), challenge.size());
   if (!constantTimeEqual(parts[1], hexEncode(expected.data(), expected.size()))) {
-    fail("AUTH_FAILED", "Device key rejected");
+    fail("AUTH_FAILED", "Authentication response rejected");
     return;
   }
   authenticated = true;
@@ -343,13 +464,12 @@ void processCommand(const std::string &command) {
     resetSession();
     return;
   }
-  if (command == "HELLO") {
-    handleHello();
-    return;
-  }
   const auto parts = split(command);
   if (parts.empty()) return;
-  if (parts[0] == "AUTH") handleAuth(parts);
+  if (parts[0] == "HELLO") handleHello(parts);
+  else if (parts[0] == "PAIR") handlePair(parts);
+  else if (parts[0] == "UNPAIR") handleUnpair(parts);
+  else if (parts[0] == "AUTH") handleAuth(parts);
   else if (parts[0] == "PING") handlePing();
   else if (parts[0] == "QUEUE") handleQueue(parts);
   else if (parts[0] == "DATA") handleData(parts);
@@ -364,14 +484,31 @@ bool buttonPressed(DebouncedButton &button) {
     button.raw = raw;
     button.changedAt = now;
   }
-  if (!button.armed && raw == HIGH && now - button.changedAt >= kButtonDebounceMs) button.armed = true;
+  if (!button.armed && raw == HIGH && now - button.changedAt >= kButtonDebounceMs) {
+    button.armed = true;
+    button.longPressHandled = false;
+  }
   if (now - button.changedAt < kButtonDebounceMs || raw == button.stable) return false;
   button.stable = raw;
   if (button.stable == HIGH) {
     button.armed = true;
+    button.longPressHandled = false;
     return false;
   }
+  button.pressedAt = now;
+  button.longPressHandled = false;
   return button.armed;
+}
+
+bool buttonHeld(DebouncedButton &button, uint32_t durationMs) {
+  const uint32_t now = millis();
+  if (button.stable == LOW && !button.longPressHandled) {
+    if (now - button.pressedAt >= durationMs) {
+      button.longPressHandled = true;
+      return true;
+    }
+  }
+  return false;
 }
 
 uint32_t humanKeystrokeDelayMs(unsigned char character) {
@@ -522,6 +659,7 @@ void updateLed() {
   switch (deviceState) {
     case DeviceState::kAdvertising: on = (now % 1200) < 80; break;
     case DeviceState::kConnected: on = (now % 800) < 80; break;
+    case DeviceState::kPairing: on = (now % 200) < 100; break;
     case DeviceState::kAuthenticated: on = (now % 2000) < 40; break;
     case DeviceState::kReady: on = (now % 400) < 200; break;
     case DeviceState::kTyping: on = true; break;
@@ -561,6 +699,8 @@ void setup() {
   pinMode(kLedPin, OUTPUT);
   digitalWrite(kLedPin, HIGH);
 
+  preferences.begin("airgap", false);
+
   USB.manufacturerName("AirGap Paste");
   USB.productName("AirGap Paste Prototype");
   keyboard.begin();
@@ -578,15 +718,47 @@ void loop() {
     }
   }
 
-  if (authenticated && millis() - lastAuthenticatedActivity > kAuthIdleTimeoutMs) resetSession();
-  if (deviceState == DeviceState::kReady && (buttonPressed(externalButton) || buttonPressed(bootButton))) {
+  const bool extPressed = buttonPressed(externalButton);
+  const bool bootPressed = buttonPressed(bootButton);
+  const bool anyPressed = extPressed || bootPressed;
+  const bool isButtonPressed = anyPressed || (digitalRead(bootButton.pin) == LOW) || (digitalRead(externalButton.pin) == LOW);
+
+  if (deviceState != DeviceState::kPairing && (buttonHeld(externalButton, 5000) || buttonHeld(bootButton, 5000))) {
+    clearAllPairings();
+    resetSession();
+    for (int i = 0; i < 6; ++i) {
+      digitalWrite(kLedPin, LOW);
+      delay(40);
+      digitalWrite(kLedPin, HIGH);
+      delay(40);
+    }
+    notify("ERR RESET All paired devices cleared");
+  }
+
+  if (deviceState == DeviceState::kPairing) {
+    if (millis() - pairingStartedAt > kPairingTimeoutMs) {
+      pendingPairClientId.clear();
+      deviceState = connected ? DeviceState::kConnected : DeviceState::kAdvertising;
+      fail("PAIR_TIMEOUT", "Pairing timed out without button confirmation");
+    } else if (isButtonPressed) {
+      std::array<uint8_t, 16> tokenBytes{};
+      esp_fill_random(tokenBytes.data(), tokenBytes.size());
+      const std::string token = hexEncode(tokenBytes.data(), tokenBytes.size());
+      savePairedToken(pendingPairClientId, token);
+      activeAuthToken = token;
+      pendingPairClientId.clear();
+      authenticated = true;
+      lastAuthenticatedActivity = millis();
+      deviceState = DeviceState::kAuthenticated;
+      notify("PAIR_OK " + token);
+    }
+  } else if (deviceState == DeviceState::kReady && anyPressed) {
     startTyping();
   } else if (deviceState == DeviceState::kTyping) {
     stepTyping();
-  } else {
-    buttonPressed(externalButton);
-    buttonPressed(bootButton);
   }
+
+  if (authenticated && millis() - lastAuthenticatedActivity > kAuthIdleTimeoutMs) resetSession();
   updateLed();
   delay(2);
 }

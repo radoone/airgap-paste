@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom/vitest";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@uiw/react-codemirror", () => ({
@@ -61,5 +61,20 @@ describe("EditorApp", () => {
 
     expect(await screen.findByRole("button", { name: "Connect AirGap Paste" })).toBeInTheDocument();
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("allows forgetting a paired device", async () => {
+    localStorage.setItem("airgap_pairing_token", "test-token-1234");
+    render(<EditorApp />);
+
+    const forgetBtn = screen.getByRole("button", { name: "Forget paired device" });
+    expect(forgetBtn).toBeInTheDocument();
+
+    fireEvent.click(forgetBtn);
+    await waitFor(() => {
+      expect(localStorage.getItem("airgap_pairing_token")).toBeNull();
+      expect(screen.queryByRole("button", { name: "Forget paired device" })).not.toBeInTheDocument();
+    });
+    expect(screen.getByText(/Paired device forgotten/)).toBeInTheDocument();
   });
 });
