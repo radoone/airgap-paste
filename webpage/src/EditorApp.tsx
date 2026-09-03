@@ -9,11 +9,12 @@ import { StreamLanguage } from "@codemirror/language";
 import { shell } from "@codemirror/legacy-modes/mode/shell";
 import { oneDark } from "@codemirror/theme-one-dark";
 import type { Extension } from "@codemirror/state";
-import { ArrowLeft, ArrowRight, CheckCircle, CircleNotch, ClipboardText, Code, CursorClick, Fingerprint, HandTap, PaperPlaneTilt, ShieldCheck, Trash, WarningCircle } from "@phosphor-icons/react";
+import { ArrowLeft, ArrowRight, CheckCircle, CircleNotch, ClipboardText, Code, CursorClick, Fingerprint, HandTap, Lightning, PaperPlaneTilt, ShieldCheck, Trash, WarningCircle } from "@phosphor-icons/react";
 import { SimulatedTransport, WebBluetoothTransport, clearSavedPairing, getSavedPairingToken, validateTransferText, type KeyboardTarget, type TransferMode, type TransferStage, type TransferTransport } from "./transport";
 
 type LanguageId = "text" | "bash" | "json" | "javascript" | "python" | "yaml" | "markdown";
 type LanguageOption = { id: LanguageId; label: string; extensions: Extension[] };
+type QueuedReview = { firstLine: string; lines: number; bytes: number };
 
 export const languageOptions: LanguageOption[] = [
   { id: "text", label: "Plain text", extensions: [] },
@@ -31,7 +32,7 @@ const stageCopy: Record<TransferStage, { label: string; title: string; detail: s
   pairing: { label: "Action required", title: "Press button on AirGap Paste", detail: "Press the BOOT or SEND button on your device within 30 seconds to authorize." },
   connected: { label: "Next step", title: "Review, then queue the text", detail: "Nothing will be typed until you confirm it on the device." },
   queued: { label: "Preparing transfer", title: "Sending text to the device", detail: "Keep this tab open while AirGap Paste verifies the complete buffer." },
-  "awaiting-confirmation": { label: "Action required", title: "Press SEND on AirGap Paste", detail: "Choose where the text should appear, then confirm it physically." },
+  "awaiting-confirmation": { label: "Action required", title: "Press blinking halo on AirGap Paste", detail: "The green halo is blinking. Choose where the text should appear, then press the halo button physically." },
   typing: { label: "In progress", title: "AirGap Paste is typing…", detail: "Keystrokes are being typed into the focused host window." },
   transferred: { label: "Completed", title: "Text transfer finished", detail: "The reviewed text was typed. It remains in the editor for review." },
   error: { label: "Needs attention", title: "The connection needs your help", detail: "Check the message and try the connection again." },
@@ -43,7 +44,7 @@ const deviceStateLabel: Record<TransferStage, string> = {
   pairing: "Press button to pair",
   connected: "Connected",
   queued: "Preparing transfer",
-  "awaiting-confirmation": "Press SEND now",
+  "awaiting-confirmation": "Halo blinking · Press now",
   typing: "Typing into host…",
   transferred: "Transfer completed",
   error: "Connection error",
@@ -63,6 +64,7 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
   const [isSimulated, setIsSimulated] = useState(false);
   const [message, setMessage] = useState("");
   const [validationError, setValidationError] = useState("");
+  const [queuedReview, setQueuedReview] = useState<QueuedReview | null>(null);
   const queuedTimer = useRef<number | undefined>();
   const isDisconnectingRef = useRef(false);
   const selectedLanguage = languageOptions.find((option) => option.id === language) ?? languageOptions[0];
@@ -90,7 +92,7 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
 
   async function connectHardware() {
     isDisconnectingRef.current = false;
-    setMessage(""); setValidationError(""); setStage("connecting");
+    setMessage(""); setValidationError(""); setQueuedReview(null); setStage("connecting");
     try {
       if (!suppliedTransport) transportRef.current = listenToTransport(new WebBluetoothTransport());
       const device = await transportRef.current.connect();
@@ -110,7 +112,7 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
 
   async function connectSimulator() {
     isDisconnectingRef.current = false;
-    setMessage(""); setValidationError(""); setStage("connecting");
+    setMessage(""); setValidationError(""); setQueuedReview(null); setStage("connecting");
     try {
       if (!suppliedTransport) transportRef.current = listenToTransport(new SimulatedTransport());
       const device = await transportRef.current.connect();
@@ -132,6 +134,11 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
     }
     try {
       await transportRef.current.queue({ text, language: selectedLanguage.label, byteLength: stats.bytes, mode: transferMode, keyboardTarget });
+      setQueuedReview({
+        firstLine: text.split(/\r?\n/, 1)[0] || "Empty transfer",
+        lines: stats.lines,
+        bytes: stats.bytes,
+      });
       setStage("queued");
       window.clearTimeout(queuedTimer.current);
       queuedTimer.current = window.setTimeout(async () => {
@@ -178,6 +185,7 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
     setIsSimulated(false);
     setMessage("");
     setValidationError("");
+    setQueuedReview(null);
     setStage("disconnected");
     window.setTimeout(() => { isDisconnectingRef.current = false; }, 100);
   }
@@ -227,7 +235,23 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
             <p><span className="transfer-panel__status-dot" aria-hidden="true" /> Device status</p>
             <strong>{deviceStateLabel[stage]}</strong>
           </div>
-          <div className="transfer-device"><Fingerprint size={35} weight="thin" /><div><strong>{deviceName || "AirGap Paste"}</strong><span>BLE input · USB keyboard output</span></div></div>
+          <div className="transfer-device"><Fingerprint size={35} weight="thin" /><div><strong>{deviceName || "AirGap Paste"}</strong><span>BLE input · USB keyboard output</span>{isSimulated && <span className="transfer-device__simulator-badge">Simulation mode</span>}</div></div>
+          {stage === "disconnected" && !isSimulated && (
+            <div className="simulator-callout">
+              <div className="simulator-callout__badge">
+                <Lightning size={14} weight="fill" />
+                <span>Try it without hardware</span>
+              </div>
+              <p>Experience Bluetooth queuing, review buffer safety, and USB keyboard typing simulation in your browser.</p>
+              <button
+                type="button"
+                className="simulator-callout__btn"
+                onClick={connectSimulator}
+              >
+                Launch interactive simulator <ArrowRight size={14} weight="bold" />
+              </button>
+            </div>
+          )}
           <div className={`transfer-panel__status transfer-panel__status--${stage}`} role={stage === "error" || validationError ? "alert" : "status"} aria-live={stage === "error" || validationError ? "assertive" : "polite"}>
             <span className="transfer-panel__status-icon" aria-hidden="true">{statusIcon}</span>
             <div>
@@ -237,7 +261,7 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
               {stage === "awaiting-confirmation" && <ol className="confirmation-steps">
                 <li><span className="confirmation-step__number">1</span><CursorClick size={27} weight="duotone" /><strong>Click target</strong><small>Where text should appear</small></li>
                 <li className="confirmation-step__arrow" aria-hidden="true"><ArrowRight size={17} /></li>
-                <li><span className="confirmation-step__number">2</span><HandTap size={27} weight="duotone" /><strong>Press SEND</strong><small>BOOT or SEND button</small></li>
+                <li><span className="confirmation-step__number">2</span><HandTap size={27} weight="duotone" /><strong>Press blinking halo</strong><small>Illuminated SEND button</small></li>
               </ol>}
               {message && <p className="transfer-error">{message}</p>}
               {validationError && <p className="transfer-error" role="alert">{validationError}</p>}
@@ -280,7 +304,14 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
               </button>
             )}
             {canQueue && <button className="action-button" type="button" onClick={queue} disabled={hasUnicode && !unicodeTarget} title={hasUnicode && !unicodeTarget ? "Choose a target keyboard system for Unicode text first." : undefined}><PaperPlaneTilt size={18} /> Queue transfer</button>}
-            {canConfirm && isSimulated && <button className="action-button action-button--confirm" type="button" onClick={confirm}><Fingerprint size={18} /> Confirm simulated device</button>}
+            {canConfirm && queuedReview && (
+              <section className="queued-review" aria-label="Reviewed transfer summary">
+                <div className="queued-review__heading"><strong>Review text</strong><span>Queued copy · locked</span></div>
+                <code title={queuedReview.firstLine}>{queuedReview.firstLine}</code>
+                <dl><div><dt>Lines</dt><dd>{queuedReview.lines}</dd></div><div><dt>Size</dt><dd>{queuedReview.bytes} UTF-8 bytes</dd></div></dl>
+              </section>
+            )}
+            {canConfirm && isSimulated && <div className="simulated-confirmation"><p><strong>Simulation only.</strong> This will simulate typing the reviewed text into the target you choose.</p><button className="action-button action-button--confirm" type="button" onClick={confirm}><Fingerprint size={18} /> Simulate physical confirmation</button></div>}
             {stage !== "disconnected" && stage !== "connecting" && stage !== "pairing" && <button className="secondary-button" type="button" onClick={disconnect}>Disconnect device</button>}
           </div>
           <dl className="transfer-meta"><div><dt>Transfer size</dt><dd>{stats.bytes} UTF-8 bytes</dd></div><div><dt>Confirmation</dt><dd>{canConfirm ? "Required now" : "Not requested"}</dd></div></dl>

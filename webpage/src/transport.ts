@@ -104,7 +104,11 @@ type BluetoothDeviceLike = EventTarget & {
 };
 
 type BluetoothNavigatorLike = {
-  requestDevice(options: { filters: Array<{ services: string[] }> }): Promise<BluetoothDeviceLike>;
+  requestDevice(options: {
+    filters?: Array<{ services?: string[]; name?: string; namePrefix?: string }>;
+    optionalServices?: string[];
+    acceptAllDevices?: boolean;
+  }): Promise<BluetoothDeviceLike>;
 };
 
 function bluetoothApi(): BluetoothNavigatorLike | undefined {
@@ -202,7 +206,15 @@ export class WebBluetoothTransport implements TransferTransport {
     this.stage = "connecting";
     this.stateListener?.("connecting");
     try {
-      this.device = await bluetooth.requestDevice({ filters: [{ services: [AIRGAP_SERVICE_UUID] }] });
+      this.device = await bluetooth.requestDevice({
+        filters: [
+          { services: [AIRGAP_SERVICE_UUID] },
+          { namePrefix: "AirGap" },
+          { name: "AirGap" },
+          { name: "AirGap Paste" },
+        ],
+        optionalServices: [AIRGAP_SERVICE_UUID],
+      });
       const service = await this.openAirGapService();
       this.rx = await withTimeout(
         service.getCharacteristic(AIRGAP_RX_UUID),

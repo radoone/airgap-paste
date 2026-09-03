@@ -77,4 +77,26 @@ describe("EditorApp", () => {
     });
     expect(screen.getByText(/Paired device forgotten/)).toBeInTheDocument();
   });
+
+  it("launches simulator from the onboarding callout", async () => {
+    render(<EditorApp />);
+    const calloutBtn = screen.getByRole("button", { name: /Launch interactive simulator/i });
+    expect(calloutBtn).toBeInTheDocument();
+
+    fireEvent.click(calloutBtn);
+    expect(await screen.findByRole("button", { name: "Queue transfer" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Launch interactive simulator/i })).not.toBeInTheDocument();
+  });
+
+  it("shows a locked review summary before simulator confirmation", async () => {
+    render(<EditorApp />);
+    fireEvent.click(screen.getByRole("button", { name: "Run simulator" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Queue transfer" }));
+
+    expect(await screen.findByRole("button", { name: "Simulate physical confirmation" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Reviewed transfer summary" })).toHaveTextContent("docker compose up -d --build");
+    fireEvent.change(screen.getByRole("textbox", { name: "Transfer text" }), { target: { value: "changed after queue" } });
+    expect(screen.getByRole("region", { name: "Reviewed transfer summary" })).toHaveTextContent("docker compose up -d --build");
+    expect(screen.getByText(/This will simulate typing the reviewed text/i)).toBeInTheDocument();
+  });
 });
