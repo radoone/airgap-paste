@@ -119,6 +119,7 @@ footer { width:min(1180px,calc(100% - 48px)); margin:auto; padding:34px 0 45px; 
 .transfer-panel__status p { margin:6px 0 0; color:#b8b9bc; font-size:11px; line-height:1.5; }
 .transfer-panel__status--connected,.transfer-panel__status--transferred { --status-accent:#91d1a8; }
 .transfer-panel__status--error { --status-accent:#ff7f68; background:#261d1d; }
+.transfer-panel__status--typing { --status-accent:#f59e0b; border-color:rgba(245,158,11,.55); background:linear-gradient(135deg,#28221b,#1f1c19); box-shadow:0 0 0 1px rgba(245,158,11,.12),0 12px 30px rgba(0,0,0,.24); }
 .transfer-panel__status--awaiting-confirmation { --status-accent:#ff7658; border-color:rgba(255,118,88,.55); background:linear-gradient(135deg,#2a211f,#211d1c); box-shadow:0 0 0 1px rgba(255,118,88,.12),0 12px 30px rgba(0,0,0,.24); }
 .confirmation-steps { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; gap:6px; margin:13px 0 0; padding:0; list-style:none; }
 .confirmation-steps li:not(.confirmation-step__arrow) { min-width:0; position:relative; display:grid; justify-items:center; gap:3px; padding:12px 6px 10px; border:1px solid rgba(255,118,88,.32); background:rgba(255,118,88,.07); color:#ece8e5; text-align:center; }
@@ -178,11 +179,11 @@ footer { width:min(1180px,calc(100% - 48px)); margin:auto; padding:34px 0 45px; 
 .transfer-panel__top p { display:flex; align-items:center; gap:8px; margin:0; color:#c1c2c5; font:10px "DM Mono",monospace; font-weight:700; letter-spacing:.11em; text-transform:uppercase; }
 .transfer-panel__top > strong { padding:6px 9px; border:1px solid color-mix(in srgb,var(--device-state) 55%,#353638); background:color-mix(in srgb,var(--device-state) 10%,#17181a); color:var(--device-state); font:10px "DM Mono",monospace; line-height:1.15; text-align:right; text-transform:uppercase; }
 .transfer-panel__status-dot { width:10px; height:10px; flex:0 0 auto; border:2px solid var(--device-state); border-radius:50%; box-shadow:0 0 0 3px color-mix(in srgb,var(--device-state) 13%,transparent); }
-.transfer-panel__top--connecting,.transfer-panel__top--queued { --device-state:#ff9a83; }
+.transfer-panel__top--connecting,.transfer-panel__top--queued,.transfer-panel__top--typing { --device-state:#ff9a83; }
 .transfer-panel__top--connected,.transfer-panel__top--transferred { --device-state:#91d1a8; }
 .transfer-panel__top--awaiting-confirmation { --device-state:#ff7658; background:#281f1d; border-bottom-color:rgba(255,118,88,.58); }
 .transfer-panel__top--error { --device-state:#ff7f68; background:#2a1e1d; border-bottom-color:rgba(255,127,104,.58); }
-.transfer-panel__top--connecting .transfer-panel__status-dot,.transfer-panel__top--queued .transfer-panel__status-dot,.transfer-panel__top--awaiting-confirmation .transfer-panel__status-dot { background:var(--device-state); animation:device-state-pulse 1.4s ease-in-out infinite; }
+.transfer-panel__top--connecting .transfer-panel__status-dot,.transfer-panel__top--queued .transfer-panel__status-dot,.transfer-panel__top--awaiting-confirmation .transfer-panel__status-dot,.transfer-panel__top--typing .transfer-panel__status-dot { background:var(--device-state); animation:device-state-pulse 1.4s ease-in-out infinite; }
 @keyframes device-state-pulse { 50% { box-shadow:0 0 0 7px color-mix(in srgb,var(--device-state) 6%,transparent); } }
 
 @media (max-width:620px) {

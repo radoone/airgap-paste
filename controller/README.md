@@ -31,7 +31,8 @@ The USB port becomes a HID keyboard after firmware startup. Uploading a later bu
 - Full payload length and SHA-256 verification before it becomes ready.
 - Physical confirmation through BOOT or D1/GPIO2.
 - Five-minute authentication idle timeout.
-- Command mode: one line of printable US ASCII, maximum 16 KB.
-- Text mode: printable US ASCII plus line breaks and Tab; Unicode and other control characters are rejected because the current USB HID implementation targets a US keyboard layout.
+- Command mode: one line of printable text (US ASCII or valid UTF-8 if Linux, macOS, or Windows target is selected), maximum 16 KB.
+- Text mode: printable text (US ASCII or valid UTF-8 if Linux, macOS, or Windows target is selected) plus line breaks and Tab, maximum 16 KB.
+- Keyboard targets: `ascii` (printable US ASCII), `linux` (`Ctrl+Shift+U`), `macos` (Unicode Hex Input), and `windows` (`EnableHexNumpad`).
 
-The target computer must use a US keyboard layout for symbols to match. See [PROTOCOL.md](./PROTOCOL.md) for the wire protocol.
+The target computer must use a US keyboard layout for ASCII symbols to match. See [PROTOCOL.md](./PROTOCOL.md) for the wire protocol.

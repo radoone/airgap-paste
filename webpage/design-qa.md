@@ -37,3 +37,43 @@
 - Publish the final legal controller identity, postal address, privacy-contact email, retention schedule and counsel-reviewed notices before a public commercial launch.
 
 **final result: passed**
+
+---
+
+## Design QA — compact `/app` workspace
+
+**Source visual truth:** User feedback on the Browser-captured `/app` screen: the editor workflow should be compact, easy to use, and should not separate the device panel into a long second section.
+
+**Implementation evidence:** `qa/compact-editor-2026-07-16.png` at 779 × 806, disconnected device state with one Bash command in the editor.
+
+**Full-view comparison evidence:** The pre-change Browser capture showed a 470 px editor and a one-column layout at this width, leaving the device controls below the editor. The revised capture keeps the review buffer and complete device connection action visible together.
+
+**Focused-region comparison:** The editor toolbar and device panel were reviewed directly; no image assets are used in this workspace, so a separate asset crop was not needed.
+
+### Comparison history
+
+- [P1] The workspace split into a vertical flow too early, requiring a scroll before the user could reach the device controls.
+  - Fix: narrowed the workspace, reduced the sidebar to 330 px, and moved the one-column breakpoint from 950 px to 760 px.
+  - Post-fix evidence: `qa/compact-editor-2026-07-16.png` shows the review buffer, device key, and primary connection action in one viewport.
+- [P2] Oversized heading, editor height, and panel spacing made the command workflow feel like a landing page instead of a utility.
+  - Fix: reduced the header, intro, controls, editor height, panel padding, and row spacing.
+  - Post-fix evidence: the command, transfer metadata, device key, and primary action are visible without a large empty canvas.
+
+### Required fidelity surfaces
+
+- **Fonts and typography:** Keeps Manrope for readable workflow hierarchy and DM Mono for operational labels; compact sizes remain legible at the checked viewport.
+- **Spacing and layout rhythm:** The main grid is now compact and side-by-side through 761 px; it collapses only when controls need a single column.
+- **Colors and visual tokens:** The existing black/graphite base, off-white text, orange action, and green completion token are unchanged.
+- **Image quality and asset fidelity:** No images are used in the editor workspace; the existing Phosphor icon set remains appropriate.
+- **Copy and content:** Hardware-specific connection, device-key, safety-profile, and local-transfer copy remain present and readable.
+
+### Interaction checks
+
+- Syntax selector, clear button, device-key input, hardware connection button, and simulator action remain visible and keyboard reachable in the checked state.
+- Production build and unit tests pass after the compactness changes.
+
+### Follow-up polish
+
+- At widths below 760 px, the device panel intentionally follows the editor; keep the connection action near the top of that panel in a future mobile-specific pass.
+
+**final result: passed**

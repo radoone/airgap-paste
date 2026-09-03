@@ -1,4 +1,4 @@
-export type TransferStage = "disconnected" | "connecting" | "connected" | "queued" | "awaiting-confirmation" | "transferred" | "error";
+export type TransferStage = "disconnected" | "connecting" | "connected" | "queued" | "awaiting-confirmation" | "typing" | "transferred" | "error";
 
 export type TransferMode = "command" | "text";
 export type KeyboardTarget = "ascii" | "linux" | "macos" | "windows";
@@ -123,6 +123,8 @@ export class SimulatedTransport implements TransferTransport {
   }
   async confirm(): Promise<void> {
     if (this.stage !== "awaiting-confirmation") throw new Error("The device is not awaiting confirmation.");
+    this.updateStage("typing");
+    await new Promise((resolve) => window.setTimeout(resolve, 300));
     this.updateStage("transferred");
   }
   disconnect() { this.updateStage("disconnected"); }
@@ -208,18 +210,21 @@ export class WebBluetoothTransport implements TransferTransport {
     }
     await this.write(`COMMIT ${this.transferId}`);
     this.stage = "queued";
+    this.stateListener?.("queued");
   }
 
   async awaitConfirmation(): Promise<void> {
     if (this.stage !== "queued") throw new Error("No transfer is queued.");
     await this.waitFor((message) => message === `READY ${this.transferId}`, 15_000);
     this.stage = "awaiting-confirmation";
+    this.stateListener?.("awaiting-confirmation");
   }
 
   async confirm(): Promise<void> {
-    if (this.stage !== "awaiting-confirmation") throw new Error("The device is not awaiting confirmation.");
-    await this.waitFor((message) => message === `DONE ${this.transferId}`, 180_000);
+    if (this.stage !== "awaiting-confirmation" && this.stage !== "typing") throw new Error("The device is not awaiting confirmation.");
+    await this.waitFor((message) => message === `DONE ${this.transferId}`, 600_000);
     this.stage = "transferred";
+    this.stateListener?.("transferred");
   }
 
   disconnect() {
@@ -285,7 +290,7 @@ export class WebBluetoothTransport implements TransferTransport {
   }
 
   private async sendHeartbeat() {
-    if (this.heartbeatInFlight || !["connected", "queued", "awaiting-confirmation", "transferred"].includes(this.stage)) return;
+    if (this.heartbeatInFlight || !["connected", "queued", "awaiting-confirmation", "typing", "transferred"].includes(this.stage)) return;
     this.heartbeatInFlight = true;
     try {
       await this.write("PING");
@@ -316,6 +321,13 @@ export class WebBluetoothTransport implements TransferTransport {
       for (const waiter of waiters) { window.clearTimeout(waiter.timer); waiter.reject(error); }
       if (!waiters.length) this.pendingError = error;
       return;
+    }
+    if (message.startsWith("TYPING ")) {
+      const typingId = message.slice("TYPING ".length).trim();
+      if (typingId === this.transferId) {
+        this.stage = "typing";
+        this.stateListener?.("typing");
+      }
     }
     const waiterIndex = this.waiters.findIndex((waiter) => waiter.predicate(message));
     if (waiterIndex >= 0) {

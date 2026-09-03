@@ -31,4 +31,35 @@ describe("EditorApp", () => {
     fireEvent.change(format, { target: { value: "text" } });
     expect(screen.getByText(/line breaks and tabs/)).toBeInTheDocument();
   });
+
+  it("displays validation error without resetting connected state", async () => {
+    render(<EditorApp />);
+    const connectSimBtn = screen.getByRole("button", { name: "Run simulator" });
+    fireEvent.click(connectSimBtn);
+    expect(await screen.findByRole("button", { name: "Queue transfer" })).toBeInTheDocument();
+
+    const editor = screen.getByRole("textbox", { name: "Transfer text" });
+    fireEvent.change(editor, { target: { value: "echo hello\necho world" } });
+
+    const queueBtn = screen.getByRole("button", { name: "Queue transfer" });
+    fireEvent.click(queueBtn);
+
+    expect(await screen.findByText(/Commands must be one line of printable text/)).toBeInTheDocument();
+    // Device is still connected and queue button remains accessible:
+    expect(screen.getByRole("button", { name: "Queue transfer" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Connect AirGap Paste" })).not.toBeInTheDocument();
+  });
+
+  it("disconnects cleanly without triggering an error", async () => {
+    render(<EditorApp />);
+    const connectSimBtn = screen.getByRole("button", { name: "Run simulator" });
+    fireEvent.click(connectSimBtn);
+    expect(await screen.findByRole("button", { name: "Disconnect device" })).toBeInTheDocument();
+
+    const disconnectBtn = screen.getByRole("button", { name: "Disconnect device" });
+    fireEvent.click(disconnectBtn);
+
+    expect(await screen.findByRole("button", { name: "Connect AirGap Paste" })).toBeInTheDocument();
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
 });

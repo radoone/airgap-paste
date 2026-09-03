@@ -58,12 +58,23 @@ struct DebouncedButton {
   explicit DebouncedButton(uint8_t pinNumber) : pin(pinNumber) {}
 };
 
+struct TypingEngine {
+  bool active = false;
+  std::string id;
+  std::vector<uint32_t> codepoints;
+  size_t index = 0;
+  bool textMode = false;
+  KeyboardTarget keyboardTarget = KeyboardTarget::kAscii;
+  uint32_t nextActionAt = 0;
+};
+
 USBHIDKeyboard keyboard;
 NimBLECharacteristic *txCharacteristic = nullptr;
 std::queue<std::string> commandQueue;
 std::mutex commandMutex;
 DeviceState deviceState = DeviceState::kAdvertising;
 Transfer transfer;
+TypingEngine typingEngine;
 std::array<uint8_t, 16> challenge{};
 bool connected = false;
 bool authenticated = false;
@@ -156,12 +167,20 @@ void notify(const std::string &message) {
 }
 
 void fail(const std::string &code, const std::string &detail) {
+  if (typingEngine.active) {
+    keyboard.releaseAll();
+    typingEngine = {};
+  }
   transfer = {};
   deviceState = DeviceState::kError;
   notify("ERR " + code + " " + detail);
 }
 
 void resetSession() {
+  if (typingEngine.active) {
+    keyboard.releaseAll();
+    typingEngine = {};
+  }
   authenticated = false;
   transfer = {};
   lastAuthenticatedActivity = 0;
@@ -170,7 +189,12 @@ void resetSession() {
 
 void enqueueCommand(const std::string &command) {
   std::lock_guard<std::mutex> lock(commandMutex);
-  if (commandQueue.size() < 64) commandQueue.push(command);
+  if (commandQueue.size() < 64) {
+    commandQueue.push(command);
+  } else {
+    while (!commandQueue.empty()) commandQueue.pop();
+    commandQueue.push("__OVERFLOW__");
+  }
 }
 
 class RxCallbacks final : public NimBLECharacteristicCallbacks {
@@ -241,6 +265,10 @@ void handlePing() {
 
 void handleQueue(const std::vector<std::string> &parts) {
   if (!requireAuthentication()) return;
+  if (deviceState == DeviceState::kTyping) {
+    fail("BUSY", "Device is currently typing");
+    return;
+  }
   if (parts.size() != 6 || parts[1].size() != 8 || parts[3].size() != 64 ||
       (parts[4] != "command" && parts[4] != "text") ||
       (parts[5] != "ascii" && parts[5] != "linux" && parts[5] != "macos" && parts[5] != "windows")) {
@@ -301,6 +329,10 @@ void handleCommit(const std::vector<std::string> &parts) {
 }
 
 void processCommand(const std::string &command) {
+  if (command == "__OVERFLOW__") {
+    fail("QUEUE_OVERFLOW", "Command buffer overflow");
+    return;
+  }
   if (command == "__CONNECTED__") {
     connected = true;
     resetSession();
@@ -381,11 +413,11 @@ void sendHidKey(uint8_t modifiers, uint8_t usage, uint32_t holdMs, uint32_t sett
 }
 
 void typeUnicodeCodepoint(uint32_t codepoint, KeyboardTarget target) {
-  const std::string hex = unicodeHex(codepoint);
   if (target == KeyboardTarget::kLinux) {
     // Send every step as a complete HID report. USBHIDKeyboard::press() keeps
     // modifier state internally and does not emit a report for modifier-only
     // changes, which can leave Ctrl/Shift timing dependent on the next key.
+    const std::string hex = unicodeHex(codepoint);
     constexpr uint8_t kCtrlShift = 0x03;
     sendHidKey(kCtrlShift, hidUsageForAscii('u'), 35, 120);
     for (const char character : hex) {
@@ -393,47 +425,95 @@ void typeUnicodeCodepoint(uint32_t codepoint, KeyboardTarget target) {
     }
     sendHidKey(0, 0x28, 35, 120);  // Enter commits the Unicode input sequence.
   } else if (target == KeyboardTarget::kMacOS) {
-    keyboard.press(KEY_LEFT_ALT);
-    for (const char character : hex) keyboard.write(character);
-    keyboard.releaseAll();
+    if (codepoint <= 0xffff) {
+      const std::string hex = unicodeHex(codepoint);
+      keyboard.press(KEY_LEFT_ALT);
+      for (const char character : hex) keyboard.write(character);
+      keyboard.releaseAll();
+    } else {
+      // macOS Unicode Hex Input requires UTF-16 surrogate pairs for characters outside BMP.
+      const uint32_t highSurrogate = 0xd800 + ((codepoint - 0x10000) >> 10);
+      const uint32_t lowSurrogate = 0xdc00 + ((codepoint - 0x10000) & 0x3ff);
+      keyboard.press(KEY_LEFT_ALT);
+      for (const char character : unicodeHex(highSurrogate)) keyboard.write(character);
+      keyboard.releaseAll();
+      delay(4);
+      keyboard.press(KEY_LEFT_ALT);
+      for (const char character : unicodeHex(lowSurrogate)) keyboard.write(character);
+      keyboard.releaseAll();
+    }
   } else if (target == KeyboardTarget::kWindows) {
     // Windows Unicode input requires EnableHexNumpad. HID usage 0x57 is the
     // keypad '+' key; the remaining hexadecimal digits are normal key presses.
-    keyboard.press(KEY_LEFT_ALT);
-    keyboard.pressRaw(0x57);
-    keyboard.releaseRaw(0x57);
-    for (const char character : hex) keyboard.write(character);
-    keyboard.releaseAll();
+    if (codepoint <= 0xffff) {
+      const std::string hex = unicodeHex(codepoint);
+      keyboard.press(KEY_LEFT_ALT);
+      keyboard.pressRaw(0x57);
+      keyboard.releaseRaw(0x57);
+      for (const char character : hex) keyboard.write(character);
+      keyboard.releaseAll();
+    } else {
+      // Windows EnableHexNumpad requires UTF-16 surrogate pairs for characters outside BMP.
+      const uint32_t highSurrogate = 0xd800 + ((codepoint - 0x10000) >> 10);
+      const uint32_t lowSurrogate = 0xdc00 + ((codepoint - 0x10000) & 0x3ff);
+      keyboard.press(KEY_LEFT_ALT);
+      keyboard.pressRaw(0x57);
+      keyboard.releaseRaw(0x57);
+      for (const char character : unicodeHex(highSurrogate)) keyboard.write(character);
+      keyboard.releaseAll();
+      delay(4);
+      keyboard.press(KEY_LEFT_ALT);
+      keyboard.pressRaw(0x57);
+      keyboard.releaseRaw(0x57);
+      for (const char character : unicodeHex(lowSurrogate)) keyboard.write(character);
+      keyboard.releaseAll();
+    }
   }
   delay(4);
 }
 
-void typeReadyTransfer() {
+void startTyping() {
   if (!transfer.ready) return;
-  const std::string id = transfer.id;
-  const std::string payload = transfer.payload;
-  const bool textMode = transfer.textMode;
-  const KeyboardTarget keyboardTarget = transfer.keyboardTarget;
-  transfer.ready = false;
-  deviceState = DeviceState::kTyping;
-  notify("TYPING " + id);
   std::vector<uint32_t> codepoints;
-  if (!decodeUtf8(payload, codepoints)) {
+  if (!decodeUtf8(transfer.payload, codepoints)) {
     fail("UNSUPPORTED_TEXT", "Text is not valid UTF-8");
     return;
   }
-  for (const uint32_t codepoint : codepoints) {
-    if (textMode && codepoint == '\n') keyboard.write(KEY_RETURN);
-    else if (textMode && codepoint == '\t') keyboard.write(KEY_TAB);
-    else if (codepoint <= 0x7e) keyboard.write(static_cast<uint8_t>(codepoint));
-    else typeUnicodeCodepoint(codepoint, keyboardTarget);
-    delay(humanKeystrokeDelayMs(codepoint <= 0x7f ? static_cast<unsigned char>(codepoint) : ' '));
+  typingEngine.active = true;
+  typingEngine.id = transfer.id;
+  typingEngine.codepoints = std::move(codepoints);
+  typingEngine.index = 0;
+  typingEngine.textMode = transfer.textMode;
+  typingEngine.keyboardTarget = transfer.keyboardTarget;
+  typingEngine.nextActionAt = millis();
+  transfer.ready = false;
+  deviceState = DeviceState::kTyping;
+  notify("TYPING " + typingEngine.id);
+}
+
+void stepTyping() {
+  if (!typingEngine.active) return;
+  const uint32_t now = millis();
+  if (now < typingEngine.nextActionAt) return;
+
+  if (typingEngine.index >= typingEngine.codepoints.size()) {
+    keyboard.releaseAll();
+    const std::string finishedId = typingEngine.id;
+    typingEngine = {};
+    transfer = {};
+    deviceState = DeviceState::kAuthenticated;
+    lastAuthenticatedActivity = millis();
+    notify("DONE " + finishedId);
+    return;
   }
-  keyboard.releaseAll();
-  transfer = {};
-  deviceState = DeviceState::kAuthenticated;
-  lastAuthenticatedActivity = millis();
-  notify("DONE " + id);
+
+  const uint32_t codepoint = typingEngine.codepoints[typingEngine.index++];
+  if (typingEngine.textMode && codepoint == '\n') keyboard.write(KEY_RETURN);
+  else if (typingEngine.textMode && codepoint == '\t') keyboard.write(KEY_TAB);
+  else if (codepoint <= 0x7e) keyboard.write(static_cast<uint8_t>(codepoint));
+  else typeUnicodeCodepoint(codepoint, typingEngine.keyboardTarget);
+
+  typingEngine.nextActionAt = millis() + humanKeystrokeDelayMs(codepoint <= 0x7f ? static_cast<unsigned char>(codepoint) : ' ');
 }
 
 void updateLed() {
@@ -500,7 +580,9 @@ void loop() {
 
   if (authenticated && millis() - lastAuthenticatedActivity > kAuthIdleTimeoutMs) resetSession();
   if (deviceState == DeviceState::kReady && (buttonPressed(externalButton) || buttonPressed(bootButton))) {
-    typeReadyTransfer();
+    startTyping();
+  } else if (deviceState == DeviceState::kTyping) {
+    stepTyping();
   } else {
     buttonPressed(externalButton);
     buttonPressed(bootButton);
