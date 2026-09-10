@@ -11,6 +11,8 @@ import { oneDark } from "@codemirror/theme-one-dark";
 import type { Extension } from "@codemirror/state";
 import { ArrowLeft, ArrowRight, CheckCircle, CircleNotch, ClipboardText, Code, CursorClick, Fingerprint, HandTap, Lightning, PaperPlaneTilt, ShieldCheck, Trash, WarningCircle } from "@phosphor-icons/react";
 import { SimulatedTransport, WebBluetoothTransport, clearSavedPairing, getSavedPairingToken, validateTransferText, type KeyboardTarget, type TransferMode, type TransferStage, type TransferTransport } from "./transport";
+import { brand } from "./brand";
+import transferMark from "./assets/airgap-transfer-mark.png";
 
 type LanguageId = "text" | "bash" | "json" | "javascript" | "python" | "yaml" | "markdown";
 type LanguageOption = { id: LanguageId; label: string; extensions: Extension[] };
@@ -210,8 +212,8 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
   return (
     <main className="editor-page">
       <header className="editor-nav">
-        <a className="wordmark" href="/" aria-label="Back to AirGap Paste home">AirGap <span>Paste</span></a>
-        <p><span className="editor-nav__dot" /> Hardware prototype · Web Bluetooth</p>
+        <a className="wordmark" href="/" aria-label="Back to AirGap Paste home"><img src={transferMark} alt="" />AirGap <span>Paste</span></a>
+        <p><span className="editor-nav__dot" /> Prototype case in progress · Web Bluetooth</p>
         <a className="editor-nav__back" href="/"><ArrowLeft size={16} /> Back to landing page</a>
       </header>
       <section className="editor-intro">
@@ -235,7 +237,7 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
             <p><span className="transfer-panel__status-dot" aria-hidden="true" /> Device status</p>
             <strong>{deviceStateLabel[stage]}</strong>
           </div>
-          <div className="transfer-device"><Fingerprint size={35} weight="thin" /><div><strong>{deviceName || "AirGap Paste"}</strong><span>BLE input · USB keyboard output</span>{isSimulated && <span className="transfer-device__simulator-badge">Simulation mode</span>}</div></div>
+          <div className="transfer-device"><img src={transferMark} alt={brand.markAlt} /><div><strong>{deviceName || "AirGap Paste"}</strong><span>BLE input · USB keyboard output</span>{isSimulated && <span className="transfer-device__simulator-badge">Simulation mode</span>}</div></div>
           {stage === "disconnected" && !isSimulated && (
             <div className="simulator-callout">
               <div className="simulator-callout__badge">
