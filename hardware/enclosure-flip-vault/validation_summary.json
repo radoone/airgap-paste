@@ -106,7 +106,7 @@
         48.0,
         5.2
       ],
-      "volume_mm3": 6106.6
+      "volume_mm3": 6100.32
     },
     "03_mx_keycap_vault": {
       "valid": true,
@@ -152,11 +152,16 @@
       "valid": true,
       "solids": 1,
       "bbox_mm": [
-        27.0,
-        1.5,
+        28.8,
+        2.7,
         2.0
       ],
-      "volume_mm3": 77.65
+      "volume_mm3": 82.46
     }
+  },
+  "optional_wedge_faces_y_mm": {
+    "looser": -0.38,
+    "nominal": -0.48,
+    "tighter": -0.58
   }
 }

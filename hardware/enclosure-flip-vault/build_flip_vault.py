@@ -237,7 +237,7 @@ for side in (-1, 1):
 
 # A full-width solid rear anvil takes cable insertion loads through a small
 # replaceable wedge. It is separated from the board for top-down assembly.
-rear_stop = box(28.0, 1.6, 2.8, 0, 1.8, BASE_H)
+rear_stop = box(26.6, 1.6, 2.8, 0, 1.8, BASE_H)
 retention_features.append(rear_stop)
 base = base.union(rear_stop)
 base = base.cut(box(15.0, 10.0, 1.4, 0, BOARD_Y, 1.0))
@@ -246,8 +246,15 @@ def make_board_wedge(face_y):
     """A lead-in ramp seats the PCB against the front shoulders on insertion."""
     section = [(1.0, 2.4), (-0.20, 2.4), (face_y, 3.0),
                (face_y, 4.4), (1.0, 4.4)]
-    return (cq.Workplane("YZ").polyline(section).close()
-            .extrude(27.0).translate((-13.5, 0, 0)))
+    wedge = (cq.Workplane("YZ").polyline(section).close()
+             .extrude(26.0).translate((-13.0, 0, 0)))
+    # U-shaped end ears locate the wedge laterally around the anvil. 0.30 mm
+    # side clearance lets the separately printed parts assemble on an A1.
+    for side in (-1, 1):
+        connector = box(1.8, 0.8, 2.0, side * 13.1, 0.6, BASE_H)
+        ear = box(0.8, 1.6, 2.0, side * 14.0, 1.4, BASE_H)
+        wedge = wedge.union(connector).union(ear)
+    return wedge
 
 board_wedge = make_board_wedge(WEDGE_FACE_Y)
 wedge_fit_options = {

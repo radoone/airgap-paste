@@ -4,12 +4,13 @@
     "parts": [
       "01_upper_shell_vault.stl",
       "02_bottom_chassis_vault.stl",
-      "06_flip_shield_vault_face_down.stl"
+      "06_flip_shield_vault_face_down.stl",
+      "07_xiao_locking_wedge.stl"
     ],
     "support_enabled": true,
     "warning": "",
-    "print_time_minutes": 91.4,
-    "filament_grams": 28.07
+    "print_time_minutes": 93.1,
+    "filament_grams": 28.34
   },
   {
     "file": "02_flip_vault_orange_A1_PLA.3mf",
