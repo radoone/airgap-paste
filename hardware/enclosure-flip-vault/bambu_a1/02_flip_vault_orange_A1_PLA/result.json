@@ -1,0 +1,77 @@
+{
+    "error_string": "Success.",
+    "export_time": 441,
+    "layer_height": 0.20000000298023224,
+    "plate_index": 0,
+    "prepare_time": 10,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 10.907927513122559,
+                "Bridge": 8.119720458984375,
+                "Custom": 381.656982421875,
+                "Flush": 25.0,
+                "Gap infill": 25.09497833251953,
+                "Inner wall": 106.13118743896484,
+                "Internal solid infill": 26.386213302612305,
+                "Outer wall": 141.789306640625,
+                "Sparse infill": 1.2609577178955078,
+                "Top surface": 20.475643157958984,
+                "Travel": 154.0706787109375,
+                "Undefined": 137.08009338378906
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFL99",
+                    "id": 1,
+                    "main_used_g": 1.8000671863555908,
+                    "total_used_g": 1.8000671863555908
+                }
+            ],
+            "generate_support_material_time": 4,
+            "id": 1,
+            "infill_time": 14,
+            "layer_filament_change": 0,
+            "main_predication": 469.249267578125,
+            "make_perimeters_time": 43,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 22.59999656677246,
+                        "height": 2.700000762939453,
+                        "width": 22.60000228881836,
+                        "x": 116.69999694824219,
+                        "y": 126.80000305175781,
+                        "z": 0.0
+                    },
+                    "id": 49,
+                    "name": "05_accent_halo_vault.stl",
+                    "triangle_count": 448
+                },
+                {
+                    "bbox": {
+                        "depth": 18.20000457763672,
+                        "height": 7.199999809265137,
+                        "width": 18.19999885559082,
+                        "x": 118.9000015258789,
+                        "y": 106.60000610351563,
+                        "z": 0.0
+                    },
+                    "id": 38,
+                    "name": "03_mx_keycap_vault_top_down.stl",
+                    "triangle_count": 440
+                }
+            ],
+            "sliced_time": 259,
+            "sliced_time_with_cache": 180,
+            "total_predication": 883.9157104492188,
+            "triangle_count": 888,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 20.0,
+    "wall_loops": 3
+}

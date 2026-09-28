@@ -1,0 +1,46 @@
+[
+  {
+    "file": "01_black_body_A1_PLA.3mf",
+    "parts": [
+      "01_upper_shell_octo.stl",
+      "02_bottom_chassis_octo.stl"
+    ],
+    "support_enabled": true,
+    "warning": "",
+    "print_time_minutes": 64.3,
+    "filament_grams": 18.95
+  },
+  {
+    "file": "02_orange_keycap_A1_PLA.3mf",
+    "parts": [
+      "03_mx_keycap_octo.stl"
+    ],
+    "support_enabled": false,
+    "warning": "",
+    "print_time_minutes": 13.3,
+    "filament_grams": 1.34
+  },
+  {
+    "file": "03_clear_lightguides_A1_PLA.3mf",
+    "parts": [
+      "04_lightguides_octo.stl"
+    ],
+    "support_enabled": false,
+    "warning": "",
+    "print_time_minutes": 8.2,
+    "filament_grams": 0.19
+  },
+  {
+    "file": "04_all_parts_one_plate_A1_PLA.3mf",
+    "parts": [
+      "01_upper_shell_octo.stl",
+      "02_bottom_chassis_octo.stl",
+      "03_mx_keycap_octo.stl",
+      "04_lightguides_octo.stl"
+    ],
+    "support_enabled": true,
+    "warning": "",
+    "print_time_minutes": 71.1,
+    "filament_grams": 20.64
+  }
+]

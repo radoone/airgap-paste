@@ -1,0 +1,89 @@
+{
+    "error_string": "Success.",
+    "layer_height": 0.20000000298023224,
+    "peak_rss_mb": 113.09375,
+    "plate_index": 0,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Custom": 381.5789489746094,
+                "Flush": 25.0,
+                "Gap infill": 9.585969924926758,
+                "Inner wall": 19.519433975219727,
+                "Outer wall": 28.243173599243164,
+                "Top surface": 2.6147778034210205,
+                "Travel": 45.0064582824707,
+                "Undefined": 28.060884475708008
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFL99",
+                    "id": 1,
+                    "main_used_g": 0.1891767382621765,
+                    "total_used_g": 0.1891767382621765
+                }
+            ],
+            "id": 1,
+            "layer_filament_change": 0,
+            "main_predication": 79.97012329101563,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 7.0,
+                        "height": 2.0,
+                        "width": 18.999998092651367,
+                        "x": 118.49999237060547,
+                        "y": 124.5,
+                        "z": 0.0
+                    },
+                    "id": 5,
+                    "name": "04_lightguides_ops.stl",
+                    "triangle_count": 420
+                }
+            ],
+            "times": {
+                "conflict_check_time": 0,
+                "detect_overhangs_time": 0,
+                "export_gcode_time": 46,
+                "flush_plan_time": 0,
+                "generate_support_material_time": 0,
+                "infill_generate_time": 1,
+                "infill_time": 4,
+                "ironing_time": 0,
+                "make_perimeters_time": 3,
+                "multifilament_segment_2d_time": 0,
+                "other_slice_time": 1,
+                "prepare_infill_time": 3,
+                "region_split_time": 0,
+                "skirt_brim_time": 1,
+                "slice_layers_time": 1,
+                "sliced_time": 58,
+                "sliced_time_with_cache": 47,
+                "support_detect_time": 0,
+                "support_interface_time": 0,
+                "support_normal_generate_time": 0,
+                "support_toolpath_time": 0,
+                "support_tree_generate_time": 0,
+                "toolpath_time": 1,
+                "wall_time": 2,
+                "wipe_tower_time": 1
+            },
+            "total_predication": 494.6035461425781,
+            "triangle_count": 420,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 20.0,
+    "times": {
+        "export_3mf_time": 19,
+        "export_slicedata_time": 0,
+        "export_time": 441,
+        "import_time": 1,
+        "load_slicedata_time": 0,
+        "prepare_time": 12
+    },
+    "wall_loops": 3
+}

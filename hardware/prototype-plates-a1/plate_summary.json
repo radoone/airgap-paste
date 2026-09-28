@@ -1,0 +1,38 @@
+{
+  "01_edc_pocket_vault_all_parts": {
+    "file": "01_EDC_Pocket_Vault_ALL_PARTS_A1_PLA.3mf",
+    "plate_count": 1,
+    "object_count": 7,
+    "material": "PLA single material",
+    "layer_height_mm": 0.2,
+    "supports": false,
+    "print_time_minutes": 102.4,
+    "filament_grams": 32.12,
+    "warning": "",
+    "note": "Seven assembly parts on one plate, including a printable paracord cord bead; MX fit coupon intentionally excluded."
+  },
+  "02_mini_v3_all_parts": {
+    "file": "02_Mini_v3_ALL_PARTS_A1_PLA.3mf",
+    "plate_count": 1,
+    "object_count": 3,
+    "material": "PLA single material",
+    "layer_height_mm": 0.2,
+    "supports": true,
+    "print_time_minutes": 76.4,
+    "filament_grams": 20.62,
+    "warning": "",
+    "note": "Three Mini v3 assembly parts on one plate; snug build-plate-only supports enabled for the electronics chassis."
+  },
+  "03_hex_node_all_parts": {
+    "file": "03_Hex_Node_COMPACT_v2_ALL_PARTS_A1_PLA.3mf",
+    "plate_count": 1,
+    "object_count": 4,
+    "material": "PLA single material",
+    "layer_height_mm": 0.2,
+    "supports": true,
+    "print_time_minutes": 75.8,
+    "filament_grams": 21.23,
+    "warning": "",
+    "note": "Four Compact Hex Node v2 printed parts on one plate; snug support under the side loop. MX fit coupon intentionally excluded. Hardware is fitted after printing."
+  }
+}

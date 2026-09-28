@@ -1,0 +1,80 @@
+{
+  "version": "AirGap Paste Ops Capsule v1",
+  "units": "mm",
+  "dimensions_mm": {
+    "width": 54.0,
+    "depth": 48.0,
+    "height_shell": 16.5,
+    "total_height_with_guards": 23.0,
+    "length_with_loop": 62.0
+  },
+  "checks": {
+    "shell_vs_base_mm3": 0,
+    "keycap_vs_shell_mm3": 0,
+    "lightguides_vs_shell_mm3": 0,
+    "lightguides_vs_base_mm3": 0,
+    "halo_vs_shell_mm3": 0,
+    "halo_vs_keycap_mm3": 0,
+    "official_xiao_vs_retention_mm3": 0
+  },
+  "fixture_clearances_mm": {
+    "front_stop_mm": 0.131,
+    "rear_stop_mm": 0.204,
+    "side_fence_each_mm": 0.205,
+    "top_tab_above_pcb_mm": 0.195,
+    "ledge_top_vs_pcb_bottom_mm": 0.005,
+    "usb_face_recess_from_front_mm": 1.153
+  },
+  "parts": {
+    "01_upper_shell_ops": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        54.0,
+        62.0,
+        20.6
+      ],
+      "volume_mm3": 13215.18
+    },
+    "02_bottom_chassis_ops": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        54.0,
+        48.0,
+        5.2
+      ],
+      "volume_mm3": 6039.4
+    },
+    "03_mx_keycap_ops": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        18.2,
+        18.2,
+        7.2
+      ],
+      "volume_mm3": 1069.2
+    },
+    "04_lightguides_ops": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        19.0,
+        7.0,
+        2.0
+      ],
+      "volume_mm3": 104.35
+    },
+    "05_accent_halo_ops": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        22.6,
+        22.6,
+        2.7
+      ],
+      "volume_mm3": 360.66
+    }
+  }
+}

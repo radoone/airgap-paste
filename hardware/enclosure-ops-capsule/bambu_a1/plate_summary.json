@@ -1,0 +1,34 @@
+[
+  {
+    "file": "01_ops_capsule_black_A1_PLA.3mf",
+    "parts": [
+      "01_upper_shell_ops.stl",
+      "02_bottom_chassis_ops.stl"
+    ],
+    "support_enabled": true,
+    "warning": "",
+    "print_time_minutes": 77.9,
+    "filament_grams": 24.03
+  },
+  {
+    "file": "02_ops_capsule_orange_A1_PLA.3mf",
+    "parts": [
+      "03_mx_keycap_ops_top_down.stl",
+      "05_accent_halo_ops.stl"
+    ],
+    "support_enabled": false,
+    "warning": "",
+    "print_time_minutes": 14.8,
+    "filament_grams": 1.8
+  },
+  {
+    "file": "03_ops_capsule_clear_A1_PLA.3mf",
+    "parts": [
+      "04_lightguides_ops.stl"
+    ],
+    "support_enabled": false,
+    "warning": "",
+    "print_time_minutes": 8.2,
+    "filament_grams": 0.19
+  }
+]

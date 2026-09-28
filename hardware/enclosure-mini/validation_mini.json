@@ -1,0 +1,58 @@
+{
+  "version": "AirGap Paste Mini v3 (M3 Screws Edition)",
+  "assembly_dimensions_mm": [
+    46.0,
+    46.0,
+    21.8
+  ],
+  "board": "Seeed Studio XIAO ESP32-S3 (with generous side & vertical clearances)",
+  "board_clearance_width_mm": 20.8,
+  "fasteners": "4x M3x10mm countersunk flathead screws (DIN 963 / ISO 2009) + 4x M3 hex nuts (DIN 934)",
+  "parts": {
+    "01_shell_mini": {
+      "valid": true,
+      "solids": 1,
+      "shells": 1,
+      "bbox_mm": [
+        46.0,
+        46.0,
+        18.0
+      ],
+      "volume_mm3": 6836.68
+    },
+    "02_top_button_mini": {
+      "valid": true,
+      "solids": 1,
+      "shells": 1,
+      "bbox_mm": [
+        39.0,
+        39.0,
+        6.4
+      ],
+      "volume_mm3": 5300.6
+    },
+    "03_bottom_base_mini": {
+      "valid": true,
+      "solids": 1,
+      "shells": 1,
+      "bbox_mm": [
+        46.0,
+        46.0,
+        15.1
+      ],
+      "volume_mm3": 4718.68
+    }
+  },
+  "intersections_mm3": {
+    "shell_base": 0.0,
+    "shell_button": 0.0,
+    "button_base": 0.0,
+    "board_shell": 0.0,
+    "board_base": 0.0,
+    "board_button": 0.0,
+    "switch_shell": 0.0,
+    "switch_base": 0.0,
+    "shell_button_pressed": 0.0,
+    "board_button_pressed": 0.0
+  }
+}

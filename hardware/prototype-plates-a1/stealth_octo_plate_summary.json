@@ -1,0 +1,13 @@
+{
+  "file": "04_Stealth_Octo_ALL_PARTS_A1_PLA.3mf",
+  "plate_count": 1,
+  "object_count": 4,
+  "material": "Bambu PLA Basic (Single Color)",
+  "layer_height_mm": 0.2,
+  "supports": true,
+  "support_note": "Snug build-plate-only supports under the right carry loop",
+  "print_time_minutes": 68.6,
+  "filament_grams": 19.7,
+  "warning": "",
+  "path": "/Users/radoone/Documents/airgap paste/hardware/prototype-plates-a1/04_Stealth_Octo_ALL_PARTS_A1_PLA.3mf"
+}

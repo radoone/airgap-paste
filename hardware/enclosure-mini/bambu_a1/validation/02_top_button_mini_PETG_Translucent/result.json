@@ -1,0 +1,64 @@
+{
+    "error_string": "Success.",
+    "export_time": 449,
+    "layer_height": 0.20000000298023224,
+    "plate_index": 0,
+    "prepare_time": 29,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bridge": 113.46199035644531,
+                "Custom": 385.630859375,
+                "Flush": 25.0,
+                "Gap infill": 12.656682014465332,
+                "Inner wall": 77.16754913330078,
+                "Internal solid infill": 309.89923095703125,
+                "Outer wall": 143.2517852783203,
+                "Overhang wall": 3.028494119644165,
+                "Sparse infill": 56.401283264160156,
+                "Top surface": 135.900634765625,
+                "Travel": 140.4637451171875,
+                "Undefined": 123.46712493896484
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFG99",
+                    "id": 1,
+                    "main_used_g": 5.197742462158203,
+                    "total_used_g": 5.197742462158203
+                }
+            ],
+            "generate_support_material_time": 10,
+            "id": 1,
+            "infill_time": 173,
+            "layer_filament_change": 0,
+            "main_predication": 967.242919921875,
+            "make_perimeters_time": 42,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 38.98788070678711,
+                        "height": 6.399999618530273,
+                        "width": 38.999996185302734,
+                        "x": 108.49999237060547,
+                        "y": 108.50605773925781,
+                        "z": 0.0
+                    },
+                    "id": 5,
+                    "name": "02_top_button_mini.stl",
+                    "triangle_count": 28772
+                }
+            ],
+            "sliced_time": 444,
+            "sliced_time_with_cache": 177,
+            "total_predication": 1385.877197265625,
+            "triangle_count": 28772,
+            "warning_message": "It seems object 02_top_button_mini.stl has floating regions. Please re-orient the object or enable support generation."
+        }
+    ],
+    "sparse_infill_density": 20.0,
+    "wall_loops": 3
+}

@@ -1,0 +1,61 @@
+{
+  "version": "AirGap Paste Stealth Octo v1",
+  "units": "mm",
+  "dimensions_mm": {
+    "width_no_lug": 48.0,
+    "width_with_lug": 65.0,
+    "depth": 48.0,
+    "height_shell": 18.2,
+    "total_height_with_cap": 24.8
+  },
+  "checks": {
+    "shell_vs_base_mm3": 0,
+    "keycap_vs_shell_mm3": 0,
+    "lightguides_vs_shell_mm3": 0,
+    "lightguides_vs_base_mm3": 0,
+    "official_xiao_vs_shell_mm3": 0,
+    "official_xiao_vs_base_mm3": 0
+  },
+  "parts": {
+    "01_upper_shell_octo": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        62.5,
+        48.0,
+        15.6
+      ],
+      "volume_mm3": 11515.92
+    },
+    "02_bottom_chassis_octo": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        48.0,
+        48.0,
+        5.8
+      ],
+      "volume_mm3": 5470.06
+    },
+    "03_mx_keycap_octo": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        18.2,
+        18.2,
+        8.8
+      ],
+      "volume_mm3": 1322.15
+    },
+    "04_lightguides_octo": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        19.0,
+        7.0,
+        2.0
+      ],
+      "volume_mm3": 104.35
+    }
+  }
+}

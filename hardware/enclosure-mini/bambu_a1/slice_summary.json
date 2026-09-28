@@ -1,0 +1,34 @@
+{
+  "01_shell_mini_PLA_Black": {
+    "file": "01_shell_mini_A1_PLA_Black.3mf",
+    "material": "PLA",
+    "color": "Black",
+    "print_time_minutes": 37.2,
+    "filament_grams": 8.2,
+    "warning": ""
+  },
+  "02_top_button_mini_PETG_Translucent": {
+    "file": "02_top_button_mini_A1_PETG_Translucent.3mf",
+    "material": "PETG",
+    "color": "Translucent",
+    "print_time_minutes": 23.1,
+    "filament_grams": 5.2,
+    "warning": "It seems object 02_top_button_mini.stl has floating regions. Please re-orient the object or enable support generation."
+  },
+  "02_top_button_mini_PLA_White": {
+    "file": "02_top_button_mini_A1_PLA_White.3mf",
+    "material": "PLA",
+    "color": "White",
+    "print_time_minutes": 20.4,
+    "filament_grams": 5.32,
+    "warning": "It seems object 02_top_button_mini.stl has floating regions. Please re-orient the object or enable support generation."
+  },
+  "03_bottom_base_mini_PLA_Black": {
+    "file": "03_bottom_base_mini_A1_PLA_Black.3mf",
+    "material": "PLA",
+    "color": "Black",
+    "print_time_minutes": 28.9,
+    "filament_grams": 5.66,
+    "warning": ""
+  }
+}

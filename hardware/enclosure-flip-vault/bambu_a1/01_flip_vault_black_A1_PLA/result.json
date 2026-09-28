@@ -1,0 +1,94 @@
+{
+    "error_string": "Success.",
+    "export_time": 487,
+    "layer_height": 0.20000000298023224,
+    "plate_index": 0,
+    "prepare_time": 14,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 193.41676330566406,
+                "Bridge": 272.2308349609375,
+                "Custom": 381.4695739746094,
+                "Flush": 25.0,
+                "Gap infill": 151.12582397460938,
+                "Inner wall": 833.2954711914063,
+                "Internal solid infill": 572.79345703125,
+                "Outer wall": 974.9129638671875,
+                "Overhang wall": 118.95319366455078,
+                "Sparse infill": 275.2438049316406,
+                "Support": 491.7384948730469,
+                "Support interface": 94.84728240966797,
+                "Support transition": 65.23758697509766,
+                "Top surface": 304.1284484863281,
+                "Travel": 748.1572875976563,
+                "Undefined": 730.99609375
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFL99",
+                    "id": 1,
+                    "main_used_g": 28.073226928710938,
+                    "total_used_g": 28.073226928710938
+                }
+            ],
+            "generate_support_material_time": 1103,
+            "id": 1,
+            "infill_time": 130,
+            "layer_filament_change": 0,
+            "main_predication": 5071.01904296875,
+            "make_perimeters_time": 158,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 61.999996185302734,
+                        "height": 20.700000762939453,
+                        "width": 54.0,
+                        "x": 131.0,
+                        "y": 116.85001373291016,
+                        "z": 0.0
+                    },
+                    "id": 57,
+                    "name": "01_upper_shell_vault.stl",
+                    "triangle_count": 4814
+                },
+                {
+                    "bbox": {
+                        "depth": 54.0,
+                        "height": 5.199999809265137,
+                        "width": 47.999996185302734,
+                        "x": 70.99999237060547,
+                        "y": 124.8499984741211,
+                        "z": 0.0
+                    },
+                    "id": 68,
+                    "name": "02_bottom_chassis_vault.stl",
+                    "triangle_count": 1136
+                },
+                {
+                    "bbox": {
+                        "depth": 35.69999694824219,
+                        "height": 9.199999809265137,
+                        "width": 47.20000076293945,
+                        "x": 86.12947082519531,
+                        "y": 77.1500015258789,
+                        "z": 0.0
+                    },
+                    "id": 79,
+                    "name": "06_flip_shield_vault_face_down.stl",
+                    "triangle_count": 1080
+                }
+            ],
+            "sliced_time": 2129,
+            "sliced_time_with_cache": 646,
+            "total_predication": 5485.32763671875,
+            "triangle_count": 7030,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 20.0,
+    "wall_loops": 3
+}

@@ -1,0 +1,110 @@
+{
+    "error_string": "Success.",
+    "layer_height": 0.20000000298023224,
+    "peak_rss_mb": 167.21875,
+    "plate_index": 0,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 142.81192016601563,
+                "Bridge": 235.39292907714844,
+                "Custom": 381.3066101074219,
+                "Flush": 25.0,
+                "Gap infill": 116.47793579101563,
+                "Inner wall": 675.7759399414063,
+                "Internal solid infill": 443.58642578125,
+                "Outer wall": 779.0172729492188,
+                "Overhang wall": 113.25670623779297,
+                "Sparse infill": 243.5397491455078,
+                "Support": 488.9158935546875,
+                "Support interface": 88.04826354980469,
+                "Support transition": 62.18690872192383,
+                "Top surface": 231.35157775878906,
+                "Travel": 666.06982421875,
+                "Undefined": 649.0319213867188
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFL99",
+                    "id": 1,
+                    "main_used_g": 24.025646209716797,
+                    "total_used_g": 24.025644302368164
+                }
+            ],
+            "id": 1,
+            "layer_filament_change": 0,
+            "main_predication": 4261.376953125,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 62.0,
+                        "height": 20.599998474121094,
+                        "width": 54.0,
+                        "x": 131.0,
+                        "y": 97.0,
+                        "z": 0.0
+                    },
+                    "id": 38,
+                    "name": "01_upper_shell_ops.stl",
+                    "triangle_count": 3628
+                },
+                {
+                    "bbox": {
+                        "depth": 54.0,
+                        "height": 5.199999809265137,
+                        "width": 48.0,
+                        "x": 71.0,
+                        "y": 101.0,
+                        "z": 0.0
+                    },
+                    "id": 49,
+                    "name": "02_bottom_chassis_ops.stl",
+                    "triangle_count": 1136
+                }
+            ],
+            "times": {
+                "conflict_check_time": 25,
+                "detect_overhangs_time": 8,
+                "export_gcode_time": 630,
+                "flush_plan_time": 0,
+                "generate_support_material_time": 1482,
+                "infill_generate_time": 50,
+                "infill_time": 122,
+                "ironing_time": 0,
+                "make_perimeters_time": 157,
+                "multifilament_segment_2d_time": 0,
+                "other_slice_time": 1,
+                "prepare_infill_time": 72,
+                "region_split_time": 0,
+                "skirt_brim_time": 8,
+                "slice_layers_time": 38,
+                "sliced_time": 2472,
+                "sliced_time_with_cache": 638,
+                "support_detect_time": 446,
+                "support_interface_time": 3,
+                "support_normal_generate_time": 1033,
+                "support_toolpath_time": 8,
+                "support_tree_generate_time": 0,
+                "toolpath_time": 34,
+                "wall_time": 119,
+                "wipe_tower_time": 3
+            },
+            "total_predication": 4675.6455078125,
+            "triangle_count": 4764,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 20.0,
+    "times": {
+        "export_3mf_time": 108,
+        "export_slicedata_time": 0,
+        "export_time": 556,
+        "import_time": 5,
+        "load_slicedata_time": 0,
+        "prepare_time": 15
+    },
+    "wall_loops": 3
+}

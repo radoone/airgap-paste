@@ -1,0 +1,72 @@
+{
+  "01_upper_shell_edc_PLA_Black": {
+    "file": "01_upper_shell_edc_A1_PLA_Black.3mf",
+    "material": "PLA",
+    "colour": "Black",
+    "layer_height_mm": 0.2,
+    "supports": false,
+    "print_time_minutes": 64.7,
+    "filament_grams": 19.0,
+    "warning": ""
+  },
+  "02_bottom_chassis_edc_PLA_Black": {
+    "file": "02_bottom_chassis_edc_A1_PLA_Black.3mf",
+    "material": "PLA",
+    "colour": "Black",
+    "layer_height_mm": 0.2,
+    "supports": false,
+    "print_time_minutes": 32.1,
+    "filament_grams": 8.47,
+    "warning": ""
+  },
+  "03_mx_keycap_translucent_PETG_Translucent": {
+    "file": "03_mx_keycap_translucent_A1_PETG_Translucent.3mf",
+    "material": "PETG",
+    "colour": "Translucent",
+    "layer_height_mm": 0.16,
+    "supports": false,
+    "print_time_minutes": 17.3,
+    "filament_grams": 1.33,
+    "warning": ""
+  },
+  "04_lightguide_translucent_PETG_Translucent": {
+    "file": "04_lightguide_translucent_A1_PETG_Translucent.3mf",
+    "material": "PETG",
+    "colour": "Translucent",
+    "layer_height_mm": 0.16,
+    "supports": false,
+    "print_time_minutes": 11.1,
+    "filament_grams": 0.34,
+    "warning": ""
+  },
+  "05_mx_fit_coupon_PLA_Black": {
+    "file": "05_mx_fit_coupon_A1_PLA_Black.3mf",
+    "material": "PLA",
+    "colour": "Black",
+    "layer_height_mm": 0.2,
+    "supports": false,
+    "print_time_minutes": 11.2,
+    "filament_grams": 1.27,
+    "warning": ""
+  },
+  "06_guard_left_PLA_Black": {
+    "file": "06_guard_left_A1_PLA_Black.3mf",
+    "material": "PLA",
+    "colour": "Black",
+    "layer_height_mm": 0.2,
+    "supports": false,
+    "print_time_minutes": 11.4,
+    "filament_grams": 0.96,
+    "warning": ""
+  },
+  "07_guard_right_PLA_Black": {
+    "file": "07_guard_right_A1_PLA_Black.3mf",
+    "material": "PLA",
+    "colour": "Black",
+    "layer_height_mm": 0.2,
+    "supports": false,
+    "print_time_minutes": 11.4,
+    "filament_grams": 0.96,
+    "warning": ""
+  }
+}

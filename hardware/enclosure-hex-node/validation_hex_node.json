@@ -1,0 +1,109 @@
+{
+  "version": "AirGap Paste Compact Hex Node v2",
+  "units": "mm",
+  "body_across_flats_mm": 48.0,
+  "overall_with_lug_mm": [
+    67.71281292110204,
+    48.0,
+    22.0
+  ],
+  "assembled_height_with_keycap_mm": 31.3,
+  "hardware": {
+    "board": "Seeed Studio XIAO ESP32-S3",
+    "board_pocket_mm": [
+      22.8,
+      20.8
+    ],
+    "usb_opening_mm": [
+      10.8,
+      4.8
+    ],
+    "mx_cutout_mm": 14.1,
+    "mx_plate_thickness_mm": 1.5,
+    "fasteners": "2x M3x10 DIN 963 + 2x M3 nuts",
+    "front_indicators": "2x 2 mm LEDs",
+    "keycap": "rounded square 20 x 20 mm, blank",
+    "lanyard": "integral open loop for cord or purchased metal ring"
+  },
+  "checks": {
+    "board_vs_shell_mm3": 0,
+    "board_vs_keycap_mm3": 0,
+    "mx_vs_base_mm3": 0,
+    "shell_vs_base_mm3": 0,
+    "lightguide_vs_shell_mm3": 0,
+    "lightguide_vs_base_mm3": 0,
+    "lightguide_vs_keycap_mm3": 0,
+    "official_xiao_step_vs_shell_mm3": 0,
+    "official_xiao_step_vs_base_mm3": 0
+  },
+  "parts": {
+    "01_upper_shell_hex": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        67.713,
+        48.0,
+        19.4
+      ],
+      "volume_mm3": 10911.27
+    },
+    "02_bottom_chassis_hex": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        55.085,
+        48.0,
+        11.1
+      ],
+      "volume_mm3": 5721.41
+    },
+    "03_mx_keycap_hex": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        20.0,
+        20.0,
+        6.8
+      ],
+      "volume_mm3": 1237.23
+    },
+    "04_lightguide_hex": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        3.7,
+        8.25,
+        16.3
+      ],
+      "volume_mm3": 256.26
+    },
+    "06_mx_fit_coupon_hex": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        60.0,
+        22.0,
+        1.5
+      ],
+      "volume_mm3": 1085.33
+    },
+    "07_usb_fit_coupon_hex": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        32.0,
+        14.0,
+        2.2
+      ],
+      "volume_mm3": 852.36
+    }
+  },
+  "physical_validation_required": [
+    "MX fit coupon for actual switch batch",
+    "USB-C cable test",
+    "LED/light-guide brightness test",
+    "U.FL bend radius and antenna radio test",
+    "M3 screw length test"
+  ],
+  "usb_recess_from_front_mm": 1.159
+}

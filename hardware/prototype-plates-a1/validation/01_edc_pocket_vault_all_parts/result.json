@@ -1,0 +1,143 @@
+{
+    "error_string": "Success.",
+    "export_time": 654,
+    "layer_height": 0.20000000298023224,
+    "plate_index": 0,
+    "prepare_time": 212,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 286.6719970703125,
+                "Bridge": 206.4966583251953,
+                "Custom": 385.6663818359375,
+                "Flush": 25.0,
+                "Gap infill": 269.27813720703125,
+                "Inner wall": 1083.6300048828125,
+                "Internal solid infill": 967.157958984375,
+                "Outer wall": 1591.0010986328125,
+                "Overhang wall": 59.502017974853516,
+                "Sparse infill": 193.54966735839844,
+                "Top surface": 363.3858642578125,
+                "Travel": 730.4609375,
+                "Undefined": 713.34521484375
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFL99",
+                    "id": 1,
+                    "main_used_g": 32.12438201904297,
+                    "total_used_g": 32.12438201904297
+                }
+            ],
+            "generate_support_material_time": 93,
+            "id": 1,
+            "infill_time": 336,
+            "layer_filament_change": 0,
+            "main_predication": 5725.818359375,
+            "make_perimeters_time": 526,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 47.99999237060547,
+                        "height": 21.400001525878906,
+                        "width": 61.997825622558594,
+                        "x": 109.50106048583984,
+                        "y": 130.42486572265625,
+                        "z": 0.0
+                    },
+                    "id": 129,
+                    "name": "01_upper_shell_edc.stl",
+                    "triangle_count": 11206
+                },
+                {
+                    "bbox": {
+                        "depth": 47.999996185302734,
+                        "height": 10.600000381469727,
+                        "width": 61.997825622558594,
+                        "x": 109.50106048583984,
+                        "y": 80.42487335205078,
+                        "z": 0.0
+                    },
+                    "id": 140,
+                    "name": "02_bottom_chassis_edc.stl",
+                    "triangle_count": 9616
+                },
+                {
+                    "bbox": {
+                        "depth": 21.000001907348633,
+                        "height": 6.799999237060547,
+                        "width": 18.60000228881836,
+                        "x": 88.90107727050781,
+                        "y": 124.44744873046875,
+                        "z": 0.0
+                    },
+                    "id": 151,
+                    "name": "03_mx_keycap_translucent.stl",
+                    "triangle_count": 3244
+                },
+                {
+                    "bbox": {
+                        "depth": 25.000001907348633,
+                        "height": 6.900001525878906,
+                        "width": 9.000001907348633,
+                        "x": 98.50106811523438,
+                        "y": 147.44741821289063,
+                        "z": 0.0
+                    },
+                    "id": 173,
+                    "name": "06_guard_left.stl",
+                    "triangle_count": 1532
+                },
+                {
+                    "bbox": {
+                        "depth": 25.000003814697266,
+                        "height": 6.900001525878906,
+                        "width": 8.999999046325684,
+                        "x": 98.50109100341797,
+                        "y": 97.44745635986328,
+                        "z": 0.0
+                    },
+                    "id": 184,
+                    "name": "07_guard_right.stl",
+                    "triangle_count": 1532
+                },
+                {
+                    "bbox": {
+                        "depth": 12.000006675720215,
+                        "height": 13.856406211853027,
+                        "width": 12.000003814697266,
+                        "x": 84.50110626220703,
+                        "y": 147.4474334716797,
+                        "z": 0.0
+                    },
+                    "id": 195,
+                    "name": "08_paracord_cord_bead.stl",
+                    "triangle_count": 528
+                },
+                {
+                    "bbox": {
+                        "depth": 14.699997901916504,
+                        "height": 3.700000047683716,
+                        "width": 8.250003814697266,
+                        "x": 163.24888610839844,
+                        "y": 77.57514190673828,
+                        "z": 0.0
+                    },
+                    "id": 162,
+                    "name": "04_lightguide_translucent.stl",
+                    "triangle_count": 540
+                }
+            ],
+            "sliced_time": 2005,
+            "sliced_time_with_cache": 930,
+            "total_predication": 6144.369140625,
+            "triangle_count": 28198,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 20.0,
+    "wall_loops": 3
+}

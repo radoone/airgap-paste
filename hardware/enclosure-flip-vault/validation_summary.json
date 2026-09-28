@@ -1,0 +1,162 @@
+{
+  "version": "AirGap Paste Flip Vault v1",
+  "units": "mm",
+  "dimensions_mm": {
+    "width": 54.0,
+    "depth": 48.0,
+    "height_shell": 16.5,
+    "total_height_closed": 26.5,
+    "closed_keycap_to_shield_nominal_gap": 1.2,
+    "length_with_loop": 62.0
+  },
+  "checks": {
+    "shell_vs_base_mm3": 0,
+    "keycap_vs_shell_mm3": 0,
+    "lightguides_vs_shell_mm3": 0,
+    "lightguides_vs_base_mm3": 0,
+    "halo_vs_shell_mm3": 0,
+    "halo_vs_keycap_mm3": 0,
+    "closed_shield_vs_shell_mm3": 0,
+    "closed_shield_vs_keycap_mm3": 0,
+    "open_shield_vs_shell_mm3": 0,
+    "open_shield_vs_keycap_mm3": 0,
+    "board_wedge_vs_shell_mm3": 0,
+    "board_wedge_vs_base_mm3": 0.002700000000000156,
+    "official_xiao_vs_retention_mm3": 0,
+    "official_xiao_vs_board_wedge_mm3": 0,
+    "official_xiao_vs_shell_mm3": 0,
+    "official_xiao_vs_base_mm3": 0
+  },
+  "motion_sweep_deg": {
+    "0": {
+      "shell_mm3": 0,
+      "keycap_mm3": 0
+    },
+    "-10": {
+      "shell_mm3": 0,
+      "keycap_mm3": 0
+    },
+    "-20": {
+      "shell_mm3": 0,
+      "keycap_mm3": 0
+    },
+    "-30": {
+      "shell_mm3": 0,
+      "keycap_mm3": 0
+    },
+    "-40": {
+      "shell_mm3": 0,
+      "keycap_mm3": 0
+    },
+    "-50": {
+      "shell_mm3": 0,
+      "keycap_mm3": 0
+    },
+    "-60": {
+      "shell_mm3": 0,
+      "keycap_mm3": 0
+    },
+    "-70": {
+      "shell_mm3": 0,
+      "keycap_mm3": 0
+    },
+    "-80": {
+      "shell_mm3": 0,
+      "keycap_mm3": 0
+    },
+    "-90": {
+      "shell_mm3": 0,
+      "keycap_mm3": 0
+    },
+    "-100": {
+      "shell_mm3": 0,
+      "keycap_mm3": 0
+    },
+    "-110": {
+      "shell_mm3": 0,
+      "keycap_mm3": 0
+    }
+  },
+  "fixture_clearances_mm": {
+    "front_stop_mm": 0.001,
+    "rear_wedge_face_mm": 0.004,
+    "rear_wedge_to_anvil_mm": 0.0,
+    "side_fence_each_mm": 0.205,
+    "top_tab_above_pcb_mm": 0.195,
+    "ledge_top_vs_pcb_bottom_mm": 0.005,
+    "usb_face_recess_from_front_mm": 1.023
+  },
+  "usb_load_path": "plug to connector to seated PCB to broad front shoulders on pull; PCB to rear wedge to full-width anvil on insertion",
+  "parts": {
+    "01_upper_shell_vault": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        54.0,
+        62.0,
+        20.7
+      ],
+      "volume_mm3": 12749.42
+    },
+    "02_bottom_chassis_vault": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        54.0,
+        48.0,
+        5.2
+      ],
+      "volume_mm3": 6106.6
+    },
+    "03_mx_keycap_vault": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        18.2,
+        18.2,
+        7.2
+      ],
+      "volume_mm3": 1069.2
+    },
+    "04_lightguides_vault": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        19.0,
+        7.0,
+        2.0
+      ],
+      "volume_mm3": 104.35
+    },
+    "05_accent_halo_vault": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        22.6,
+        22.6,
+        2.7
+      ],
+      "volume_mm3": 360.66
+    },
+    "06_flip_shield_vault": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        47.2,
+        35.7,
+        9.2
+      ],
+      "volume_mm3": 4492.54
+    },
+    "07_xiao_locking_wedge": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        27.0,
+        1.5,
+        2.0
+      ],
+      "volume_mm3": 77.65
+    }
+  }
+}

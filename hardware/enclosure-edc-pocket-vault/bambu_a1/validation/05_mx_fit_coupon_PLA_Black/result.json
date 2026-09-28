@@ -1,0 +1,62 @@
+{
+    "error_string": "Success.",
+    "export_time": 386,
+    "layer_height": 0.20000000298023224,
+    "plate_index": 0,
+    "prepare_time": 6,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 26.778234481811523,
+                "Custom": 385.5577697753906,
+                "Flush": 25.0,
+                "Gap infill": 3.3009066581726074,
+                "Inner wall": 69.4868392944336,
+                "Internal solid infill": 31.798084259033203,
+                "Outer wall": 56.51512908935547,
+                "Top surface": 36.106143951416016,
+                "Travel": 53.339298248291016,
+                "Undefined": 36.445526123046875
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFL99",
+                    "id": 1,
+                    "main_used_g": 1.273078441619873,
+                    "total_used_g": 1.273078441619873
+                }
+            ],
+            "generate_support_material_time": 1,
+            "id": 1,
+            "infill_time": 17,
+            "layer_filament_change": 0,
+            "main_predication": 252.32730102539063,
+            "make_perimeters_time": 5,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 22.0,
+                        "height": 1.5,
+                        "width": 59.999996185302734,
+                        "x": 97.99999237060547,
+                        "y": 117.0,
+                        "z": 0.0
+                    },
+                    "id": 5,
+                    "name": "05_mx_fit_coupon.stl",
+                    "triangle_count": 584
+                }
+            ],
+            "sliced_time": 58,
+            "sliced_time_with_cache": 32,
+            "total_predication": 670.9913330078125,
+            "triangle_count": 584,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 20.0,
+    "wall_loops": 3
+}

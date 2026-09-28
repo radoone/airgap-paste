@@ -1,0 +1,145 @@
+{
+  "version": "AirGap Paste EDC Pocket Vault v1",
+  "units": "mm",
+  "external_body_mm": [
+    54.0,
+    48.0,
+    24.0
+  ],
+  "overall_with_lug_mm": [
+    62.0,
+    48.0,
+    24.0
+  ],
+  "assembled_height_with_keycap_mm": 35.0,
+  "hardware": {
+    "board": "Seeed Studio XIAO ESP32-S3",
+    "board_nominal_mm": [
+      20.95,
+      17.78,
+      4.85
+    ],
+    "board_pocket_mm": [
+      22.8,
+      20.8
+    ],
+    "usb_opening_mm": [
+      13.2,
+      7.0
+    ],
+    "mx_cutout_mm": 14.1,
+    "mx_plate_thickness_mm": 1.5,
+    "led_bore_mm": 5.35,
+    "fasteners": "4x M3x10 DIN 963 + 4x M3 DIN 934 nuts"
+  },
+  "parts": {
+    "01_upper_shell_edc": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        62.0,
+        48.0,
+        21.4
+      ],
+      "volume_mm3": 17023.81
+    },
+    "02_bottom_chassis_edc": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        62.0,
+        48.0,
+        10.6
+      ],
+      "volume_mm3": 7314.29
+    },
+    "03_mx_keycap_translucent": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        18.6,
+        21.0,
+        6.8
+      ],
+      "volume_mm3": 1091.46
+    },
+    "04_lightguide_translucent": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        3.7,
+        8.25,
+        14.7
+      ],
+      "volume_mm3": 233.88
+    },
+    "05_mx_fit_coupon": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        60.0,
+        22.0,
+        1.5
+      ],
+      "volume_mm3": 1080.17
+    },
+    "06_guard_left": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        9.0,
+        25.0,
+        6.9
+      ],
+      "volume_mm3": 948.08
+    },
+    "07_guard_right": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        9.0,
+        25.0,
+        6.9
+      ],
+      "volume_mm3": 948.08
+    },
+    "08_paracord_cord_bead": {
+      "valid": true,
+      "solids": 1,
+      "bbox_mm": [
+        12.0,
+        12.0,
+        13.856
+      ],
+      "volume_mm3": 1260.87
+    }
+  },
+  "checks": {
+    "board_vs_shell_mm3": 0.0,
+    "board_vs_keycap_mm3": 0.0,
+    "mx_body_vs_base_mm3": 0.0,
+    "official_xiao_step_vs_shell_mm3": 0.0
+  },
+  "physical_validation_required": [
+    "print MX coupon and select 14.00/14.10/14.20 opening for the actual switch batch",
+    "test USB cable overmould clearance",
+    "test LED brightness and diffusion with chosen translucent filament",
+    "verify U.FL cable bend radius and antenna radio performance",
+    "verify screw length with actual DIN 963 head and nut thickness"
+  ],
+  "stl_print_orientation": {
+    "01_upper_shell_edc": "top face on build plate",
+    "02_bottom_chassis_edc": "bottom face on build plate",
+    "03_mx_keycap_translucent": "key top on build plate",
+    "04_lightguide_translucent": "laid on side",
+    "05_mx_fit_coupon": "flat",
+    "06_guard_left": "flat guard top on build plate",
+    "07_guard_right": "flat guard top on build plate",
+    "08_paracord_cord_bead": "hexagonal barrel laid on a flat side"
+  },
+  "official_xiao_step_placed_bbox_mm": [
+    17.78,
+    22.482,
+    4.46
+  ]
+}

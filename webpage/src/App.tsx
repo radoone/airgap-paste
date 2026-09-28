@@ -28,7 +28,7 @@ import { getToken } from "firebase/app-check";
 import { appCheck } from "./firebase";
 import { disableGoogleAnalytics, enableGoogleAnalytics } from "./analytics";
 import { brand } from "./brand";
-import productHero from "./assets/airgap-paste-hero-v2.png";
+import productHero from "./assets/airgap-paste-hero-v4.png";
 import transferMark from "./assets/airgap-transfer-mark.png";
 import "./styles.css";
 
@@ -171,8 +171,8 @@ function LandingPage() {
           <p className="hero-lede">AirGap Paste is a pocket-sized Bluetooth hardware bridge. Review commands, keys, or scripts on your phone or laptop, then press SEND; it types into any computer, VM console, or terminal as a standard USB keyboard.</p>
         </div>
         <button className="hero-visual" type="button" aria-label="Open an enlarged AirGap Paste prototype render" onClick={() => setIsProductPreviewOpen(true)}>
-          <img src={productHero} alt="AirGap Paste desktop controller with a milky-white sculpted SEND button, green illuminated halo, silky-black lower enclosure, and Wi-Fi-to-USB one-way transfer mark." />
-          <div className="visual-label visual-label--top">Desktop enclosure<br /><strong>Ø 68 × 27 mm · Sculpted 3D Printed</strong></div>
+          <img src={productHero} alt="AirGap Paste desktop controller with a broad milky-white sculpted SEND button, continuous green halo, silky-black lower enclosure, Wi-Fi-to-USB one-way transfer mark, and embossed AIRGAP PASTE name." />
+          <div className="visual-label visual-label--top">Desktop enclosure<br /><strong>Ø 68 × 28 mm · Sculpted 3D Printed</strong></div>
           <div className="visual-label visual-label--bottom"><span className="status-dot status-dot--green status-dot--pulse" /> Green Halo · Blinks when ready to press</div>
           <span className="visual-expand">Click to enlarge</span>
         </button>
@@ -192,8 +192,8 @@ function LandingPage() {
         <div className="product-preview" role="dialog" aria-modal="true" aria-label="Enlarged AirGap Paste prototype render" onMouseDown={() => setIsProductPreviewOpen(false)}>
           <div className="product-preview__content" onMouseDown={(event) => event.stopPropagation()}>
             <button ref={closePreviewRef} className="product-preview__close" type="button" onClick={() => setIsProductPreviewOpen(false)} aria-label="Close enlarged render"><X size={22} /></button>
-            <img src={productHero} alt="Enlarged render of AirGap Paste with its milky-white SEND button, green halo, silky-black base, and Wi-Fi-to-USB one-way transfer mark." />
-            <p>AirGap Paste desktop controller · Ø 68 × 27 mm sculpted 3D-printed enclosure with an illuminated halo SEND button</p>
+            <img src={productHero} alt="Enlarged render of AirGap Paste with its broad milky-white SEND button, continuous green halo, silky-black base, Wi-Fi-to-USB mark, and embossed AIRGAP PASTE name." />
+            <p>AirGap Paste desktop controller · Ø 68 × 28 mm sculpted 3D-printed enclosure with an illuminated halo SEND button</p>
           </div>
         </div>
       )}
@@ -390,7 +390,7 @@ function LandingPage() {
       <section id="faq" className="faq section-shell" aria-labelledby="faq-heading">
         <div><p className="section-kicker">FAQ</p><h2 id="faq-heading">The useful constraints.</h2></div>
         <div className="faq-list">
-          <details><summary>Is AirGap Paste a finished product?</summary><p>Not yet. AirGap Paste is in active prototype testing and this is a pre-launch waitlist. The enclosure shown is the intended Ø 68 × 27 mm precision 3D-printed desktop controller with a removable milky-white halo SEND button and silky-black lower enclosure.</p></details>
+          <details><summary>Is AirGap Paste a finished product?</summary><p>Not yet. AirGap Paste is in active prototype testing and this is a pre-launch waitlist. The enclosure shown is the intended Ø 68 × 28 mm precision 3D-printed desktop controller with a removable milky-white halo SEND button, embossed AIRGAP PASTE name, and silky-black lower enclosure.</p></details>
           <details><summary>Does it automatically run a command?</summary><p>No. The intended default is text-only input. A physical confirmation starts typing, and the device does not append Enter to single-line commands.</p></details>
           <details><summary>Does the target computer need a driver?</summary><p>No custom driver is intended on the target computer. AirGap Paste is being designed to appear as a standard USB HID keyboard, using the keyboard support already built into the operating system.</p></details>
           <details><summary>Can it transfer multi-line scripts?</summary><p>That is an intended workflow for text editors and reviewed shell inputs. Because a line break may execute a terminal command, the focused application and process remain your responsibility.</p></details>

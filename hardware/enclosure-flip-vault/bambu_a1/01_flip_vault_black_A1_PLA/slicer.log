@@ -1,0 +1,3 @@
+[2026-09-28 21:35:03.208964] [0x00000001eda3e180] [trace]   Initializing StaticPrintConfigs
+[2026-09-28 21:35:03.443319] [0x000000016d593000] [error]   ZFiller: encounter idx from clip: 5
+[2026-09-28 21:35:03.510019] [0x000000016d187000] [error]   ZFiller: encounter idx from clip: 3

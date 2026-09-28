@@ -1,0 +1,120 @@
+{
+  "EDC Pocket Vault": {
+    "parts": {
+      "01_upper_shell_edc": {
+        "vertices": 5577,
+        "faces": 11206,
+        "non_manifold_edges": 0,
+        "bbox_mm": [
+          61.998,
+          48.0,
+          21.4
+        ]
+      },
+      "02_bottom_chassis_edc": {
+        "vertices": 4800,
+        "faces": 9616,
+        "non_manifold_edges": 0,
+        "bbox_mm": [
+          61.998,
+          48.0,
+          10.6
+        ]
+      },
+      "03_mx_keycap_translucent": {
+        "vertices": 1624,
+        "faces": 3244,
+        "non_manifold_edges": 0,
+        "bbox_mm": [
+          18.6,
+          21.0,
+          6.8
+        ]
+      },
+      "04_lightguide_translucent": {
+        "vertices": 272,
+        "faces": 540,
+        "non_manifold_edges": 0,
+        "bbox_mm": [
+          3.7,
+          8.25,
+          14.7
+        ]
+      },
+      "06_guard_left": {
+        "vertices": 768,
+        "faces": 1532,
+        "non_manifold_edges": 0,
+        "bbox_mm": [
+          9.0,
+          25.0,
+          6.9
+        ]
+      },
+      "07_guard_right": {
+        "vertices": 768,
+        "faces": 1532,
+        "non_manifold_edges": 0,
+        "bbox_mm": [
+          9.0,
+          25.0,
+          6.9
+        ]
+      },
+      "08_paracord_cord_bead": {
+        "vertices": 264,
+        "faces": 528,
+        "non_manifold_edges": 0,
+        "bbox_mm": [
+          12.0,
+          12.0,
+          13.856
+        ]
+      }
+    }
+  },
+  "Hex Node": {
+    "parts": {
+      "01_upper_shell_hex": {
+        "vertices": 3077,
+        "faces": 6178,
+        "non_manifold_edges": 0,
+        "bbox_mm": [
+          67.713,
+          48.0,
+          19.4
+        ]
+      },
+      "02_bottom_chassis_hex": {
+        "vertices": 2558,
+        "faces": 5120,
+        "non_manifold_edges": 0,
+        "bbox_mm": [
+          55.085,
+          48.0,
+          11.1
+        ]
+      },
+      "03_mx_keycap_hex": {
+        "vertices": 868,
+        "faces": 1732,
+        "non_manifold_edges": 0,
+        "bbox_mm": [
+          20.0,
+          20.0,
+          6.8
+        ]
+      },
+      "04_lightguide_hex": {
+        "vertices": 16,
+        "faces": 28,
+        "non_manifold_edges": 0,
+        "bbox_mm": [
+          3.7,
+          8.25,
+          12.7
+        ]
+      }
+    }
+  }
+}
