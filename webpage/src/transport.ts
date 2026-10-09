@@ -8,17 +8,21 @@ export type DeviceInfo = { name: string; simulated: boolean };
 export const CLIENT_ID_KEY = "airgap_client_id";
 export const PAIRED_TOKEN_KEY = "airgap_pairing_token";
 
+let fallbackClientId = "";
+
 export function getOrCreateClientId(): string {
   try {
     let id = localStorage.getItem(CLIENT_ID_KEY);
     if (!id || !/^[0-9a-f]{16}$/i.test(id)) {
-      const bytes = crypto.getRandomValues(new Uint8Array(8));
-      id = bytesToHex(bytes);
+      id = bytesToHex(crypto.getRandomValues(new Uint8Array(8)));
       localStorage.setItem(CLIENT_ID_KEY, id);
     }
     return id;
   } catch {
-    return "0123456789abcdef";
+    if (!fallbackClientId) {
+      fallbackClientId = bytesToHex(crypto.getRandomValues(new Uint8Array(8)));
+    }
+    return fallbackClientId;
   }
 }
 
@@ -136,10 +140,11 @@ async function hmacHex(secret: string, challengeHex: string): Promise<string> {
 }
 
 export function validateTransferText(text: string, mode: TransferMode = "command", keyboardTarget: KeyboardTarget = "ascii"): Uint8Array {
-  const bytes = encoder.encode(text);
-  if (!text.trim()) throw new Error("Add text before queuing a transfer.");
+  const normalized = text.replace(/\r\n?/g, "\n");
+  const bytes = encoder.encode(normalized);
+  if (!normalized.trim()) throw new Error("Add text before queuing a transfer.");
   if (bytes.length > MAX_TRANSFER_BYTES) throw new Error(`The prototype accepts at most ${MAX_TRANSFER_BYTES} bytes per transfer.`);
-  for (const symbol of text) {
+  for (const symbol of normalized) {
     const codePoint = symbol.codePointAt(0) ?? 0;
     const isTextWhitespace = mode === "text" && (codePoint === 0x09 || codePoint === 0x0a);
     const isControl = codePoint < 0x20 || (codePoint >= 0x7f && codePoint <= 0x9f);
@@ -199,6 +204,8 @@ export class WebBluetoothTransport implements TransferTransport {
   private stateListener?: (stage: TransferStage, message?: string) => void;
   private heartbeatTimer?: number;
   private heartbeatInFlight = false;
+  private transferInFlight = false;
+  private writeChain: Promise<void> = Promise.resolve();
 
   async connect(): Promise<DeviceInfo> {
     const bluetooth = bluetoothApi();
@@ -286,7 +293,7 @@ export class WebBluetoothTransport implements TransferTransport {
   async unpair(): Promise<void> {
     const clientId = getOrCreateClientId();
     clearSavedPairing();
-    if (this.stage === "connected" && this.rx) {
+    if (this.rx && ["connected", "queued", "awaiting-confirmation", "transferred"].includes(this.stage)) {
       try {
         await this.write(`UNPAIR ${clientId}`);
         await this.waitFor((msg) => msg === "OK UNPAIR", 3000);
@@ -300,15 +307,27 @@ export class WebBluetoothTransport implements TransferTransport {
     if (this.stage !== "connected" && this.stage !== "transferred") throw new Error("Connect a device before queuing a transfer.");
     const bytes = validateTransferText(payload.text, payload.mode, payload.keyboardTarget);
     this.transferId = bytesToHex(crypto.getRandomValues(new Uint8Array(4)));
+    this.inbox = [];
+    this.pendingError = undefined;
     const digest = await sha256Hex(bytes);
-    await this.write(`QUEUE ${this.transferId} ${bytes.length} ${digest} ${payload.mode} ${payload.keyboardTarget}`);
-    for (let offset = 0; offset < bytes.length; offset += 120) {
-      const chunk = bytes.slice(offset, offset + 120);
-      await this.write(`DATA ${this.transferId} ${offset} ${bytesToBase64(chunk)}`);
+    this.transferInFlight = true;
+    try {
+      await this.write(`QUEUE ${this.transferId} ${bytes.length} ${digest} ${payload.mode} ${payload.keyboardTarget}`);
+      const totalChunks = Math.ceil(bytes.length / 120);
+      for (let offset = 0, chunkIndex = 1; offset < bytes.length; offset += 120, chunkIndex += 1) {
+        const chunk = bytes.slice(offset, offset + 120);
+        await this.write(`DATA ${this.transferId} ${offset} ${bytesToBase64(chunk)}`);
+        if (totalChunks > 2) {
+          const pct = Math.round((Math.min(offset + 120, bytes.length) / bytes.length) * 100);
+          this.stateListener?.("queued", `Uploading buffer… ${pct}% (${chunkIndex}/${totalChunks} chunks)`);
+        }
+      }
+      await this.write(`COMMIT ${this.transferId}`);
+      this.stage = "queued";
+      this.stateListener?.("queued");
+    } finally {
+      this.transferInFlight = false;
     }
-    await this.write(`COMMIT ${this.transferId}`);
-    this.stage = "queued";
-    this.stateListener?.("queued");
   }
 
   async awaitConfirmation(): Promise<void> {
@@ -388,7 +407,13 @@ export class WebBluetoothTransport implements TransferTransport {
   }
 
   private async sendHeartbeat() {
-    if (this.heartbeatInFlight || !["connected", "queued", "awaiting-confirmation", "typing", "transferred"].includes(this.stage)) return;
+    if (
+      this.heartbeatInFlight ||
+      this.transferInFlight ||
+      !["connected", "queued", "awaiting-confirmation", "typing", "transferred"].includes(this.stage)
+    ) {
+      return;
+    }
     this.heartbeatInFlight = true;
     try {
       await this.write("PING");
@@ -433,6 +458,19 @@ export class WebBluetoothTransport implements TransferTransport {
         this.stage = "typing";
         this.stateListener?.("typing");
       }
+      return;
+    }
+    if (message.startsWith("PROGRESS ")) {
+      const [, progressId, typedRaw, totalRaw] = message.trim().split(/\s+/);
+      if (progressId === this.transferId) {
+        const typed = Number.parseInt(typedRaw, 10);
+        const total = Number.parseInt(totalRaw, 10);
+        if (total > 0 && Number.isFinite(typed)) {
+          const pct = Math.round((typed / total) * 100);
+          this.stateListener?.("typing", `Typing progress: ${pct}% (${typed}/${total} chars)`);
+        }
+      }
+      return;
     }
     const waiterIndex = this.waiters.findIndex((waiter) => waiter.predicate(message));
     if (waiterIndex >= 0) {
@@ -466,17 +504,23 @@ export class WebBluetoothTransport implements TransferTransport {
     });
   }
 
-  private async write(message: string) {
-    if (!this.rx) throw new Error("Bluetooth command channel is unavailable.");
-    const value = encoder.encode(message);
-    if (this.rx.writeValueWithResponse) await this.rx.writeValueWithResponse(value);
-    else await this.rx.writeValue(value);
+  private write(message: string): Promise<void> {
+    const nextWrite = this.writeChain.then(async () => {
+      if (!this.rx) throw new Error("Bluetooth command channel is unavailable.");
+      const value = encoder.encode(message);
+      if (this.rx.writeValueWithResponse) await this.rx.writeValueWithResponse(value);
+      else await this.rx.writeValue(value);
+    });
+    this.writeChain = nextWrite.catch(() => {});
+    return nextWrite;
   }
 
   private reset(error: Error, nextStage: TransferStage = "disconnected") {
     window.clearInterval(this.heartbeatTimer);
     this.heartbeatTimer = undefined;
     this.heartbeatInFlight = false;
+    this.transferInFlight = false;
+    this.writeChain = Promise.resolve();
     this.stage = nextStage;
     this.rx = undefined;
     this.tx = undefined;

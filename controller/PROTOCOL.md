@@ -18,10 +18,9 @@ device: PAIR_WAIT 30
 # Device enters pairing mode; LED blinks rapidly (5 Hz).
 # User physically presses the BOOT or D1/GPIO2 button on AirGap Paste within 30 seconds.
 device: PAIR_OK <32-hex-token>
-device: OK AUTH
 ```
 
-The browser saves `<16-hex-client-id>` and `<32-hex-token>` in persistent local storage. The device saves them in flash NVS (supporting up to 8 paired clients).
+The browser saves `<16-hex-client-id>` and `<32-hex-token>` in persistent local storage. The device saves them in flash NVS (supporting up to 8 paired clients) and marks the session as authenticated.
 
 ## 2. Reconnecting a Paired Client (Instant 1-Click)
 
@@ -42,7 +41,7 @@ The client can then immediately fall back to the `PAIR` command.
 
 ## 3. Unpairing & Factory Reset
 
-- **Client unpair**:
+- **Client unpair** (requires an authenticated session for `<16-hex-client-id>`):
   ```text
   client: UNPAIR <16-hex-client-id>
   device: OK UNPAIR
@@ -64,7 +63,10 @@ client: COMMIT <id>
 device: READY <id>
 # User presses BOOT or the D1/GPIO2 SEND button to initiate typing.
 device: TYPING <id>
+device: PROGRESS <id> <typed-codepoints> <total-codepoints>
 device: DONE <id>
+# Pressing BOOT or D1/GPIO2 again while typing immediately releases keys and aborts:
+device: ERR ABORTED Typing cancelled on device
 ```
 
 Errors use `ERR <CODE> <detail>`. An authenticated browser sends `PING` every 20 seconds and expects `PONG`; this refreshes the five-minute authentication idle timer and detects a lost GATT link. Every transfer declares a typing mode and target keyboard. `ascii` accepts printable US ASCII only; `linux`, `macos`, and `windows` accept valid printable UTF-8. Linux uses `Ctrl+Shift+U`, macOS uses Unicode Hex Input, and Windows uses the EnableHexNumpad Alt+plus sequence. The host must have the corresponding input method enabled. `text` also accepts LF line breaks and Tab, which are typed as Enter and Tab keys within the transferred text. Both modes accept at most 16 KB per transfer. Neither mode adds an automatic Enter after the payload. DATA chunks must be sequential and the complete payload must match both the declared length and SHA-256 digest.

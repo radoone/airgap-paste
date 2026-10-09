@@ -2,4 +2,3 @@
 .vscode/
 .venv/
 .platformio-core/
-include/device_secrets.h

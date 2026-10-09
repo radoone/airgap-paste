@@ -38,6 +38,7 @@ describe("SimulatedTransport", () => {
     expect(Array.from(validateTransferText("docker compose up -d", "command", "ascii"))).toEqual(Array.from(new TextEncoder().encode("docker compose up -d")));
     expect(() => validateTransferText("echo ready\n./deploy", "command", "linux")).toThrow("one line");
     expect(Array.from(validateTransferText("First line\n\tSecond line", "text", "ascii"))).toEqual(Array.from(new TextEncoder().encode("First line\n\tSecond line")));
+    expect(Array.from(validateTransferText("First line\r\nSecond line", "text", "ascii"))).toEqual(Array.from(new TextEncoder().encode("First line\nSecond line")));
     expect(() => validateTransferText("príliš", "text", "ascii")).toThrow("cannot type Unicode");
     expect(Array.from(validateTransferText("príliš", "text", "linux"))).toEqual(Array.from(new TextEncoder().encode("príliš")));
     expect(Array.from(validateTransferText("deploy 🚀", "text", "linux"))).toEqual(Array.from(new TextEncoder().encode("deploy 🚀")));

@@ -35,7 +35,7 @@ const stageCopy: Record<TransferStage, { label: string; title: string; detail: s
   connected: { label: "Next step", title: "Review, then queue the text", detail: "Nothing will be typed until you confirm it on the device." },
   queued: { label: "Preparing transfer", title: "Sending text to the device", detail: "Keep this tab open while AirGap Paste verifies the complete buffer." },
   "awaiting-confirmation": { label: "Action required", title: "Press blinking halo on AirGap Paste", detail: "The green halo is blinking. Choose where the text should appear, then press the halo button physically." },
-  typing: { label: "In progress", title: "AirGap Paste is typing…", detail: "Keystrokes are being typed into the focused host window." },
+  typing: { label: "In progress", title: "AirGap Paste is typing…", detail: "Keystrokes are being typed into the focused host window. Press the device button again to stop immediately." },
   transferred: { label: "Completed", title: "Text transfer finished", detail: "The reviewed text was typed. It remains in the editor for review." },
   error: { label: "Needs attention", title: "The connection needs your help", detail: "Check the message and try the connection again." },
 };
@@ -104,9 +104,13 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
   }
 
   async function forgetDevice() {
-    clearSavedPairing();
     if (transportRef.current.unpair) {
       await transportRef.current.unpair();
+    } else {
+      clearSavedPairing();
+    }
+    if (stage !== "disconnected" && stage !== "error") {
+      disconnect();
     }
     setHasPairedDevice(false);
     setMessage("Paired device forgotten from this browser.");
@@ -265,30 +269,19 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
                 <li className="confirmation-step__arrow" aria-hidden="true"><ArrowRight size={17} /></li>
                 <li><span className="confirmation-step__number">2</span><HandTap size={27} weight="duotone" /><strong>Press blinking halo</strong><small>Illuminated SEND button</small></li>
               </ol>}
-              {message && <p className="transfer-error">{message}</p>}
+              {message && <p className={stage === "error" ? "transfer-error" : "transfer-progress"}>{message}</p>}
               {validationError && <p className="transfer-error" role="alert">{validationError}</p>}
             </div>
           </div>
           <div className="transfer-settings">
             <label className="transfer-format"><span>Transfer type</span><select aria-label="Transfer type" value={transferMode} onChange={(event) => { setTransferMode(event.target.value as TransferMode); if (validationError) setValidationError(""); }}><option value="command">Command — one line</option><option value="text">Text — lines allowed</option></select><small>{transferMode === "command" ? "For a single command or short value. It is typed but not automatically submitted." : "For reviewed text with line breaks and tabs. It is typed exactly after confirmation."}</small></label>
-            {hasUnicode ? <><label className="transfer-format transfer-format--unicode"><span>Unicode detected · choose target keyboard</span><select aria-label="Target keyboard" value={unicodeTarget} onChange={(event) => { setUnicodeTarget(event.target.value as Exclude<KeyboardTarget, "ascii"> | ""); if (validationError) setValidationError(""); }}><option value="">Choose target system…</option><option value="linux">Linux — Unicode input</option><option value="macos">macOS — Unicode Hex Input</option><option value="windows">Windows — Unicode Alt code</option></select><small>{unicodeTarget === "linux" ? "Tested on Linux with Ctrl + Shift + U Unicode input." : unicodeTarget === "macos" ? "Requires Unicode Hex Input on the target Mac." : unicodeTarget === "windows" ? "Requires EnableHexNumpad and a numeric keypad on the target Windows system." : "Select the operating system that will receive the text."}</small></label>{unicodeTarget === "macos" && <details className="macos-unicode-hint"><summary>macOS setup hint</summary><p>On the target Mac: System Settings → Keyboard → Text Input → Edit → <strong>+</strong> → add <strong>Unicode Hex Input</strong>. Select it from the Input menu before pressing SEND.</p></details>}</> : <p className="ascii-output-note">US ASCII selected automatically for this text.</p>}
+            {hasUnicode ? <><label className="transfer-format transfer-format--unicode"><span>Unicode detected · choose target keyboard</span><select aria-label="Target keyboard" value={unicodeTarget} onChange={(event) => { setUnicodeTarget(event.target.value as Exclude<KeyboardTarget, "ascii"> | ""); if (validationError) setValidationError(""); }}><option value="">Choose target system…</option><option value="linux">Linux — Unicode input</option><option value="macos">macOS — Unicode Hex Input</option><option value="windows">Windows — Unicode Alt code</option></select><small>{unicodeTarget === "linux" ? "Tested on Linux with Ctrl + Shift + U Unicode input." : unicodeTarget === "macos" ? "Requires Unicode Hex Input on the target Mac." : unicodeTarget === "windows" ? "Requires EnableHexNumpad and a numeric keypad on the target Windows system." : "Select the operating system that will receive the text."}</small></label>{unicodeTarget === "macos" && <details className="macos-unicode-hint"><summary>macOS setup hint</summary><p>On the target Mac: System Settings → Keyboard → Text Input → Edit → <strong>+</strong> → add <strong>Unicode Hex Input</strong>. Select it from the Input menu before pressing SEND.</p></details>}</> : <p className="ascii-output-note">US ASCII selected automatically (target host must use US QWERTY keyboard layout).</p>}
           </div>
           <div className="transfer-actions">
             {(stage === "disconnected" || stage === "error") && (
               <>
-                <button
-                  className="action-button"
-                  type="button"
-                  onClick={connectHardware}
-                  disabled={stage === "connecting" || stage === "pairing"}
-                >
-                  {stage === "connecting" ? (
-                    <><CircleNotch className="spin" size={18} /> Connecting</>
-                  ) : stage === "pairing" ? (
-                    <><HandTap size={18} /> Press button to pair</>
-                  ) : (
-                    <><ClipboardText size={18} /> Connect AirGap Paste</>
-                  )}
+                <button className="action-button" type="button" onClick={connectHardware}>
+                  <ClipboardText size={18} /> Connect AirGap Paste
                 </button>
                 {hasPairedDevice && (
                   <button className="secondary-button" type="button" onClick={forgetDevice}>
@@ -314,7 +307,16 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
               </section>
             )}
             {canConfirm && isSimulated && <div className="simulated-confirmation"><p><strong>Simulation only.</strong> This will simulate typing the reviewed text into the target you choose.</p><button className="action-button action-button--confirm" type="button" onClick={confirm}><Fingerprint size={18} /> Simulate physical confirmation</button></div>}
-            {stage !== "disconnected" && stage !== "connecting" && stage !== "pairing" && <button className="secondary-button" type="button" onClick={disconnect}>Disconnect device</button>}
+            {stage !== "disconnected" && stage !== "connecting" && stage !== "pairing" && (
+              <>
+                <button className="secondary-button" type="button" onClick={disconnect}>Disconnect device</button>
+                {hasPairedDevice && !isSimulated && (stage === "connected" || stage === "transferred") && (
+                  <button className="secondary-button" type="button" onClick={forgetDevice}>
+                    Forget paired device
+                  </button>
+                )}
+              </>
+            )}
           </div>
           <dl className="transfer-meta"><div><dt>Transfer size</dt><dd>{stats.bytes} UTF-8 bytes</dd></div><div><dt>Confirmation</dt><dd>{canConfirm ? "Required now" : "Not requested"}</dd></div></dl>
           <p className="transfer-disclaimer">Check the text carefully. After physical confirmation, AirGap Paste types it into the active window. Keystrokes are paced for reliable USB keyboard input; the reviewed text is never changed.</p>
