@@ -1,0 +1,92 @@
+{
+  "01_shell": {
+    "vertices": 27661,
+    "faces": 55346,
+    "nonmanifold_edges": 0,
+    "dimensions_mm": [
+      54.0,
+      48.0,
+      24.2
+    ]
+  },
+  "02_base": {
+    "vertices": 2992,
+    "faces": 5988,
+    "nonmanifold_edges": 0,
+    "dimensions_mm": [
+      54.0,
+      48.0,
+      11.8
+    ]
+  },
+  "03_keycap": {
+    "vertices": 15287,
+    "faces": 30570,
+    "nonmanifold_edges": 0,
+    "dimensions_mm": [
+      20.2,
+      20.2,
+      8.3
+    ]
+  },
+  "04_halo": {
+    "vertices": 14120,
+    "faces": 28240,
+    "nonmanifold_edges": 0,
+    "dimensions_mm": [
+      27.6,
+      27.6,
+      9.4
+    ]
+  },
+  "05_mx_plate": {
+    "vertices": 368,
+    "faces": 736,
+    "nonmanifold_edges": 0,
+    "dimensions_mm": [
+      26.2,
+      26.2,
+      1.5
+    ]
+  },
+  "06_lightguide_left": {
+    "vertices": 12,
+    "faces": 20,
+    "nonmanifold_edges": 0,
+    "dimensions_mm": [
+      5.0,
+      7.7,
+      2.8
+    ]
+  },
+  "06_lightguide_right": {
+    "vertices": 14,
+    "faces": 24,
+    "nonmanifold_edges": 0,
+    "dimensions_mm": [
+      5.0,
+      7.7,
+      2.8
+    ]
+  },
+  "07_xiao_wedge": {
+    "vertices": 26,
+    "faces": 48,
+    "nonmanifold_edges": 0,
+    "dimensions_mm": [
+      28.4,
+      3.25901,
+      1.75
+    ]
+  },
+  "09_eye_bushing": {
+    "vertices": 22521,
+    "faces": 45042,
+    "nonmanifold_edges": 0,
+    "dimensions_mm": [
+      8.0197,
+      8.3996,
+      5.31751
+    ]
+  }
+}

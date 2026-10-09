@@ -22,6 +22,11 @@
     "open_shield_vs_keycap_mm3": 0,
     "board_wedge_vs_shell_mm3": 0,
     "board_wedge_vs_base_mm3": 0.002700000000000156,
+    "pressed_keycap_vs_shell_mm3": 0,
+    "pressed_keycap_vs_halo_mm3": 0,
+    "mx_body_vs_shell_mm3": 0,
+    "mx_pin_wiring_vs_base_mm3": 0,
+    "mx_pin_wiring_vs_shell_mm3": 0,
     "official_xiao_vs_retention_mm3": 0,
     "official_xiao_vs_board_wedge_mm3": 0,
     "official_xiao_vs_shell_mm3": 0,
@@ -87,6 +92,9 @@
     "usb_face_recess_from_front_mm": 1.023
   },
   "usb_load_path": "plug to connector to seated PCB to broad front shoulders on pull; PCB to rear wedge to full-width anvil on insertion",
+  "mx_snap_plate_thickness_measured_mm": 1.5,
+  "mx_keycap_full_travel_checked_mm": 4.0,
+  "mx_contact_orientation": "metal pins toward +Y, away from the XIAO rear anvil",
   "parts": {
     "01_upper_shell_vault": {
       "valid": true,
@@ -96,7 +104,7 @@
         62.0,
         20.7
       ],
-      "volume_mm3": 12749.42
+      "volume_mm3": 13181.18
     },
     "02_bottom_chassis_vault": {
       "valid": true,
@@ -106,7 +114,7 @@
         48.0,
         5.2
       ],
-      "volume_mm3": 6100.32
+      "volume_mm3": 5995.92
     },
     "03_mx_keycap_vault": {
       "valid": true,
@@ -116,7 +124,7 @@
         18.2,
         7.2
       ],
-      "volume_mm3": 1069.2
+      "volume_mm3": 640.09
     },
     "04_lightguides_vault": {
       "valid": true,
@@ -154,9 +162,9 @@
       "bbox_mm": [
         28.8,
         2.7,
-        2.0
+        1.8
       ],
-      "volume_mm3": 82.46
+      "volume_mm3": 71.88
     }
   },
   "optional_wedge_faces_y_mm": {

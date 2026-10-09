@@ -1,0 +1,18 @@
+{
+  "file": "03_clear_lightguides_A1_PLA.3mf",
+  "objects": 2,
+  "print_sequence": "by layer",
+  "minimum_full_height_XY_bounding_box_gap_mm": 12.0,
+  "brim_width_mm": 4.0,
+  "brim_object_gap_mm": 0.15,
+  "conservative_remaining_brim_gap_mm": 3.7,
+  "pair_distances": [
+    {
+      "objects": [
+        1,
+        2
+      ],
+      "bounding_box_gap_mm": 12.0
+    }
+  ]
+}

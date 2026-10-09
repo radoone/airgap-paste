@@ -1,0 +1,103 @@
+{
+    "error_string": "Success.",
+    "export_time": 532,
+    "layer_height": 0.10000000149011612,
+    "plate_index": 0,
+    "prepare_time": 444,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 60.35958480834961,
+                "Bridge": 11.783092498779297,
+                "Custom": 399.51177978515625,
+                "Flush": 25.0,
+                "Gap infill": 67.13124084472656,
+                "Inner wall": 248.7437286376953,
+                "Internal solid infill": 161.96669006347656,
+                "Outer wall": 370.1584167480469,
+                "Sparse infill": 89.52900695800781,
+                "Top surface": 71.49314880371094,
+                "Travel": 304.9161376953125,
+                "Undefined": 287.97393798828125
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFL99",
+                    "id": 1,
+                    "main_used_g": 3.5077292919158936,
+                    "total_used_g": 3.5077292919158936
+                }
+            ],
+            "generate_support_material_time": 17,
+            "id": 1,
+            "infill_time": 76,
+            "layer_filament_change": 0,
+            "main_predication": 1361.0850830078125,
+            "make_perimeters_time": 196,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 24.0000057220459,
+                        "height": 1.5,
+                        "width": 24.0000057220459,
+                        "x": 128.99998474121094,
+                        "y": 128.99998474121094,
+                        "z": 0.0
+                    },
+                    "id": 74,
+                    "name": "08_mx_coupon_14p0.stl",
+                    "triangle_count": 672
+                },
+                {
+                    "bbox": {
+                        "depth": 24.000001907348633,
+                        "height": 1.5,
+                        "width": 24.0000057220459,
+                        "x": 128.99998474121094,
+                        "y": 103.00000762939453,
+                        "z": 0.0
+                    },
+                    "id": 85,
+                    "name": "08_mx_coupon_14p1.stl",
+                    "triangle_count": 672
+                },
+                {
+                    "bbox": {
+                        "depth": 24.0000057220459,
+                        "height": 1.5,
+                        "width": 24.000001907348633,
+                        "x": 103.00000762939453,
+                        "y": 128.99998474121094,
+                        "z": 0.0
+                    },
+                    "id": 96,
+                    "name": "08_mx_coupon_14p2.stl",
+                    "triangle_count": 672
+                },
+                {
+                    "bbox": {
+                        "depth": 20.19999885559082,
+                        "height": 8.300000190734863,
+                        "width": 20.199996948242188,
+                        "x": 106.80000305175781,
+                        "y": 106.80001068115234,
+                        "z": 0.0
+                    },
+                    "id": 107,
+                    "name": "03_keycap.stl",
+                    "triangle_count": 31162
+                }
+            ],
+            "sliced_time": 761,
+            "sliced_time_with_cache": 427,
+            "total_predication": 1793.6546630859375,
+            "triangle_count": 33178,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 20.0,
+    "wall_loops": 3
+}

@@ -1,4 +1,4 @@
-"""Create three Bambu Lab A1 prototype plates for the Flip Vault."""
+"""Create three build plates and one MX fit-test plate for the A1."""
 
 from pathlib import Path
 import json
@@ -16,6 +16,7 @@ plates = (
     ("01_flip_vault_black_A1_PLA.3mf", ["01_upper_shell_vault.stl", "02_bottom_chassis_vault.stl", "06_flip_shield_vault_face_down.stl", "07_xiao_locking_wedge.stl"], True),
     ("02_flip_vault_orange_A1_PLA.3mf", ["03_mx_keycap_vault_top_down.stl", "05_accent_halo_vault.stl"], False),
     ("03_flip_vault_clear_A1_PLA.3mf", ["04_lightguides_vault.stl"], False),
+    ("04_mx_snap_fit_coupons_A1_PLA.3mf", ["08_mx_snap_coupon_14p0.stl", "08_mx_snap_coupon_14p1.stl", "08_mx_snap_coupon_14p2.stl"], False),
 )
 summaries = []
 

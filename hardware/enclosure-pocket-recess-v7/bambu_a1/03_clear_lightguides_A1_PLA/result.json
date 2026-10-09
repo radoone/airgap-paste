@@ -1,0 +1,82 @@
+{
+    "error_string": "Success.",
+    "export_time": 438,
+    "layer_height": 0.10000000149011612,
+    "plate_index": 0,
+    "prepare_time": 16,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Brim": 14.324461936950684,
+                "Custom": 399.15679931640625,
+                "Flush": 25.0,
+                "Inner wall": 28.90044593811035,
+                "Outer wall": 64.7922592163086,
+                "Top surface": 1.095007300376892,
+                "Travel": 211.3162841796875,
+                "Undefined": 194.43336486816406
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFL99",
+                    "id": 1,
+                    "main_used_g": 0.16443610191345215,
+                    "total_used_g": 0.16443610191345215
+                }
+            ],
+            "generate_support_material_time": 23,
+            "id": 1,
+            "infill_time": 2,
+            "layer_filament_change": 0,
+            "main_predication": 295.43218994140625,
+            "make_perimeters_time": 20,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 2.800001621246338,
+                        "height": 7.700000286102295,
+                        "width": 5.0,
+                        "x": 117.0,
+                        "y": 126.5999984741211,
+                        "z": -3.051148222965594e-09
+                    },
+                    "id": 5,
+                    "name": "06_lightguide_left.stl",
+                    "triangle_count": 20
+                },
+                {
+                    "bbox": {
+                        "depth": 2.800001621246338,
+                        "height": 7.700000286102295,
+                        "width": 5.0,
+                        "x": 134.0,
+                        "y": 126.5999984741211,
+                        "z": -3.051148222965594e-09
+                    },
+                    "id": 9,
+                    "name": "06_lightguide_right.stl",
+                    "triangle_count": 24
+                }
+            ],
+            "sliced_time": 179,
+            "sliced_time_with_cache": 117,
+            "total_predication": 727.7060546875,
+            "triangle_count": 44,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 20.0,
+    "upward_compatible_machine": [
+        "Bambu Lab H2D 0.4 nozzle",
+        "Bambu Lab H2D Pro 0.4 nozzle",
+        "Bambu Lab H2S 0.4 nozzle",
+        "Bambu Lab P2S 0.4 nozzle",
+        "Bambu Lab H2C 0.4 nozzle",
+        "Bambu Lab X2D 0.4 nozzle",
+        "Bambu Lab A2L 0.4 nozzle"
+    ],
+    "wall_loops": 3
+}

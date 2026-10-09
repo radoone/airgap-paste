@@ -9,8 +9,8 @@
     ],
     "support_enabled": true,
     "warning": "",
-    "print_time_minutes": 93.1,
-    "filament_grams": 28.34
+    "print_time_minutes": 95.5,
+    "filament_grams": 28.86
   },
   {
     "file": "02_flip_vault_orange_A1_PLA.3mf",
@@ -20,8 +20,8 @@
     ],
     "support_enabled": false,
     "warning": "",
-    "print_time_minutes": 14.7,
-    "filament_grams": 1.8
+    "print_time_minutes": 13.2,
+    "filament_grams": 1.32
   },
   {
     "file": "03_flip_vault_clear_A1_PLA.3mf",
@@ -32,5 +32,17 @@
     "warning": "",
     "print_time_minutes": 8.2,
     "filament_grams": 0.19
+  },
+  {
+    "file": "04_mx_snap_fit_coupons_A1_PLA.3mf",
+    "parts": [
+      "08_mx_snap_coupon_14p0.stl",
+      "08_mx_snap_coupon_14p1.stl",
+      "08_mx_snap_coupon_14p2.stl"
+    ],
+    "support_enabled": false,
+    "warning": "",
+    "print_time_minutes": 31.9,
+    "filament_grams": 8.23
   }
 ]

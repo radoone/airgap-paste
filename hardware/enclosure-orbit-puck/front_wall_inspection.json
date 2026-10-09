@@ -1,0 +1,5 @@
+{
+  "front_wall_probe_expected_mm3": 3.2,
+  "front_wall_probe_actual_mm3": 3.1999999999999957,
+  "solid_front_above_USB": true
+}

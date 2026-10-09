@@ -1,0 +1,74 @@
+{
+    "error_string": "Success.",
+    "export_time": 842,
+    "layer_height": 0.1599999964237213,
+    "plate_index": 0,
+    "prepare_time": 828,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 40.729469299316406,
+                "Bridge": 24.419063568115234,
+                "Custom": 385.86285400390625,
+                "Flush": 25.0,
+                "Gap infill": 0.9879403710365295,
+                "Inner wall": 393.8354797363281,
+                "Internal solid infill": 315.10028076171875,
+                "Outer wall": 409.2906188964844,
+                "Overhang wall": 3.286750316619873,
+                "Sparse infill": 486.077880859375,
+                "Top surface": 4.804380893707275,
+                "Travel": 440.24737548828125,
+                "Undefined": 423.4543151855469
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFG02",
+                    "id": 1,
+                    "main_used_g": 9.407559394836426,
+                    "total_used_g": 9.407559394836426
+                }
+            ],
+            "generate_support_material_time": 48,
+            "id": 1,
+            "infill_time": 219,
+            "layer_filament_change": 0,
+            "main_predication": 2093.776123046875,
+            "make_perimeters_time": 262,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 48.13237380981445,
+                        "height": 23.28020477294922,
+                        "width": 38.79821014404297,
+                        "x": 75.21202850341797,
+                        "y": 92.31507873535156,
+                        "z": 1.3525390585300556e-08
+                    },
+                    "id": 5,
+                    "name": "Duck head - Cherry MX 1.30 mm",
+                    "triangle_count": 251394
+                }
+            ],
+            "sliced_time": 845,
+            "sliced_time_with_cache": 277,
+            "total_predication": 2512.845947265625,
+            "triangle_count": 251394,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 15.0,
+    "upward_compatible_machine": [
+        "Bambu Lab H2D 0.4 nozzle",
+        "Bambu Lab H2D Pro 0.4 nozzle",
+        "Bambu Lab H2S 0.4 nozzle",
+        "Bambu Lab P2S 0.4 nozzle",
+        "Bambu Lab H2C 0.4 nozzle",
+        "Bambu Lab X2D 0.4 nozzle",
+        "Bambu Lab A2L 0.4 nozzle"
+    ],
+    "wall_loops": 3
+}

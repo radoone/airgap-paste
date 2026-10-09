@@ -1,0 +1,162 @@
+[
+  {
+    "file": "00_complete_test_A1_PLA.3mf",
+    "models_match_final_STLs": [
+      {
+        "source": "07_xiao_wedge.stl",
+        "mesh_volume_difference_mm3": 0.0
+      },
+      {
+        "source": "06_lightguide_right.stl",
+        "mesh_volume_difference_mm3": 0.0
+      },
+      {
+        "source": "06_lightguide_left.stl",
+        "mesh_volume_difference_mm3": 0.0
+      },
+      {
+        "source": "05_mx_plate.stl",
+        "mesh_volume_difference_mm3": 2.6e-05
+      },
+      {
+        "source": "02_base.stl",
+        "mesh_volume_difference_mm3": 0.000945
+      },
+      {
+        "source": "01_shell.stl",
+        "mesh_volume_difference_mm3": 0.000336
+      },
+      {
+        "source": "04_halo.stl",
+        "mesh_volume_difference_mm3": 1.6e-05
+      },
+      {
+        "source": "12_seam_trim.stl",
+        "mesh_volume_difference_mm3": 0.0
+      },
+      {
+        "source": "03_keycap.stl",
+        "mesh_volume_difference_mm3": 3.7e-05
+      },
+      {
+        "source": "09_eye_bushing.stl",
+        "mesh_volume_difference_mm3": 0.0
+      }
+    ],
+    "archive_ok": true
+  },
+  {
+    "file": "01_graphite_A1_PLA.3mf",
+    "models_match_final_STLs": [
+      {
+        "source": "07_xiao_wedge.stl",
+        "mesh_volume_difference_mm3": 0.0
+      },
+      {
+        "source": "02_base.stl",
+        "mesh_volume_difference_mm3": 0.000945
+      },
+      {
+        "source": "01_shell.stl",
+        "mesh_volume_difference_mm3": 0.000336
+      }
+    ],
+    "archive_ok": true
+  },
+  {
+    "file": "02_orange_A1_PLA.3mf",
+    "models_match_final_STLs": [
+      {
+        "source": "12_seam_trim.stl",
+        "mesh_volume_difference_mm3": 0.0
+      },
+      {
+        "source": "05_mx_plate.stl",
+        "mesh_volume_difference_mm3": 2.6e-05
+      },
+      {
+        "source": "04_halo.stl",
+        "mesh_volume_difference_mm3": 1.6e-05
+      },
+      {
+        "source": "03_keycap.stl",
+        "mesh_volume_difference_mm3": 3.7e-05
+      },
+      {
+        "source": "09_eye_bushing.stl",
+        "mesh_volume_difference_mm3": 0.0
+      }
+    ],
+    "archive_ok": true
+  },
+  {
+    "file": "03_clear_lightguides_A1_PLA.3mf",
+    "models_match_final_STLs": [
+      {
+        "source": "06_lightguide_left.stl",
+        "mesh_volume_difference_mm3": 0.0
+      },
+      {
+        "source": "06_lightguide_right.stl",
+        "mesh_volume_difference_mm3": 0.0
+      }
+    ],
+    "archive_ok": true
+  },
+  {
+    "file": "04_mx_fit_tests_A1_PLA.3mf",
+    "models_match_final_STLs": [
+      {
+        "source": "08_mx_coupon_14p0.stl",
+        "mesh_volume_difference_mm3": 0.0
+      },
+      {
+        "source": "08_mx_coupon_14p2.stl",
+        "mesh_volume_difference_mm3": 0.0
+      },
+      {
+        "source": "08_mx_coupon_14p1.stl",
+        "mesh_volume_difference_mm3": 0.0
+      },
+      {
+        "source": "03_keycap.stl",
+        "mesh_volume_difference_mm3": 3.7e-05
+      }
+    ],
+    "archive_ok": true
+  },
+  {
+    "file": "06_eyelet_fit_A1_PLA.3mf",
+    "models_match_final_STLs": [
+      {
+        "source": "10_eyelet_coupon.stl",
+        "mesh_volume_difference_mm3": 7e-06
+      },
+      {
+        "source": "09_eye_bushing.stl",
+        "mesh_volume_difference_mm3": 0.0
+      }
+    ],
+    "archive_ok": true
+  },
+  {
+    "file": "07_seam_trim_A1_PLA.3mf",
+    "models_match_final_STLs": [
+      {
+        "source": "12_seam_trim.stl",
+        "mesh_volume_difference_mm3": 0.0
+      }
+    ],
+    "archive_ok": true
+  },
+  {
+    "file": "08_base_upgrade_A1_PLA.3mf",
+    "models_match_final_STLs": [
+      {
+        "source": "02_base.stl",
+        "mesh_volume_difference_mm3": 0.000483
+      }
+    ],
+    "archive_ok": true
+  }
+]

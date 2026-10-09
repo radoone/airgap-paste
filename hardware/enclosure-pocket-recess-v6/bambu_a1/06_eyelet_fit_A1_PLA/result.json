@@ -1,0 +1,79 @@
+{
+    "error_string": "Success.",
+    "export_time": 635,
+    "layer_height": 0.10000000149011612,
+    "plate_index": 0,
+    "prepare_time": 200,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 1.574791431427002,
+                "Bridge": 6.3647942543029785,
+                "Brim": 29.236295700073242,
+                "Custom": 399.2647399902344,
+                "Flush": 25.0,
+                "Gap infill": 41.546112060546875,
+                "Inner wall": 374.6875915527344,
+                "Internal solid infill": 76.7579116821289,
+                "Outer wall": 279.111328125,
+                "Overhang wall": 0.8222840428352356,
+                "Sparse infill": 95.33670043945313,
+                "Top surface": 11.578202247619629,
+                "Travel": 433.04473876953125,
+                "Undefined": 416.0439758300781
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFL99",
+                    "id": 1,
+                    "main_used_g": 1.5718685388565063,
+                    "total_used_g": 1.5718685388565063
+                }
+            ],
+            "generate_support_material_time": 29,
+            "id": 1,
+            "infill_time": 62,
+            "layer_filament_change": 0,
+            "main_predication": 1325.064453125,
+            "make_perimeters_time": 154,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 13.5,
+                        "height": 13.800000190734863,
+                        "width": 12.499996185302734,
+                        "x": 126.94949340820313,
+                        "y": 121.25,
+                        "z": 0.0
+                    },
+                    "id": 38,
+                    "name": "10_eyelet_coupon.stl",
+                    "triangle_count": 6552
+                },
+                {
+                    "bbox": {
+                        "depth": 8.563485145568848,
+                        "height": 1.600000023841858,
+                        "width": 8.563883781433105,
+                        "x": 116.46839904785156,
+                        "y": 123.7182388305664,
+                        "z": 0.0
+                    },
+                    "id": 49,
+                    "name": "09_eye_bushing.stl",
+                    "triangle_count": 45692
+                }
+            ],
+            "sliced_time": 1029,
+            "sliced_time_with_cache": 750,
+            "total_predication": 1757.328369140625,
+            "triangle_count": 52244,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 20.0,
+    "wall_loops": 3
+}

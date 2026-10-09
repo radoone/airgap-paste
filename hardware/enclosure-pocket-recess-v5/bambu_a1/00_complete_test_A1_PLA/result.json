@@ -1,0 +1,170 @@
+{
+    "error_string": "Success.",
+    "export_time": 848,
+    "layer_height": 0.10000000149011612,
+    "plate_index": 0,
+    "prepare_time": 565,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 192.18887329101563,
+                "Bridge": 152.11843872070313,
+                "Brim": 196.8749542236328,
+                "Custom": 399.42779541015625,
+                "Flush": 25.0,
+                "Gap infill": 493.9200134277344,
+                "Inner wall": 1678.052001953125,
+                "Internal solid infill": 809.16064453125,
+                "Outer wall": 3358.715087890625,
+                "Overhang wall": 18.215648651123047,
+                "Sparse infill": 386.3803405761719,
+                "Top surface": 274.71832275390625,
+                "Travel": 1497.517578125,
+                "Undefined": 1480.5703125
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFL99",
+                    "id": 1,
+                    "main_used_g": 27.50072479248047,
+                    "total_used_g": 27.50072479248047
+                }
+            ],
+            "generate_support_material_time": 295,
+            "id": 1,
+            "infill_time": 617,
+            "layer_filament_change": 0,
+            "main_predication": 9033.1416015625,
+            "make_perimeters_time": 1335,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 47.99999237060547,
+                        "height": 24.200000762939453,
+                        "width": 54.0,
+                        "x": 115.09999084472656,
+                        "y": 130.87498474121094,
+                        "z": 0.0
+                    },
+                    "id": 171,
+                    "name": "01_shell.stl",
+                    "triangle_count": 55682
+                },
+                {
+                    "bbox": {
+                        "depth": 47.999996185302734,
+                        "height": 11.80000114440918,
+                        "width": 54.0,
+                        "x": 115.09999084472656,
+                        "y": 80.87499237060547,
+                        "z": 0.0
+                    },
+                    "id": 182,
+                    "name": "02_base.stl",
+                    "triangle_count": 5948
+                },
+                {
+                    "bbox": {
+                        "depth": 26.200000762939453,
+                        "height": 1.5,
+                        "width": 26.200000762939453,
+                        "x": 86.90000915527344,
+                        "y": 122.487060546875,
+                        "z": 0.0
+                    },
+                    "id": 226,
+                    "name": "05_mx_plate.stl",
+                    "triangle_count": 736
+                },
+                {
+                    "bbox": {
+                        "depth": 23.40000343322754,
+                        "height": 9.5,
+                        "width": 23.39999771118164,
+                        "x": 89.70001220703125,
+                        "y": 150.68702697753906,
+                        "z": 0.0
+                    },
+                    "id": 215,
+                    "name": "04_halo.stl",
+                    "triangle_count": 27552
+                },
+                {
+                    "bbox": {
+                        "depth": 20.19999885559082,
+                        "height": 8.300000190734863,
+                        "width": 20.200000762939453,
+                        "x": 92.90000915527344,
+                        "y": 100.28707122802734,
+                        "z": 0.0
+                    },
+                    "id": 204,
+                    "name": "03_keycap.stl",
+                    "triangle_count": 31162
+                },
+                {
+                    "bbox": {
+                        "depth": 1.750002384185791,
+                        "height": 3.25900936126709,
+                        "width": 28.399993896484375,
+                        "x": 130.9617156982422,
+                        "y": 77.12500762939453,
+                        "z": 0.0
+                    },
+                    "id": 193,
+                    "name": "07_xiao_wedge.stl",
+                    "triangle_count": 48
+                },
+                {
+                    "bbox": {
+                        "depth": 8.563881874084473,
+                        "height": 1.600000023841858,
+                        "width": 8.563486099243164,
+                        "x": 104.61824798583984,
+                        "y": 89.8053207397461,
+                        "z": 0.0
+                    },
+                    "id": 237,
+                    "name": "09_eye_bushing.stl",
+                    "triangle_count": 45692
+                },
+                {
+                    "bbox": {
+                        "depth": 2.8000004291534424,
+                        "height": 7.700000286102295,
+                        "width": 5.000001430511475,
+                        "x": 109.47248840332031,
+                        "y": 176.0657196044922,
+                        "z": 0.0
+                    },
+                    "id": 248,
+                    "name": "06_lightguide_left.stl",
+                    "triangle_count": 20
+                },
+                {
+                    "bbox": {
+                        "depth": 4.999996662139893,
+                        "height": 7.700000286102295,
+                        "width": 2.8000032901763916,
+                        "x": 88.10003662109375,
+                        "y": 115.4870834350586,
+                        "z": 0.0
+                    },
+                    "id": 259,
+                    "name": "06_lightguide_right.stl",
+                    "triangle_count": 24
+                }
+            ],
+            "sliced_time": 4939,
+            "sliced_time_with_cache": 2336,
+            "total_predication": 9465.6220703125,
+            "triangle_count": 166864,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 20.0,
+    "wall_loops": 3
+}

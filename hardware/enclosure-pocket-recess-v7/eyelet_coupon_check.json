@@ -1,0 +1,10 @@
+{
+  "cad_solid": 1,
+  "watertight": true,
+  "print_extents_mm": [
+    12.5,
+    13.5,
+    13.800000090734798
+  ],
+  "purpose": "Exact corner subsection for cord and bezel fit; open cut faces are test-only"
+}

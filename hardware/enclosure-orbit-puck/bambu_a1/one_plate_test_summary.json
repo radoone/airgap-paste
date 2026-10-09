@@ -1,0 +1,26 @@
+{
+  "file": "00_all_parts_test_A1_PLA.3mf",
+  "parts": [
+    "01_shell.stl",
+    "02_base.stl",
+    "03_keycap.stl",
+    "04_halo.stl",
+    "05_belt_left.stl",
+    "05_belt_right.stl",
+    "06_lightguide_left.stl",
+    "06_lightguide_right.stl",
+    "07_xiao_wedge.stl",
+    "09_mx_snap_plate.stl"
+  ],
+  "plate_count": 1,
+  "build_items": 10,
+  "layer_height_mm": 0.1,
+  "first_layer_height_mm": 0.1,
+  "supports": false,
+  "support_feature_markers": 0,
+  "warning": "",
+  "print_time_minutes": 114.3,
+  "filament_grams": 17.46,
+  "archive_ok": true,
+  "material_note": "Single-colour PLA mechanical prototype; opaque light guides do not verify optical function."
+}

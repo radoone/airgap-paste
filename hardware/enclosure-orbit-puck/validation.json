@@ -1,0 +1,162 @@
+{
+  "design": "Orbit Puck v2 support-free cartridge",
+  "units": "mm",
+  "body_diameter_mm": 47.0,
+  "body_envelope_mm": [
+    47.0,
+    44.7,
+    23.4
+  ],
+  "keycap_top_mm": 23.2,
+  "mx_plate_mm": 1.5,
+  "mx_travel_mm": 4,
+  "pressed_skirt_clearance_mm": 0.6,
+  "mx_pins_orientation": "+Y, towards rear, above lowered anvil",
+  "screws": "2x countersunk M3x10 or M3x12 + 2x standard M3 nuts",
+  "nut_seat_z_mm": 4.4,
+  "nut_top_z_mm": 6.8,
+  "screw_tip_clearance_to_bore_end_M3x12_mm": 3.3,
+  "antenna_envelope": "A-02, 37.8 mm arc x 17.9 mm high x 1.8 mm radial; curvature and RF require physical test",
+  "checks_mm3": {
+    "shell_base": 0,
+    "board_shell": 0,
+    "board_base": 0,
+    "board_wedge": 0,
+    "board_mx_body": 0,
+    "board_pin_envelope": 0,
+    "mx_base": 0,
+    "mx_shell": 0,
+    "pins_base": 0,
+    "pins_shell": 0,
+    "antenna_shell": 0,
+    "antenna_base": 0,
+    "antenna_mx": 0,
+    "pressed_keycap_shell": 0,
+    "pressed_keycap_halo": 0,
+    "wedge_shell": 0,
+    "wedge_base": 0.0027000000000001485,
+    "pins_wedge": 0,
+    "plate_shell": 0,
+    "plate_base": 0,
+    "plate_board": 0,
+    "plate_antenna": 0,
+    "mx_plate": 0,
+    "pressed_cap_plate": 0,
+    "pins_plate": 0,
+    "screw12_-18.2_shell": 0,
+    "screw12_-18.2_base": 0,
+    "screw12_18.2_shell": 0,
+    "screw12_18.2_base": 0,
+    "nut_entry_-1_shell": 0,
+    "nut_seated_-1_base": 0,
+    "nut_entry_1_shell": 0,
+    "nut_seated_1_base": 0,
+    "06_lightguide_left_board": 0,
+    "06_lightguide_left_shell": 0,
+    "06_lightguide_right_board": 0,
+    "06_lightguide_right_shell": 0
+  },
+  "parts": {
+    "01_shell": {
+      "valid": true,
+      "solids": 1,
+      "watertight": true,
+      "bbox_mm": [
+        47.0,
+        44.7,
+        21.0
+      ]
+    },
+    "02_base": {
+      "valid": true,
+      "solids": 1,
+      "watertight": true,
+      "bbox_mm": [
+        46.98,
+        44.7,
+        13.4
+      ]
+    },
+    "03_keycap": {
+      "valid": true,
+      "solids": 1,
+      "watertight": true,
+      "bbox_mm": [
+        18.2,
+        18.2,
+        7.2
+      ]
+    },
+    "04_halo": {
+      "valid": true,
+      "solids": 1,
+      "watertight": true,
+      "bbox_mm": [
+        23.4,
+        23.4,
+        0.8
+      ]
+    },
+    "05_belt_left": {
+      "valid": true,
+      "solids": 1,
+      "watertight": true,
+      "bbox_mm": [
+        23.19,
+        44.6,
+        1.0
+      ]
+    },
+    "05_belt_right": {
+      "valid": true,
+      "solids": 1,
+      "watertight": true,
+      "bbox_mm": [
+        23.19,
+        44.6,
+        1.0
+      ]
+    },
+    "07_xiao_wedge": {
+      "valid": true,
+      "solids": 1,
+      "watertight": true,
+      "bbox_mm": [
+        28.8,
+        2.68,
+        1.75
+      ]
+    },
+    "09_mx_snap_plate": {
+      "valid": true,
+      "solids": 1,
+      "watertight": true,
+      "bbox_mm": [
+        26.2,
+        26.2,
+        1.5
+      ]
+    },
+    "06_lightguide_left": {
+      "valid": true,
+      "solids": 1,
+      "watertight": true,
+      "bbox_mm": [
+        1.9,
+        1.2,
+        1.9
+      ]
+    },
+    "06_lightguide_right": {
+      "valid": true,
+      "solids": 1,
+      "watertight": true,
+      "bbox_mm": [
+        1.9,
+        1.2,
+        1.9
+      ]
+    }
+  },
+  "mx_plate_probe_volume_mm3": 6.0
+}

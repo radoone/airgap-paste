@@ -14,3 +14,9 @@ webpage/qa/*/
 controller/.platformio-core/
 controller/.pio/
 controller/.venv/
+
+# OS, Python cache, and Blender backup files
+.DS_Store
+__pycache__/
+*.pyc
+*.blend1

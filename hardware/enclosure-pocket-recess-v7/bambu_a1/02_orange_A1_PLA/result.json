@@ -1,0 +1,125 @@
+{
+    "error_string": "Success.",
+    "export_time": 854,
+    "layer_height": 0.10000000149011612,
+    "plate_index": 0,
+    "prepare_time": 271,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 36.578670501708984,
+                "Bridge": 11.782398223876953,
+                "Custom": 399.1209716796875,
+                "Flush": 25.0,
+                "Gap infill": 122.67091369628906,
+                "Inner wall": 250.3777618408203,
+                "Internal solid infill": 136.62815856933594,
+                "Outer wall": 655.0711669921875,
+                "Sparse infill": 69.84369659423828,
+                "Top surface": 73.72564697265625,
+                "Travel": 364.9150390625,
+                "Undefined": 348.3599548339844
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFL99",
+                    "id": 1,
+                    "main_used_g": 4.289923667907715,
+                    "total_used_g": 4.289923667907715
+                }
+            ],
+            "generate_support_material_time": 141,
+            "id": 1,
+            "infill_time": 142,
+            "layer_filament_change": 0,
+            "main_predication": 1696.613037109375,
+            "make_perimeters_time": 353,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 47.999996185302734,
+                        "height": 1.2000000476837158,
+                        "width": 54.0,
+                        "x": 62.099998474121094,
+                        "y": 87.9000015258789,
+                        "z": -4.0185788030555614e-10
+                    },
+                    "id": 5,
+                    "name": "12_seam_trim.stl",
+                    "triangle_count": 28240
+                },
+                {
+                    "bbox": {
+                        "depth": 27.600000381469727,
+                        "height": 9.399999618530273,
+                        "width": 27.599992752075195,
+                        "x": 128.10000610351563,
+                        "y": 98.0999984741211,
+                        "z": -2.41513653520542e-09
+                    },
+                    "id": 9,
+                    "name": "04_halo.stl",
+                    "triangle_count": 28240
+                },
+                {
+                    "bbox": {
+                        "depth": 26.20000457763672,
+                        "height": 1.5,
+                        "width": 26.20000457763672,
+                        "x": 167.6999969482422,
+                        "y": 98.79999542236328,
+                        "z": -2.9491678432691515e-08
+                    },
+                    "id": 13,
+                    "name": "05_mx_plate.stl",
+                    "triangle_count": 736
+                },
+                {
+                    "bbox": {
+                        "depth": 20.20000648498535,
+                        "height": 8.300000190734863,
+                        "width": 20.200000762939453,
+                        "x": 107.70048522949219,
+                        "y": 147.89999389648438,
+                        "z": 4.632561001471913e-09
+                    },
+                    "id": 17,
+                    "name": "03_keycap.stl",
+                    "triangle_count": 31162
+                },
+                {
+                    "bbox": {
+                        "depth": 8.563482284545898,
+                        "height": 1.600000023841858,
+                        "width": 8.563883781433105,
+                        "x": 139.81838989257813,
+                        "y": 153.71826171875,
+                        "z": 4.744220571950564e-10
+                    },
+                    "id": 21,
+                    "name": "09_eye_bushing.stl",
+                    "triangle_count": 45692
+                }
+            ],
+            "sliced_time": 1853,
+            "sliced_time_with_cache": 1047,
+            "total_predication": 2129.178955078125,
+            "triangle_count": 134070,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 20.0,
+    "upward_compatible_machine": [
+        "Bambu Lab H2D 0.4 nozzle",
+        "Bambu Lab H2D Pro 0.4 nozzle",
+        "Bambu Lab H2S 0.4 nozzle",
+        "Bambu Lab P2S 0.4 nozzle",
+        "Bambu Lab H2C 0.4 nozzle",
+        "Bambu Lab X2D 0.4 nozzle",
+        "Bambu Lab A2L 0.4 nozzle"
+    ],
+    "wall_loops": 3
+}

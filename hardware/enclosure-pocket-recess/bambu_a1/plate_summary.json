@@ -1,0 +1,92 @@
+[
+  {
+    "file": "00_complete_test_A1_PLA.3mf",
+    "parts": [
+      "01_shell.stl",
+      "02_base.stl",
+      "07_xiao_wedge.stl",
+      "03_keycap.stl",
+      "04_halo.stl",
+      "05_mx_plate.stl",
+      "06_lightguide_left.stl",
+      "06_lightguide_right.stl"
+    ],
+    "objects": 8,
+    "plate_count": 1,
+    "layer_height_mm": 0.1,
+    "supports": false,
+    "support_feature_markers": 0,
+    "warning": "",
+    "print_time_minutes": 155.9,
+    "filament_grams": 27.64,
+    "archive_ok": true
+  },
+  {
+    "file": "01_graphite_A1_PLA.3mf",
+    "parts": [
+      "01_shell.stl",
+      "02_base.stl",
+      "07_xiao_wedge.stl"
+    ],
+    "objects": 3,
+    "plate_count": 1,
+    "layer_height_mm": 0.2,
+    "supports": false,
+    "support_feature_markers": 0,
+    "warning": "",
+    "print_time_minutes": 86.5,
+    "filament_grams": 26.43,
+    "archive_ok": true
+  },
+  {
+    "file": "02_orange_A1_PLA.3mf",
+    "parts": [
+      "03_keycap.stl",
+      "04_halo.stl",
+      "05_mx_plate.stl"
+    ],
+    "objects": 3,
+    "plate_count": 1,
+    "layer_height_mm": 0.1,
+    "supports": false,
+    "support_feature_markers": 0,
+    "warning": "",
+    "print_time_minutes": 21.0,
+    "filament_grams": 1.75,
+    "archive_ok": true
+  },
+  {
+    "file": "03_clear_lightguides_A1_PLA.3mf",
+    "parts": [
+      "06_lightguide_left.stl",
+      "06_lightguide_right.stl"
+    ],
+    "objects": 2,
+    "plate_count": 1,
+    "layer_height_mm": 0.1,
+    "supports": false,
+    "support_feature_markers": 0,
+    "warning": "",
+    "print_time_minutes": 12.1,
+    "filament_grams": 0.16,
+    "archive_ok": true
+  },
+  {
+    "file": "04_mx_fit_tests_A1_PLA.3mf",
+    "parts": [
+      "08_mx_coupon_14p0.stl",
+      "08_mx_coupon_14p1.stl",
+      "08_mx_coupon_14p2.stl",
+      "03_keycap.stl"
+    ],
+    "objects": 4,
+    "plate_count": 1,
+    "layer_height_mm": 0.1,
+    "supports": false,
+    "support_feature_markers": 0,
+    "warning": "",
+    "print_time_minutes": 25.0,
+    "filament_grams": 2.72,
+    "archive_ok": true
+  }
+]

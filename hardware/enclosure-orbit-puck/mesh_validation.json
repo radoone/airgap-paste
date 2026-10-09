@@ -1,0 +1,92 @@
+{
+  "01_shell.stl": {
+    "watertight": true,
+    "components": 1,
+    "positive_volume": true,
+    "min_z": 0.0
+  },
+  "02_base.stl": {
+    "watertight": true,
+    "components": 1,
+    "positive_volume": true,
+    "min_z": 0.0303
+  },
+  "03_keycap.stl": {
+    "watertight": true,
+    "components": 1,
+    "positive_volume": true,
+    "min_z": 0.0
+  },
+  "04_halo.stl": {
+    "watertight": true,
+    "components": 1,
+    "positive_volume": true,
+    "min_z": 0.0017
+  },
+  "05_belt_left.stl": {
+    "watertight": true,
+    "components": 1,
+    "positive_volume": true,
+    "min_z": 0.0292
+  },
+  "05_belt_right.stl": {
+    "watertight": true,
+    "components": 1,
+    "positive_volume": true,
+    "min_z": 0.0292
+  },
+  "06_lightguide_left.stl": {
+    "watertight": true,
+    "components": 1,
+    "positive_volume": true,
+    "min_z": -0.0
+  },
+  "06_lightguide_right.stl": {
+    "watertight": true,
+    "components": 1,
+    "positive_volume": true,
+    "min_z": -0.0
+  },
+  "07_wedge_looser.stl": {
+    "watertight": true,
+    "components": 1,
+    "positive_volume": true,
+    "min_z": 0.0
+  },
+  "07_wedge_tighter.stl": {
+    "watertight": true,
+    "components": 1,
+    "positive_volume": true,
+    "min_z": 0.0
+  },
+  "07_xiao_wedge.stl": {
+    "watertight": true,
+    "components": 1,
+    "positive_volume": true,
+    "min_z": 0.0
+  },
+  "08_mx_snap_coupon_14p0.stl": {
+    "watertight": true,
+    "components": 1,
+    "positive_volume": true,
+    "min_z": 0.0
+  },
+  "08_mx_snap_coupon_14p1.stl": {
+    "watertight": true,
+    "components": 1,
+    "positive_volume": true,
+    "min_z": 0.0
+  },
+  "08_mx_snap_coupon_14p2.stl": {
+    "watertight": true,
+    "components": 1,
+    "positive_volume": true,
+    "min_z": 0.0
+  },
+  "09_mx_snap_plate.stl": {
+    "watertight": true,
+    "components": 1,
+    "positive_volume": true,
+    "min_z": 0.0
+  }
+}

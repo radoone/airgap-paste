@@ -1,0 +1,16 @@
+{
+  "source": "bambu_a1/01_graphite_A1_PLA/plate_1.gcode",
+  "object_label": 66,
+  "shell_layers": 121,
+  "inspected_heights_mm": [
+    0.2,
+    3.0,
+    13.0,
+    18.0,
+    21.4,
+    23.8
+  ],
+  "arcs_tessellated": true,
+  "support_features": 0,
+  "note": "Print coordinates. Selected actual extrusion sections; not a physical print test."
+}

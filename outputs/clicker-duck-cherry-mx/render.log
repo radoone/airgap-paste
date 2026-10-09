@@ -1,0 +1,9 @@
+/Users/radoone/Documents/airgap paste/outputs/clicker-duck-cherry-mx/render_preview.py:8: DeprecationWarning: 'Material.use_nodes' is expected to be removed in Blender 6.0
+  mat=bpy.data.materials.new('Duck yellow');mat.diffuse_color=(1,.63,.035,1);mat.use_nodes=True
+00:09.348  render           | Saved: '/Users/radoone/Documents/airgap paste/outputs/clicker-duck-cherry-mx/head_underside.png'
+00:38.052  render           | Saved: '/Users/radoone/Documents/airgap paste/outputs/clicker-duck-cherry-mx/socket_closeup.png'
+Informácie: Uložené ako "Duck_Cherry_MX_preview.blend"
+Blender 5.2.2 LTS (hash d13f752e3b9c built 2026-09-15 01:49:19)
+Timer 'STL Import' took 69.50 ms
+
+Blender quit

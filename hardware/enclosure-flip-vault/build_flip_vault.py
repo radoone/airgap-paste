@@ -125,6 +125,12 @@ shell = outer_body.cut(inner_void)
 well_floor_z = TOP_Z - WELL_DEPTH
 plate_bottom_z = well_floor_z - MX_PLATE_THICK
 
+# The roof hollow would otherwise leave only 0.2 mm under the recess. Add a
+# local structural insert first, then cut the 14.1 mm opening through it: the
+# latch land now remains a real 1.50 mm thick printed plate.
+mx_mounting_plate = box(WELL_SIZE, WELL_SIZE, MX_PLATE_THICK,
+                         MX_X, MX_Y, plate_bottom_z)
+shell = shell.union(mx_mounting_plate)
 shell = shell.cut(box(WELL_SIZE, WELL_SIZE, WELL_DEPTH + 1.0, MX_X, MX_Y, well_floor_z))
 shell = shell.cut(box(MX_CUTOUT, MX_CUTOUT, MX_PLATE_THICK + 2.0, MX_X, MX_Y, plate_bottom_z - 0.5))
 shell = shell.cut(box(16.5, 16.5, 4.5, MX_X, MX_Y, plate_bottom_z - 4.5))
@@ -196,7 +202,7 @@ for tx in (-7.8, 7.8):
 # The upper shell traps the adjustable rear wedge so it cannot work loose in
 # a pocket. These two posts land beyond the PCB and outside the MX cutout.
 for tx in (-12.5, 12.5):
-    wedge_keeper = box(2.0, 1.4, 9.3, tx, 0.0, 4.9)
+    wedge_keeper = box(2.0, 1.4, 9.75, tx, 0.0, 4.45)
     retention_features.append(wedge_keeper)
     shell = shell.union(wedge_keeper)
 
@@ -242,17 +248,24 @@ retention_features.append(rear_stop)
 base = base.union(rear_stop)
 base = base.cut(box(15.0, 10.0, 1.4, 0, BOARD_Y, 1.0))
 
+# Rotate a 3-pin MX so its electrical pins face +Y. The center pin and
+# soldered leads then descend into this recessed wiring bay, beyond the rear
+# XIAO anvil, with 1.6 mm of plastic left under the bay.
+base = base.cut(box(14.5, 9.0, 0.9, MX_X, MX_Y + 3.25, 1.6))
+
 def make_board_wedge(face_y):
     """A lead-in ramp seats the PCB against the front shoulders on insertion."""
+    # Keep its roof below the top PCB surface: components near the U.FL edge
+    # are never used as clamping points.
     section = [(1.0, 2.4), (-0.20, 2.4), (face_y, 3.0),
-               (face_y, 4.4), (1.0, 4.4)]
+               (face_y, 4.15), (1.0, 4.15)]
     wedge = (cq.Workplane("YZ").polyline(section).close()
              .extrude(26.0).translate((-13.0, 0, 0)))
     # U-shaped end ears locate the wedge laterally around the anvil. 0.30 mm
     # side clearance lets the separately printed parts assemble on an A1.
     for side in (-1, 1):
-        connector = box(1.8, 0.8, 2.0, side * 13.1, 0.6, BASE_H)
-        ear = box(0.8, 1.6, 2.0, side * 14.0, 1.4, BASE_H)
+        connector = box(1.8, 0.8, 1.75, side * 13.1, 0.6, BASE_H)
+        ear = box(0.8, 1.6, 1.75, side * 14.0, 1.4, BASE_H)
         wedge = wedge.union(connector).union(ear)
     return wedge
 
@@ -265,8 +278,8 @@ wedge_fit_options = {
 # ==========================================
 # 7. Sculpted 1U OEM/Cherry Keycap
 # ==========================================
-cap_base_z = 15.0
-cap_h = 7.2
+cap_base_z = 18.5
+cap_h = 3.7
 cap_b_pts = rounded_rect_pts(18.2, 18.2, 2.0)
 cap_t_pts = rounded_rect_pts(15.2, 15.2, 1.4)
 
@@ -275,17 +288,40 @@ w = (cq.Workplane("XY").polyline(cap_b_pts).close()
 
 keycap = w.translate((MX_X, MX_Y, cap_base_z))
 
-in_b_pts = rounded_rect_pts(15.4, 15.4, 1.6)
-in_t_pts = rounded_rect_pts(12.2, 12.2, 1.1)
+# Broader hollow leaves room for the upper switch housing during depression.
+# Actual housing and cross-stem fit still require the selected physical switch.
+in_b_pts = rounded_rect_pts(16.4, 16.4, 1.6)
+in_t_pts = rounded_rect_pts(14.6, 14.6, 1.1)
 hollow = (cq.Workplane("XY").polyline(in_b_pts).close()
-          .workplane(offset=5.5).polyline(in_t_pts).close().loft(combine=True)
+          .workplane(offset=2.1).polyline(in_t_pts).close().loft(combine=True)
           .translate((MX_X, MX_Y, cap_base_z - 0.1)))
 keycap = keycap.cut(hollow)
 
-stem_boss = cyl(5.8, 6.4, MX_X, MX_Y, cap_base_z)
-cross_cut = (box(4.25, 1.35, 5.2, MX_X, MX_Y, cap_base_z - 0.2)
-             .union(box(1.35, 4.25, 5.2, MX_X, MX_Y, cap_base_z - 0.2)))
+stem_boss = cyl(5.8, 5.7, MX_X, MX_Y, 15.0)
+cross_cut = (box(4.25, 1.35, 5.8, MX_X, MX_Y, 14.9)
+             .union(box(1.35, 4.25, 5.8, MX_X, MX_Y, 14.9)))
 keycap = keycap.union(stem_boss).cut(cross_cut)
+
+# Four millimetres is the specified full travel for the target clicky MX
+# pattern. With the shortened skirt, the depressed cap stays 0.6 mm above
+# the mount floor while the central stem boss can descend into the opening.
+pressed_keycap = keycap.translate((0, 0, -4.0))
+
+def make_mx_fit_coupon(cutout):
+    """Stand-alone 1.5 mm snap plate to test a real switch batch on the A1."""
+    test_plate = box(26.0, 26.0, MX_PLATE_THICK)
+    test_plate = test_plate.cut(box(cutout, cutout,
+                                     MX_PLATE_THICK + 0.4, z=-0.2))
+    stand = box(26.0, 26.0, 9.0, z=MX_PLATE_THICK)
+    stand = stand.cut(box(22.5, 22.5, 9.2,
+                           z=MX_PLATE_THICK - 0.1))
+    return test_plate.union(stand)
+
+mx_fit_coupons = {
+    "08_mx_snap_coupon_14p0": make_mx_fit_coupon(14.0),
+    "08_mx_snap_coupon_14p1": make_mx_fit_coupon(14.1),
+    "08_mx_snap_coupon_14p2": make_mx_fit_coupon(14.2),
+}
 
 # A separate orange accent halo rests on the floor of the recessed switch
 # well. The 0.2 mm side clearance is for a test fit and a tiny adhesive dot.
@@ -392,7 +428,24 @@ checks = {
     "open_shield_vs_keycap_mm3": intervol(cover_open, keycap),
     "board_wedge_vs_shell_mm3": intervol(board_wedge, shell),
     "board_wedge_vs_base_mm3": intervol(board_wedge, base),
+    "pressed_keycap_vs_shell_mm3": intervol(pressed_keycap, shell),
+    "pressed_keycap_vs_halo_mm3": intervol(pressed_keycap, accent_halo),
 }
+
+# Mechanical switch envelopes are based on the supplied 3-pin MX dimensions,
+# not on an exact vendor STEP for the as-purchased clone.
+mx_plate_probe = box(2.0, 2.0, MX_PLATE_THICK,
+                      MX_X + 9.5, MX_Y, plate_bottom_z)
+mx_plate_probe_volume = intervol(shell, mx_plate_probe)
+if abs(mx_plate_probe_volume - 6.0) > 0.05:
+    raise RuntimeError(f"MX snap plate is not 1.5 mm thick: {mx_plate_probe_volume}")
+mx_body_keepout = box(14.0, 14.0, 5.0,
+                       MX_X, MX_Y, plate_bottom_z - 5.0)
+mx_pin_wiring_keepout = box(14.0, 9.0, 4.0,
+                             MX_X, MX_Y + 3.25, 3.3)
+checks["mx_body_vs_shell_mm3"] = intervol(mx_body_keepout, shell)
+checks["mx_pin_wiring_vs_base_mm3"] = intervol(mx_pin_wiring_keepout, base)
+checks["mx_pin_wiring_vs_shell_mm3"] = intervol(mx_pin_wiring_keepout, shell)
 
 # A closed and fully open pose alone can hide an interference mid-swing.
 motion_sweep = {}
@@ -450,6 +503,9 @@ manifest = {
     "motion_sweep_deg": motion_sweep,
     "fixture_clearances_mm": fixture_clearances if board_step_path.exists() else None,
     "usb_load_path": "plug to connector to seated PCB to broad front shoulders on pull; PCB to rear wedge to full-width anvil on insertion",
+    "mx_snap_plate_thickness_measured_mm": round(mx_plate_probe_volume / 4.0, 3),
+    "mx_keycap_full_travel_checked_mm": 4.0,
+    "mx_contact_orientation": "metal pins toward +Y, away from the XIAO rear anvil",
     "parts": {},
 }
 manifest["dimensions_mm"]["length_with_loop"] = round(shell.val().BoundingBox().ylen, 1)
@@ -489,6 +545,17 @@ for name, obj in parts.items():
 for name, obj in wedge_fit_options.items():
     if not obj.val().isValid() or len(obj.solids().vals()) != 1:
         raise RuntimeError(f"Invalid optional XIAO wedge: {name}")
+    cq.exporters.export(obj, str(ROOT / f"{name}.step"))
+    path = ROOT / f"{name}.stl"
+    cq.exporters.export(obj, str(path), tolerance=0.03, angularTolerance=0.25)
+    mesh = trimesh.load(path, force="mesh")
+    mesh.update_faces(mesh.nondegenerate_faces())
+    mesh.remove_unreferenced_vertices()
+    mesh.export(path)
+
+for name, obj in mx_fit_coupons.items():
+    if not obj.val().isValid() or len(obj.solids().vals()) != 1:
+        raise RuntimeError(f"Invalid MX fit coupon: {name}")
     cq.exporters.export(obj, str(ROOT / f"{name}.step"))
     path = ROOT / f"{name}.stl"
     cq.exporters.export(obj, str(path), tolerance=0.03, angularTolerance=0.25)

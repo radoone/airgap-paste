@@ -1,0 +1,87 @@
+{
+    "error_string": "Success.",
+    "export_time": 2561,
+    "layer_height": 0.1599999964237213,
+    "plate_index": 0,
+    "prepare_time": 2403,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 91.9024658203125,
+                "Bridge": 89.42461395263672,
+                "Custom": 386.0860290527344,
+                "Flush": 25.0,
+                "Gap infill": 7.100092887878418,
+                "Inner wall": 1139.2362060546875,
+                "Internal solid infill": 954.7550659179688,
+                "Outer wall": 1396.3526611328125,
+                "Overhang wall": 15.394309997558594,
+                "Sparse infill": 2718.477783203125,
+                "Top surface": 47.467872619628906,
+                "Travel": 1147.9617919921875,
+                "Undefined": 1130.9417724609375
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFG02",
+                    "id": 1,
+                    "main_used_g": 38.84474563598633,
+                    "total_used_g": 38.84474563598633
+                }
+            ],
+            "generate_support_material_time": 128,
+            "id": 1,
+            "infill_time": 830,
+            "layer_filament_change": 0,
+            "main_predication": 7582.8896484375,
+            "make_perimeters_time": 938,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 48.13237380981445,
+                        "height": 23.28020477294922,
+                        "width": 38.79821014404297,
+                        "x": 75.21202850341797,
+                        "y": 92.31507873535156,
+                        "z": 1.3525390585300556e-08
+                    },
+                    "id": 5,
+                    "name": "Duck head - Cherry MX 1.30 mm",
+                    "triangle_count": 251394
+                },
+                {
+                    "bbox": {
+                        "depth": 71.11921691894531,
+                        "height": 46.962562561035156,
+                        "width": 49.01362228393555,
+                        "x": 127.76901245117188,
+                        "y": 88.12602996826172,
+                        "z": 1.948242100979769e-08
+                    },
+                    "id": 9,
+                    "name": "Clicker duck 2.stl",
+                    "triangle_count": 721606
+                }
+            ],
+            "sliced_time": 3039,
+            "sliced_time_with_cache": 937,
+            "total_predication": 8001.95556640625,
+            "triangle_count": 973000,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 15.0,
+    "upward_compatible_machine": [
+        "Bambu Lab H2D 0.4 nozzle",
+        "Bambu Lab H2D Pro 0.4 nozzle",
+        "Bambu Lab H2S 0.4 nozzle",
+        "Bambu Lab P2S 0.4 nozzle",
+        "Bambu Lab H2C 0.4 nozzle",
+        "Bambu Lab X2D 0.4 nozzle",
+        "Bambu Lab A2L 0.4 nozzle"
+    ],
+    "wall_loops": 3
+}

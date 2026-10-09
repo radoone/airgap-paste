@@ -1,0 +1,120 @@
+/tmp/airgap-pocket-cad/lib/python3.12/site-packages/cadquery/utils.py:82: FutureWarning: save will be removed in the next release.
+  warn(f"{f.__name__} will be removed in the next release.", FutureWarning)
+{
+  "envelope": [
+    54.0,
+    48.0,
+    26.6
+  ],
+  "parts": {
+    "01_shell": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        54.0,
+        48.0,
+        24.200000662939452
+      ],
+      "volume_mm3": 16976.614132423452
+    },
+    "02_base": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        54.0,
+        48.0,
+        11.800000445917249
+      ],
+      "volume_mm3": 6285.204779310307
+    },
+    "03_keycap": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        20.200000762939453,
+        20.200000762939453,
+        5.300000090734848
+      ],
+      "volume_mm3": 684.5812996677103
+    },
+    "04_halo": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        23.399999618530273,
+        23.399999618530273,
+        9.499999809195288
+      ],
+      "volume_mm3": 823.2696289471883
+    },
+    "09_eye_bushing": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        6.0,
+        5.998814105987549,
+        1.3000000270549208
+      ],
+      "volume_mm3": 18.59115640248396
+    },
+    "05_mx_plate": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        26.200000762939453,
+        26.200000762939453,
+        1.4999999511055648
+      ],
+      "volume_mm3": 719.2931402964466
+    },
+    "07_xiao_wedge": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        28.399999618530273,
+        1.75,
+        3.25900936126709
+      ],
+      "volume_mm3": 104.37021898573687
+    },
+    "06_lightguide_left": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        5.0,
+        2.799999952316284,
+        7.700000186102294
+      ],
+      "volume_mm3": 34.970666666666666
+    },
+    "06_lightguide_right": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        5.0,
+        2.799999952316284,
+        7.700000186102294
+      ],
+      "volume_mm3": 34.97066666666667
+    }
+  },
+  "collisions_above_0p01_mm3": {}
+}

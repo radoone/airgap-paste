@@ -1,0 +1,73 @@
+{
+    "error_string": "Success.",
+    "export_time": 371,
+    "layer_height": 0.10000000149011612,
+    "plate_index": 0,
+    "prepare_time": 5,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Brim": 12.218753814697266,
+                "Custom": 399.2492370605469,
+                "Flush": 25.0,
+                "Inner wall": 28.909942626953125,
+                "Outer wall": 64.78839874267578,
+                "Top surface": 1.0948858261108398,
+                "Travel": 211.04034423828125,
+                "Undefined": 194.0713653564453
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFL99",
+                    "id": 1,
+                    "main_used_g": 0.16081920266151428,
+                    "total_used_g": 0.16081920266151428
+                }
+            ],
+            "generate_support_material_time": 2,
+            "id": 1,
+            "infill_time": 1,
+            "layer_filament_change": 0,
+            "main_predication": 293.05322265625,
+            "make_perimeters_time": 7,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 2.799995183944702,
+                        "height": 7.700000286102295,
+                        "width": 5.0,
+                        "x": 125.5,
+                        "y": 128.99998474121094,
+                        "z": 0.0
+                    },
+                    "id": 38,
+                    "name": "06_lightguide_left.stl",
+                    "triangle_count": 20
+                },
+                {
+                    "bbox": {
+                        "depth": 2.8000001907348633,
+                        "height": 7.700000286102295,
+                        "width": 4.999997615814209,
+                        "x": 125.49999237060547,
+                        "y": 124.20001983642578,
+                        "z": 0.0
+                    },
+                    "id": 49,
+                    "name": "06_lightguide_right.stl",
+                    "triangle_count": 24
+                }
+            ],
+            "sliced_time": 84,
+            "sliced_time_with_cache": 70,
+            "total_predication": 725.33349609375,
+            "triangle_count": 44,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 20.0,
+    "wall_loops": 3
+}

@@ -1,0 +1,348 @@
+{
+  "name": "AirGap Paste Pocket Recess v4 Wide Crown",
+  "units": "mm",
+  "envelope_mm": [
+    54.0,
+    48.0,
+    28.6
+  ],
+  "housing_envelope_mm": [
+    54.0,
+    48.0,
+    26.6
+  ],
+  "crown": {
+    "outer_chamfer_mm": 5.0,
+    "outer_chamfer_edge_radius_mm": 0.5,
+    "inner_roof_chamfer_mm": 3.0,
+    "outer_chamfer_angle_degrees": 45,
+    "terrace_drop_mm": 1.2,
+    "terrace_min_roof_mm": 1.6,
+    "terrace_transition_max_straight_angle_degrees": 45,
+    "terrace_size_mm": [
+      28.6,
+      26.4
+    ],
+    "terrace_xy_mm": [
+      0,
+      4.5
+    ],
+    "orange_bezel_top_mm": 22.8,
+    "waist_groove_depth_mm": 0.35
+  },
+  "keycap_top_mm": 28.6,
+  "keycap_recess_mm": 0,
+  "keycap_protrusion_mm": 2.0,
+  "lanyard_xy_mm": [
+    -18.0,
+    -14.5
+  ],
+  "button_xy_mm": [
+    0,
+    5.0
+  ],
+  "mx_plate_mm": 1.5,
+  "mx_travel_mm": 4,
+  "mx_upper_housing_model": "Manufacturer dimensional envelope, 6.6 mm above plate, central 6 mm aperture approximate; actual clone and stem fit need coupon",
+  "pressed_housing_ceiling_clearance_mm": 0.3,
+  "pcb_bounds_mm": [
+    -8.890000000000011,
+    8.890000000000013,
+    -21.214009424923038,
+    -0.25900942492303636,
+    3.0,
+    4.250000000000001
+  ],
+  "usb_face_recess_mm": 1.2590094249230397,
+  "pcb_fixture_clearance_mm": {
+    "each_side": 0.21,
+    "top": 0.2,
+    "rear_nominal_wedge": 0.2,
+    "front": 0.15
+  },
+  "antenna_envelope_mm": [
+    37.8,
+    1.8,
+    17.9
+  ],
+  "antenna": "Flat rear XZ seat, Seeed A-02 FPC, no fold",
+  "led_xy_mm": {
+    "charge_left": [
+      -5.842,
+      -17.416709424923038
+    ],
+    "status_right": [
+      5.8928,
+      -17.416709424923038
+    ]
+  },
+  "led_source": "Seeed official KiCad CHG0 and D3; STEP omits LEDs; optical efficiency and PCB revision require physical verification",
+  "hardware": "2x M3x10 countersunk, 2x M3 DIN934 nuts; bare XIAO ESP32-S3, 3-pin MX",
+  "checks_mm3": {
+    "mx_body__xiao": 0,
+    "mx_pins__xiao": 0,
+    "mx_upper_housing__xiao": 0,
+    "01_shell__02_base": 0,
+    "01_shell__05_mx_plate": 0,
+    "02_base__05_mx_plate": 0,
+    "07_xiao_wedge__01_shell": 0,
+    "07_xiao_wedge__02_base": 0,
+    "04_halo__01_shell": 0,
+    "04_halo__05_mx_plate": 0,
+    "09_eye_bushing__01_shell": 0,
+    "xiao__01_shell": 0,
+    "xiao__02_base": 0,
+    "xiao__05_mx_plate": 0,
+    "xiao__04_halo": 0,
+    "xiao__09_eye_bushing": 0,
+    "xiao__07_xiao_wedge": 0,
+    "xiao__06_lightguide_left": 0,
+    "xiao__06_lightguide_right": 0,
+    "antenna__01_shell": 0,
+    "antenna__02_base": 0,
+    "antenna__05_mx_plate": 0,
+    "antenna__04_halo": 0,
+    "antenna__09_eye_bushing": 0,
+    "antenna__07_xiao_wedge": 0,
+    "antenna__06_lightguide_left": 0,
+    "antenna__06_lightguide_right": 0,
+    "mx_body__01_shell": 0,
+    "mx_body__02_base": 0,
+    "mx_body__05_mx_plate": 0,
+    "mx_body__04_halo": 0,
+    "mx_body__09_eye_bushing": 0,
+    "mx_body__07_xiao_wedge": 0,
+    "mx_body__06_lightguide_left": 0,
+    "mx_body__06_lightguide_right": 0,
+    "mx_pins__01_shell": 0,
+    "mx_pins__02_base": 0,
+    "mx_pins__05_mx_plate": 0,
+    "mx_pins__04_halo": 0,
+    "mx_pins__09_eye_bushing": 0,
+    "mx_pins__07_xiao_wedge": 0,
+    "mx_pins__06_lightguide_left": 0,
+    "mx_pins__06_lightguide_right": 0,
+    "charge_left__01_shell": 0,
+    "charge_left__02_base": 0,
+    "charge_left__05_mx_plate": 0,
+    "charge_left__04_halo": 0,
+    "charge_left__09_eye_bushing": 0,
+    "charge_left__07_xiao_wedge": 0,
+    "charge_left__06_lightguide_left": 0,
+    "charge_left__06_lightguide_right": 0,
+    "status_right__01_shell": 0,
+    "status_right__02_base": 0,
+    "status_right__05_mx_plate": 0,
+    "status_right__04_halo": 0,
+    "status_right__09_eye_bushing": 0,
+    "status_right__07_xiao_wedge": 0,
+    "status_right__06_lightguide_left": 0,
+    "status_right__06_lightguide_right": 0,
+    "cap_travel_0__01_shell": 0,
+    "cap_travel_2__01_shell": 0,
+    "cap_travel_4__01_shell": 0,
+    "cap_travel_0__02_base": 0,
+    "cap_travel_2__02_base": 0,
+    "cap_travel_4__02_base": 0,
+    "cap_travel_0__05_mx_plate": 0,
+    "cap_travel_2__05_mx_plate": 0,
+    "cap_travel_4__05_mx_plate": 0,
+    "cap_travel_0__04_halo": 0,
+    "cap_travel_2__04_halo": 0,
+    "cap_travel_4__04_halo": 0,
+    "cap_travel_0__07_xiao_wedge": 0,
+    "cap_travel_2__07_xiao_wedge": 0,
+    "cap_travel_4__07_xiao_wedge": 0,
+    "cap_travel_0__mx_upper_housing": 0,
+    "cap_travel_2__mx_upper_housing": 0,
+    "cap_travel_4__mx_upper_housing": 0,
+    "06_lightguide_left__shell": 0,
+    "06_lightguide_left__base": 0,
+    "06_lightguide_left_vertical_insertion_drop_0.25__shell": 0,
+    "06_lightguide_left_vertical_insertion_drop_1__shell": 0,
+    "06_lightguide_left_vertical_insertion_drop_3__shell": 0,
+    "06_lightguide_left_vertical_insertion_drop_6__shell": 0,
+    "06_lightguide_left_vertical_insertion_drop_10__shell": 0,
+    "06_lightguide_right__shell": 0,
+    "06_lightguide_right__base": 0,
+    "06_lightguide_right_vertical_insertion_drop_0.25__shell": 0,
+    "06_lightguide_right_vertical_insertion_drop_1__shell": 0,
+    "06_lightguide_right_vertical_insertion_drop_3__shell": 0,
+    "06_lightguide_right_vertical_insertion_drop_6__shell": 0,
+    "06_lightguide_right_vertical_insertion_drop_10__shell": 0,
+    "coax__shell": 0,
+    "coax__base": 0,
+    "coax__plate": 0,
+    "screw_-1__shell": 0,
+    "screw_-1__base": 0,
+    "nut_path_-1_-12.5__shell": 0,
+    "nut_path_-1_-12.5__xiao": 0,
+    "nut_path_-1_-13.0__shell": 0,
+    "nut_path_-1_-13.0__xiao": 0,
+    "nut_path_-1_-13.5__shell": 0,
+    "nut_path_-1_-13.5__xiao": 0,
+    "nut_path_-1_-14.0__shell": 0,
+    "nut_path_-1_-14.0__xiao": 0,
+    "nut_path_-1_-14.5__shell": 0,
+    "nut_path_-1_-14.5__xiao": 0,
+    "nut_path_-1_-15.0__shell": 0,
+    "nut_path_-1_-15.0__xiao": 0,
+    "nut_path_-1_-15.5__shell": 0,
+    "nut_path_-1_-15.5__xiao": 0,
+    "nut_path_-1_-16.0__shell": 0,
+    "nut_path_-1_-16.0__xiao": 0,
+    "nut_path_-1_-16.5__shell": 0,
+    "nut_path_-1_-16.5__xiao": 0,
+    "nut_path_-1_-17.0__shell": 0,
+    "nut_path_-1_-17.0__xiao": 0,
+    "nut_path_-1_-17.5__shell": 0,
+    "nut_path_-1_-17.5__xiao": 0,
+    "nut_path_-1_-18.0__shell": 0,
+    "nut_path_-1_-18.0__xiao": 0,
+    "nut_path_-1_-18.5__shell": 0,
+    "nut_path_-1_-18.5__xiao": 0,
+    "nut_path_-1_-19.0__shell": 0,
+    "nut_path_-1_-19.0__xiao": 0,
+    "screw_1__shell": 0,
+    "screw_1__base": 0,
+    "nut_path_1_12.5__shell": 0,
+    "nut_path_1_12.5__xiao": 0,
+    "nut_path_1_13.0__shell": 0,
+    "nut_path_1_13.0__xiao": 0,
+    "nut_path_1_13.5__shell": 0,
+    "nut_path_1_13.5__xiao": 0,
+    "nut_path_1_14.0__shell": 0,
+    "nut_path_1_14.0__xiao": 0,
+    "nut_path_1_14.5__shell": 0,
+    "nut_path_1_14.5__xiao": 0,
+    "nut_path_1_15.0__shell": 0,
+    "nut_path_1_15.0__xiao": 0,
+    "nut_path_1_15.5__shell": 0,
+    "nut_path_1_15.5__xiao": 0,
+    "nut_path_1_16.0__shell": 0,
+    "nut_path_1_16.0__xiao": 0,
+    "nut_path_1_16.5__shell": 0,
+    "nut_path_1_16.5__xiao": 0,
+    "nut_path_1_17.0__shell": 0,
+    "nut_path_1_17.0__xiao": 0,
+    "nut_path_1_17.5__shell": 0,
+    "nut_path_1_17.5__xiao": 0,
+    "nut_path_1_18.0__shell": 0,
+    "nut_path_1_18.0__xiao": 0,
+    "nut_path_1_18.5__shell": 0,
+    "nut_path_1_18.5__xiao": 0,
+    "nut_path_1_19.0__shell": 0,
+    "nut_path_1_19.0__xiao": 0
+  },
+  "parts": {
+    "01_shell": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        54.0,
+        48.0,
+        24.20000066293946
+      ],
+      "volume_mm3": 15976.605558977064
+    },
+    "02_base": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        54.0,
+        48.0,
+        11.800000445917249
+      ],
+      "volume_mm3": 6303.454091241442
+    },
+    "03_keycap": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        20.200000762939453,
+        20.200000762939453,
+        8.300000090734848
+      ],
+      "volume_mm3": 1728.007743141532
+    },
+    "04_halo": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        23.399999618530273,
+        23.399999618530273,
+        9.499999809195288
+      ],
+      "volume_mm3": 823.2696289471883
+    },
+    "09_eye_bushing": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        6.0,
+        5.998814105987549,
+        1.3000000270549208
+      ],
+      "volume_mm3": 18.59115640248396
+    },
+    "05_mx_plate": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        26.200000762939453,
+        26.200000762939453,
+        1.4999999511055648
+      ],
+      "volume_mm3": 719.2931402964466
+    },
+    "07_xiao_wedge": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        28.399999618530273,
+        1.75,
+        3.25900936126709
+      ],
+      "volume_mm3": 104.37021898573687
+    },
+    "06_lightguide_left": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        5.0,
+        2.799999952316284,
+        7.700000186102294
+      ],
+      "volume_mm3": 34.970666666666666
+    },
+    "06_lightguide_right": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        5.0,
+        2.799999952316284,
+        7.700000186102294
+      ],
+      "volume_mm3": 34.97066666666667
+    }
+  },
+  "physical_validation": "Not performed"
+}

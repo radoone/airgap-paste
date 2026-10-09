@@ -1,0 +1,110 @@
+[
+  {
+    "file": "00_complete_test_A1_PLA.3mf",
+    "parts": [
+      "01_shell.stl",
+      "02_base.stl",
+      "07_xiao_wedge.stl",
+      "03_keycap.stl",
+      "04_halo.stl",
+      "05_mx_plate.stl",
+      "09_eye_bushing.stl",
+      "06_lightguide_left.stl",
+      "06_lightguide_right.stl"
+    ],
+    "objects": 9,
+    "plate_count": 1,
+    "layer_height_mm": 0.1,
+    "supports": false,
+    "support_feature_markers": 0,
+    "warning": "",
+    "print_time_minutes": 183.2,
+    "filament_grams": 32.1,
+    "archive_ok": true
+  },
+  {
+    "file": "01_graphite_A1_PLA.3mf",
+    "parts": [
+      "01_shell.stl",
+      "02_base.stl",
+      "07_xiao_wedge.stl"
+    ],
+    "objects": 3,
+    "plate_count": 1,
+    "layer_height_mm": 0.1,
+    "supports": false,
+    "support_feature_markers": 0,
+    "warning": "",
+    "print_time_minutes": 160.2,
+    "filament_grams": 28.15,
+    "archive_ok": true
+  },
+  {
+    "file": "02_orange_A1_PLA.3mf",
+    "parts": [
+      "03_keycap.stl",
+      "04_halo.stl",
+      "05_mx_plate.stl",
+      "09_eye_bushing.stl"
+    ],
+    "objects": 4,
+    "plate_count": 1,
+    "layer_height_mm": 0.1,
+    "supports": false,
+    "support_feature_markers": 0,
+    "warning": "",
+    "print_time_minutes": 32.4,
+    "filament_grams": 3.74,
+    "archive_ok": true
+  },
+  {
+    "file": "03_clear_lightguides_A1_PLA.3mf",
+    "parts": [
+      "06_lightguide_left.stl",
+      "06_lightguide_right.stl"
+    ],
+    "objects": 2,
+    "plate_count": 1,
+    "layer_height_mm": 0.1,
+    "supports": false,
+    "support_feature_markers": 0,
+    "warning": "",
+    "print_time_minutes": 12.1,
+    "filament_grams": 0.16,
+    "archive_ok": true
+  },
+  {
+    "file": "04_mx_fit_tests_A1_PLA.3mf",
+    "parts": [
+      "08_mx_coupon_14p0.stl",
+      "08_mx_coupon_14p1.stl",
+      "08_mx_coupon_14p2.stl",
+      "03_keycap.stl"
+    ],
+    "objects": 4,
+    "plate_count": 1,
+    "layer_height_mm": 0.1,
+    "supports": false,
+    "support_feature_markers": 0,
+    "warning": "",
+    "print_time_minutes": 29.9,
+    "filament_grams": 3.51,
+    "archive_ok": true
+  },
+  {
+    "file": "06_eyelet_fit_A1_PLA.3mf",
+    "parts": [
+      "10_eyelet_coupon.stl",
+      "09_eye_bushing.stl"
+    ],
+    "objects": 2,
+    "plate_count": 1,
+    "layer_height_mm": 0.1,
+    "supports": false,
+    "support_feature_markers": 0,
+    "warning": "",
+    "print_time_minutes": 29.3,
+    "filament_grams": 1.57,
+    "archive_ok": true
+  }
+]

@@ -1,0 +1,72 @@
+{
+    "error_string": "Success.",
+    "export_time": 45,
+    "layer_height": 0.1599999964237213,
+    "plate_index": 0,
+    "prepare_time": 14,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 12.636560440063477,
+                "Custom": 385.8291320800781,
+                "Flush": 25.0,
+                "Gap infill": 4.011807441711426,
+                "Inner wall": 185.185546875,
+                "Internal solid infill": 97.47343444824219,
+                "Outer wall": 131.3201141357422,
+                "Sparse infill": 39.09055709838867,
+                "Top surface": 17.60369300842285,
+                "Travel": 157.9202423095703,
+                "Undefined": 141.17713928222656
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFG02",
+                    "id": 1,
+                    "main_used_g": 1.847226619720459,
+                    "total_used_g": 1.847226619720459
+                }
+            ],
+            "generate_support_material_time": 3,
+            "id": 1,
+            "infill_time": 32,
+            "layer_filament_change": 0,
+            "main_predication": 620.2753295898438,
+            "make_perimeters_time": 23,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 10.0,
+                        "height": 6.199999809265137,
+                        "width": 40.000003814697266,
+                        "x": 74.61112976074219,
+                        "y": 111.38126373291016,
+                        "z": -4.633117782759655e-07
+                    },
+                    "id": 5,
+                    "name": "Cherry MX fit coupons 1.25 / 1.30 / 1.35 mm",
+                    "triangle_count": 858
+                }
+            ],
+            "sliced_time": 196,
+            "sliced_time_with_cache": 130,
+            "total_predication": 1039.361328125,
+            "triangle_count": 858,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 15.0,
+    "upward_compatible_machine": [
+        "Bambu Lab H2D 0.4 nozzle",
+        "Bambu Lab H2D Pro 0.4 nozzle",
+        "Bambu Lab H2S 0.4 nozzle",
+        "Bambu Lab P2S 0.4 nozzle",
+        "Bambu Lab H2C 0.4 nozzle",
+        "Bambu Lab X2D 0.4 nozzle",
+        "Bambu Lab A2L 0.4 nozzle"
+    ],
+    "wall_loops": 3
+}

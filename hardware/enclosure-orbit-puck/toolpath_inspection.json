@@ -1,0 +1,14 @@
+{
+  "file": "01_orbit_graphite_A1_PLA.3mf",
+  "layers_inspected_mm": [
+    1.4,
+    1.6,
+    3.8,
+    6.4,
+    16.6,
+    19.2
+  ],
+  "support_extrusion_segments": 0,
+  "longest_bridge_segment_mm": 31.5,
+  "bridge_note": "Segment length is a G-code path measurement, not a physical bridge-quality test."
+}

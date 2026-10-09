@@ -1,0 +1,13 @@
+{
+  "nominal_strand_diameter_mm": 2.0,
+  "strands": 2,
+  "centre_separation_mm": 2.1,
+  "bend_centre_radius_mm": 2.0,
+  "intersections_mm3": {
+    "left__shell": 0,
+    "left__bezel": 0,
+    "right__shell": 0,
+    "right__bezel": 0
+  },
+  "scope": "Flexible cord nominal clearance only; no strength, wear or physical threading test"
+}

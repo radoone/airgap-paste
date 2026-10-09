@@ -1,0 +1,15 @@
+{
+  "sampled_normal_thickness": [
+    {
+      "location": "left_bevel",
+      "thickness_mm": 2.1213,
+      "method": "0.05 mm diameter cylindrical probe normal to nominal 45-degree face"
+    },
+    {
+      "location": "rear_bevel",
+      "thickness_mm": 2.5272,
+      "method": "0.05 mm diameter cylindrical probe normal to nominal 45-degree face"
+    }
+  ],
+  "scope": "Two nominal straight bevel sections; not a global minimum wall analysis"
+}

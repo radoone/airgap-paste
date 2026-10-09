@@ -1,0 +1,91 @@
+{
+    "error_string": "Success.",
+    "export_time": 570,
+    "layer_height": 0.20000000298023224,
+    "plate_index": 0,
+    "prepare_time": 57,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 119.74063110351563,
+                "Bridge": 77.49188232421875,
+                "Custom": 381.3582763671875,
+                "Flush": 25.0,
+                "Gap infill": 207.9049835205078,
+                "Inner wall": 601.6715698242188,
+                "Internal solid infill": 313.8780517578125,
+                "Outer wall": 925.0013427734375,
+                "Overhang wall": 40.333614349365234,
+                "Sparse infill": 105.30072784423828,
+                "Top surface": 190.445556640625,
+                "Travel": 659.0103759765625,
+                "Undefined": 641.9947509765625
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFL99",
+                    "id": 1,
+                    "main_used_g": 15.686578750610352,
+                    "total_used_g": 15.686578750610352
+                }
+            ],
+            "generate_support_material_time": 54,
+            "id": 1,
+            "infill_time": 114,
+            "layer_filament_change": 0,
+            "main_predication": 3215.7890625,
+            "make_perimeters_time": 216,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 44.69999694824219,
+                        "height": 21.0,
+                        "width": 46.99950408935547,
+                        "x": 108.87211608886719,
+                        "y": 129.00001525878906,
+                        "z": 0.0
+                    },
+                    "id": 57,
+                    "name": "01_shell.stl",
+                    "triangle_count": 6586
+                },
+                {
+                    "bbox": {
+                        "depth": 44.70000076293945,
+                        "height": 13.399999618530273,
+                        "width": 46.98347091674805,
+                        "x": 108.88783264160156,
+                        "y": 82.29998016357422,
+                        "z": 0.0
+                    },
+                    "id": 68,
+                    "name": "02_base.stl",
+                    "triangle_count": 2324
+                },
+                {
+                    "bbox": {
+                        "depth": 22.25971794128418,
+                        "height": 1.75,
+                        "width": 22.259719848632813,
+                        "x": 99.36471557617188,
+                        "y": 125.29264831542969,
+                        "z": 0.0
+                    },
+                    "id": 79,
+                    "name": "07_xiao_wedge.stl",
+                    "triangle_count": 64
+                }
+            ],
+            "sliced_time": 987,
+            "sliced_time_with_cache": 533,
+            "total_predication": 3630.131591796875,
+            "triangle_count": 8974,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 20.0,
+    "wall_loops": 3
+}

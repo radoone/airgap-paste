@@ -1,0 +1,38 @@
+[
+  {
+    "file": "01_orbit_graphite_A1_PLA.3mf",
+    "gcode": 1,
+    "previews": 5,
+    "object_resources": 6,
+    "build_items": 3,
+    "support_feature_markers": 0,
+    "archive_ok": true
+  },
+  {
+    "file": "02_orbit_orange_A1_PLA.3mf",
+    "gcode": 1,
+    "previews": 5,
+    "object_resources": 10,
+    "build_items": 5,
+    "support_feature_markers": 0,
+    "archive_ok": true
+  },
+  {
+    "file": "03_orbit_clear_A1_PLA.3mf",
+    "gcode": 1,
+    "previews": 5,
+    "object_resources": 4,
+    "build_items": 2,
+    "support_feature_markers": 0,
+    "archive_ok": true
+  },
+  {
+    "file": "04_mx_fit_tests_A1_PLA.3mf",
+    "gcode": 1,
+    "previews": 5,
+    "object_resources": 6,
+    "build_items": 3,
+    "support_feature_markers": 0,
+    "archive_ok": true
+  }
+]

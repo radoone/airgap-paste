@@ -1,0 +1,326 @@
+{
+  "file": "00_complete_test_A1_PLA.3mf",
+  "objects": 10,
+  "print_sequence": "by layer",
+  "minimum_full_height_XY_bounding_box_gap_mm": 12.0,
+  "brim_width_mm": 4.0,
+  "brim_object_gap_mm": 0.15,
+  "conservative_remaining_brim_gap_mm": 3.7,
+  "pair_distances": [
+    {
+      "objects": [
+        1,
+        2
+      ],
+      "bounding_box_gap_mm": 12.0
+    },
+    {
+      "objects": [
+        1,
+        3
+      ],
+      "bounding_box_gap_mm": 78.0
+    },
+    {
+      "objects": [
+        1,
+        4
+      ],
+      "bounding_box_gap_mm": 12.0
+    },
+    {
+      "objects": [
+        1,
+        5
+      ],
+      "bounding_box_gap_mm": 29.15619
+    },
+    {
+      "objects": [
+        1,
+        6
+      ],
+      "bounding_box_gap_mm": 65.61659
+    },
+    {
+      "objects": [
+        1,
+        7
+      ],
+      "bounding_box_gap_mm": 55.26304
+    },
+    {
+      "objects": [
+        1,
+        8
+      ],
+      "bounding_box_gap_mm": 69.46584
+    },
+    {
+      "objects": [
+        1,
+        9
+      ],
+      "bounding_box_gap_mm": 85.39271
+    },
+    {
+      "objects": [
+        1,
+        10
+      ],
+      "bounding_box_gap_mm": 80.72243
+    },
+    {
+      "objects": [
+        2,
+        3
+      ],
+      "bounding_box_gap_mm": 12.0
+    },
+    {
+      "objects": [
+        2,
+        4
+      ],
+      "bounding_box_gap_mm": 12.0
+    },
+    {
+      "objects": [
+        2,
+        5
+      ],
+      "bounding_box_gap_mm": 12.7
+    },
+    {
+      "objects": [
+        2,
+        6
+      ],
+      "bounding_box_gap_mm": 12.34487
+    },
+    {
+      "objects": [
+        2,
+        7
+      ],
+      "bounding_box_gap_mm": 54.92452
+    },
+    {
+      "objects": [
+        2,
+        8
+      ],
+      "bounding_box_gap_mm": 51.6
+    },
+    {
+      "objects": [
+        2,
+        9
+      ],
+      "bounding_box_gap_mm": 53.06724
+    },
+    {
+      "objects": [
+        2,
+        10
+      ],
+      "bounding_box_gap_mm": 71.99903
+    },
+    {
+      "objects": [
+        3,
+        4
+      ],
+      "bounding_box_gap_mm": 64.87462
+    },
+    {
+      "objects": [
+        3,
+        5
+      ],
+      "bounding_box_gap_mm": 28.5369
+    },
+    {
+      "objects": [
+        3,
+        6
+      ],
+      "bounding_box_gap_mm": 12.34487
+    },
+    {
+      "objects": [
+        3,
+        7
+      ],
+      "bounding_box_gap_mm": 70.05929
+    },
+    {
+      "objects": [
+        3,
+        8
+      ],
+      "bounding_box_gap_mm": 56.53164
+    },
+    {
+      "objects": [
+        3,
+        9
+      ],
+      "bounding_box_gap_mm": 53.40982
+    },
+    {
+      "objects": [
+        3,
+        10
+      ],
+      "bounding_box_gap_mm": 80.72243
+    },
+    {
+      "objects": [
+        4,
+        5
+      ],
+      "bounding_box_gap_mm": 12.0
+    },
+    {
+      "objects": [
+        4,
+        6
+      ],
+      "bounding_box_gap_mm": 50.2
+    },
+    {
+      "objects": [
+        4,
+        7
+      ],
+      "bounding_box_gap_mm": 15.32451
+    },
+    {
+      "objects": [
+        4,
+        8
+      ],
+      "bounding_box_gap_mm": 34.422
+    },
+    {
+      "objects": [
+        4,
+        9
+      ],
+      "bounding_box_gap_mm": 54.35536
+    },
+    {
+      "objects": [
+        4,
+        10
+      ],
+      "bounding_box_gap_mm": 39.30633
+    },
+    {
+      "objects": [
+        5,
+        6
+      ],
+      "bounding_box_gap_mm": 12.0
+    },
+    {
+      "objects": [
+        5,
+        7
+      ],
+      "bounding_box_gap_mm": 16.02451
+    },
+    {
+      "objects": [
+        5,
+        8
+      ],
+      "bounding_box_gap_mm": 12.7
+    },
+    {
+      "objects": [
+        5,
+        9
+      ],
+      "bounding_box_gap_mm": 20.23998
+    },
+    {
+      "objects": [
+        5,
+        10
+      ],
+      "bounding_box_gap_mm": 33.09903
+    },
+    {
+      "objects": [
+        6,
+        7
+      ],
+      "bounding_box_gap_mm": 33.79022
+    },
+    {
+      "objects": [
+        6,
+        8
+      ],
+      "bounding_box_gap_mm": 15.59994
+    },
+    {
+      "objects": [
+        6,
+        9
+      ],
+      "bounding_box_gap_mm": 13.80435
+    },
+    {
+      "objects": [
+        6,
+        10
+      ],
+      "bounding_box_gap_mm": 39.98287
+    },
+    {
+      "objects": [
+        7,
+        8
+      ],
+      "bounding_box_gap_mm": 12.0
+    },
+    {
+      "objects": [
+        7,
+        9
+      ],
+      "bounding_box_gap_mm": 32.4
+    },
+    {
+      "objects": [
+        7,
+        10
+      ],
+      "bounding_box_gap_mm": 15.45351
+    },
+    {
+      "objects": [
+        8,
+        9
+      ],
+      "bounding_box_gap_mm": 12.0
+    },
+    {
+      "objects": [
+        8,
+        10
+      ],
+      "bounding_box_gap_mm": 13.00287
+    },
+    {
+      "objects": [
+        9,
+        10
+      ],
+      "bounding_box_gap_mm": 28.75232
+    }
+  ]
+}

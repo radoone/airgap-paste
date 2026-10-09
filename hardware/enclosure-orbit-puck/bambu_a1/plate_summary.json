@@ -1,0 +1,51 @@
+[
+  {
+    "file": "01_orbit_graphite_A1_PLA.3mf",
+    "parts": [
+      "01_shell.stl",
+      "02_base.stl",
+      "07_xiao_wedge.stl"
+    ],
+    "support_enabled": false,
+    "warning": "",
+    "print_time_minutes": 60.5,
+    "filament_grams": 15.69
+  },
+  {
+    "file": "02_orbit_orange_A1_PLA.3mf",
+    "parts": [
+      "09_mx_snap_plate.stl",
+      "03_keycap.stl",
+      "04_halo.stl",
+      "05_belt_left.stl",
+      "05_belt_right.stl"
+    ],
+    "support_enabled": false,
+    "warning": "",
+    "print_time_minutes": 23.2,
+    "filament_grams": 1.9
+  },
+  {
+    "file": "03_orbit_clear_A1_PLA.3mf",
+    "parts": [
+      "06_lightguide_left.stl",
+      "06_lightguide_right.stl"
+    ],
+    "support_enabled": false,
+    "warning": "",
+    "print_time_minutes": 7.1,
+    "filament_grams": 0.07
+  },
+  {
+    "file": "04_mx_fit_tests_A1_PLA.3mf",
+    "parts": [
+      "08_mx_snap_coupon_14p0.stl",
+      "08_mx_snap_coupon_14p1.stl",
+      "08_mx_snap_coupon_14p2.stl"
+    ],
+    "support_enabled": false,
+    "warning": "",
+    "print_time_minutes": 52.6,
+    "filament_grams": 8.0
+  }
+]

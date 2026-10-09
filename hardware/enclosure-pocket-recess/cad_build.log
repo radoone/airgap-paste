@@ -1,0 +1,106 @@
+{
+  "envelope": [
+    54.0,
+    48.0,
+    26.6
+  ],
+  "parts": {
+    "01_shell": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        54.0,
+        48.0,
+        24.200000762939453
+      ],
+      "volume_mm3": 17750.67682026764
+    },
+    "02_base": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        54.0,
+        48.0,
+        11.800000445917249
+      ],
+      "volume_mm3": 6285.204779310307
+    },
+    "03_keycap": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        18.200000762939453,
+        18.200000762939453,
+        5.300000090734862
+      ],
+      "volume_mm3": 574.1145516077954
+    },
+    "04_halo": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        23.399999618530273,
+        23.399999618530273,
+        0.7999999743769877
+      ],
+      "volume_mm3": 136.10159265358988
+    },
+    "05_mx_plate": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        26.200000762939453,
+        26.200000762939453,
+        1.4999999511055648
+      ],
+      "volume_mm3": 719.2931402964466
+    },
+    "07_xiao_wedge": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        28.399999618530273,
+        1.75,
+        3.25900936126709
+      ],
+      "volume_mm3": 104.37021898573687
+    },
+    "06_lightguide_left": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        5.0,
+        2.799999952316284,
+        7.700000186102294
+      ],
+      "volume_mm3": 34.970666666666666
+    },
+    "06_lightguide_right": {
+      "valid": true,
+      "cad_solids": 1,
+      "watertight": true,
+      "mesh_components": 1,
+      "print_bounds_mm": [
+        5.0,
+        2.799999952316284,
+        7.700000186102294
+      ],
+      "volume_mm3": 34.97066666666667
+    }
+  },
+  "collisions_above_0p01_mm3": {}
+}

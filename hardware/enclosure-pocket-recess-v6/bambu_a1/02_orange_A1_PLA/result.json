@@ -1,0 +1,103 @@
+{
+    "error_string": "Success.",
+    "export_time": 922,
+    "layer_height": 0.10000000149011612,
+    "plate_index": 0,
+    "prepare_time": 387,
+    "return_code": 0,
+    "sliced_plates": [
+        {
+            "feature_type_times": {
+                "Bottom surface": 34.855804443359375,
+                "Bridge": 11.79246711730957,
+                "Custom": 399.176513671875,
+                "Flush": 25.0,
+                "Gap infill": 96.68135833740234,
+                "Inner wall": 196.8402099609375,
+                "Internal solid infill": 136.63978576660156,
+                "Outer wall": 575.9335327148438,
+                "Sparse infill": 73.15454864501953,
+                "Top surface": 55.773956298828125,
+                "Travel": 352.0739440917969,
+                "Undefined": 335.51885986328125
+            },
+            "filament_change_times": 0,
+            "filaments": [
+                {
+                    "filament_id": "GFL99",
+                    "id": 1,
+                    "main_used_g": 3.740427017211914,
+                    "total_used_g": 3.740427017211914
+                }
+            ],
+            "generate_support_material_time": 38,
+            "id": 1,
+            "infill_time": 164,
+            "layer_filament_change": 0,
+            "main_predication": 1508.754150390625,
+            "make_perimeters_time": 269,
+            "obj_cached_cnt": 0,
+            "objects": [
+                {
+                    "bbox": {
+                        "depth": 27.60000228881836,
+                        "height": 9.399999618530273,
+                        "width": 27.60000228881836,
+                        "x": 128.29998779296875,
+                        "y": 125.29998779296875,
+                        "z": 0.0
+                    },
+                    "id": 85,
+                    "name": "04_halo.stl",
+                    "triangle_count": 28240
+                },
+                {
+                    "bbox": {
+                        "depth": 26.200000762939453,
+                        "height": 1.5,
+                        "width": 26.200002670288086,
+                        "x": 100.0999984741211,
+                        "y": 126.69998931884766,
+                        "z": 0.0
+                    },
+                    "id": 96,
+                    "name": "05_mx_plate.stl",
+                    "triangle_count": 736
+                },
+                {
+                    "bbox": {
+                        "depth": 20.200002670288086,
+                        "height": 8.300000190734863,
+                        "width": 20.199993133544922,
+                        "x": 135.6999969482422,
+                        "y": 103.0999984741211,
+                        "z": 0.0
+                    },
+                    "id": 74,
+                    "name": "03_keycap.stl",
+                    "triangle_count": 31162
+                },
+                {
+                    "bbox": {
+                        "depth": 8.399590492248535,
+                        "height": 1.600000023841858,
+                        "width": 8.399998664855957,
+                        "x": 121.84899139404297,
+                        "y": 116.4520263671875,
+                        "z": 0.0
+                    },
+                    "id": 107,
+                    "name": "09_eye_bushing.stl",
+                    "triangle_count": 45692
+                }
+            ],
+            "sliced_time": 1403,
+            "sliced_time_with_cache": 874,
+            "total_predication": 1941.37548828125,
+            "triangle_count": 105830,
+            "warning_message": ""
+        }
+    ],
+    "sparse_infill_density": 20.0,
+    "wall_loops": 3
+}

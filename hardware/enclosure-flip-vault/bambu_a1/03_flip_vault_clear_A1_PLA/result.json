@@ -1,9 +1,9 @@
 {
     "error_string": "Success.",
-    "export_time": 424,
+    "export_time": 412,
     "layer_height": 0.20000000298023224,
     "plate_index": 0,
-    "prepare_time": 4,
+    "prepare_time": 6,
     "return_code": 0,
     "sliced_plates": [
         {
@@ -26,9 +26,9 @@
                     "total_used_g": 0.1891767382621765
                 }
             ],
-            "generate_support_material_time": 0,
+            "generate_support_material_time": 1,
             "id": 1,
-            "infill_time": 2,
+            "infill_time": 5,
             "layer_filament_change": 0,
             "main_predication": 79.83090209960938,
             "make_perimeters_time": 3,
@@ -48,8 +48,8 @@
                     "triangle_count": 420
                 }
             ],
-            "sliced_time": 53,
-            "sliced_time_with_cache": 45,
+            "sliced_time": 89,
+            "sliced_time_with_cache": 63,
             "total_predication": 494.4643249511719,
             "triangle_count": 420,
             "warning_message": ""

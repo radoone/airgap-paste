@@ -1,0 +1,455 @@
+{
+  "design": "AirGap Paste Pocket Recess v5 Sculpted Eyelet",
+  "envelope_mm": [
+    54,
+    48,
+    28.6
+  ],
+  "housing_envelope_mm": [
+    54,
+    48,
+    26.6
+  ],
+  "files": [
+    {
+      "path": "01_shell.step",
+      "bytes": 2176133,
+      "sha256": "26efadc8f873b8d6d405bb21d3f46bd44ef71c05bfaf88cd7b153f5f991869e7"
+    },
+    {
+      "path": "01_shell.stl",
+      "bytes": 2784184,
+      "sha256": "76a15f8e06e077a9188d324ced4f3f4b89e33d1f8d4252a688075994034e7826"
+    },
+    {
+      "path": "01_shell_assembly.stl",
+      "bytes": 2780684,
+      "sha256": "08d84cedd98046488e8f6fc7692dd318666ed79348c0e91905c8410253f0e414"
+    },
+    {
+      "path": "02_base.step",
+      "bytes": 525526,
+      "sha256": "c2a3d76428dfecc41d384c8fcf5391ef70bee35ba267b7444255b33128007fd3"
+    },
+    {
+      "path": "02_base.stl",
+      "bytes": 297484,
+      "sha256": "1c01b6f44307d0ec6ca0cb61fe0b0087debc68838be4553995eaa9e5e83d9fcd"
+    },
+    {
+      "path": "02_base_assembly.stl",
+      "bytes": 297484,
+      "sha256": "1e562e153736b97323202f7c020ffdc98a576fd8eff5d26f79a054f20e0e45b5"
+    },
+    {
+      "path": "03_keycap.step",
+      "bytes": 374054,
+      "sha256": "b37ddf43dcd466ef2a6b18f778941d54f2897d3c111dfe33913b5a7e5d01c39d"
+    },
+    {
+      "path": "03_keycap.stl",
+      "bytes": 1558184,
+      "sha256": "af138da169b50e4284654dda264176668c0a413ce03dcd04ccac00ce35469d05"
+    },
+    {
+      "path": "03_keycap_assembly.stl",
+      "bytes": 1528584,
+      "sha256": "5b12c5ec81cea8fb1451b345015c5499f4cd01e43b2d2578f4ad647071a6920e"
+    },
+    {
+      "path": "04_halo.step",
+      "bytes": 108660,
+      "sha256": "5796c025f9b3bd31961fa38d076789c61c147c47f704bd952ec6a8479a995a54"
+    },
+    {
+      "path": "04_halo.stl",
+      "bytes": 1377684,
+      "sha256": "60473e28fa01eedcaf1c5662b42a569c408134cf68e02960aafd41f47b767e11"
+    },
+    {
+      "path": "04_halo_assembly.stl",
+      "bytes": 1377684,
+      "sha256": "dad2322c0474a87d2b52c26d50fd8eb124365938e0397799fd3cb7cb16af8dba"
+    },
+    {
+      "path": "05_mx_plate.step",
+      "bytes": 108519,
+      "sha256": "60dbc432e13be2266103a6f17b84e65f5aa4f9c8854ec1eba41052ca03837132"
+    },
+    {
+      "path": "05_mx_plate.stl",
+      "bytes": 36884,
+      "sha256": "5a6f2efa7c35b4aece56c9ea43e9c0b0653d73b5df24a341fb341570ef9be341"
+    },
+    {
+      "path": "05_mx_plate_assembly.stl",
+      "bytes": 36884,
+      "sha256": "bc36f74ba4625ba7406aa4f94d32d1272661f535386e65f44616821e5e49fbb2"
+    },
+    {
+      "path": "06_lightguide_left.step",
+      "bytes": 27355,
+      "sha256": "2ef1e3f2dbbe09861243b72da04e659889127a31fd47f2d49a673d208afc246d"
+    },
+    {
+      "path": "06_lightguide_left.stl",
+      "bytes": 1084,
+      "sha256": "25d1624336a9a39eb6aada0486a7fb3bb1e499c613f9f38c477be9aa8850ed39"
+    },
+    {
+      "path": "06_lightguide_left_assembly.stl",
+      "bytes": 1084,
+      "sha256": "02e7f9c7aa0a4970acb23ee86421f71ebfc88eefcc753fe5bd4999cf48c6404d"
+    },
+    {
+      "path": "06_lightguide_right.step",
+      "bytes": 27284,
+      "sha256": "66aa522d0bb4b5a5c1ef125bbde57d3a988a429410b2d33db7830f542b578336"
+    },
+    {
+      "path": "06_lightguide_right.stl",
+      "bytes": 1284,
+      "sha256": "2e4b9bf2f72b75ef61454099da92672fffd9afcffd73826b274c5ede588481c7"
+    },
+    {
+      "path": "06_lightguide_right_assembly.stl",
+      "bytes": 1284,
+      "sha256": "3a0e2bdc28d1cc94115e3b3f85e46a34ebae2d39c95c0c522bcf5d361fd3a7e9"
+    },
+    {
+      "path": "07_wedge_looser.stl",
+      "bytes": 2484,
+      "sha256": "10981beac12909b1a58eb2f89c95c62e8555e6cacd65578bf81f2e467166a130"
+    },
+    {
+      "path": "07_wedge_tighter.stl",
+      "bytes": 2484,
+      "sha256": "868e9184ac58497e668bf65618cc4a107bfcde01a0d4e3fa1fc6460aa028d438"
+    },
+    {
+      "path": "07_xiao_wedge.step",
+      "bytes": 46523,
+      "sha256": "dc7519c5cdd95d0f903be5e84ab66e3732b8c0f9eea4fac817582a6dd5fec451"
+    },
+    {
+      "path": "07_xiao_wedge.stl",
+      "bytes": 2484,
+      "sha256": "790d4f47bc3daea6223bcfb53762efa2edf49f6614bfb5f7d2a4fb21178df65b"
+    },
+    {
+      "path": "07_xiao_wedge_assembly.stl",
+      "bytes": 2484,
+      "sha256": "6871e0ac9fa2fe2893900fb7bb492a8017a286aec78e668825e27ef3b64b3d97"
+    },
+    {
+      "path": "08_mx_coupon_14p0.stl",
+      "bytes": 33684,
+      "sha256": "ca832a80c912752a8e0416fd3690cfbae8c030f309decaef03d4094e27361726"
+    },
+    {
+      "path": "08_mx_coupon_14p1.stl",
+      "bytes": 33684,
+      "sha256": "1a0798a25440e9d566605101e07e46c012a66b6ade122c719b7cb230e414e23c"
+    },
+    {
+      "path": "08_mx_coupon_14p2.stl",
+      "bytes": 33684,
+      "sha256": "11b2e198785ed0b13fed0e46b60eb5d1815e170bb1ba7838cdb4122e8715be55"
+    },
+    {
+      "path": "09_eye_bushing.step",
+      "bytes": 81171,
+      "sha256": "19078d7906763f18e231ce026c718f91db71e0e535cc12230af7c408cbb11699"
+    },
+    {
+      "path": "09_eye_bushing.stl",
+      "bytes": 2284684,
+      "sha256": "a3cc1abad95b45dae3567276173590c337979cbbed95ad6d2c0ad1e46447bbe3"
+    },
+    {
+      "path": "09_eye_bushing_assembly.stl",
+      "bytes": 2252184,
+      "sha256": "300588b7c3c5f9bdc3545461422c718f38860d2057eaee193997a013c358c977"
+    },
+    {
+      "path": "10_eyelet_coupon.step",
+      "bytes": 315296,
+      "sha256": "8eb7abdfc4c570d7f1fc39177a7e6bcc7cbde26d78a86998e3b1d98cfad38cfb"
+    },
+    {
+      "path": "10_eyelet_coupon.stl",
+      "bytes": 340384,
+      "sha256": "3533579a0d77569bdae8bbe57745d2e518334f52a35c6812414427f309b65359"
+    },
+    {
+      "path": "README_SK.md",
+      "bytes": 12709,
+      "sha256": "4cb41eec0cf1139aa472fcbf89e4ff3bc39a04a81a5353ec5e40b5b133f5ee1a"
+    },
+    {
+      "path": "bambu_a1/00_complete_test_A1_PLA.3mf",
+      "bytes": 3529362,
+      "sha256": "06aaee0912775ce50f9a145d71e0e0b51349459f23bd4cd26a59ed13b8435bb7"
+    },
+    {
+      "path": "bambu_a1/00_complete_test_A1_PLA_preview.png",
+      "bytes": 17998,
+      "sha256": "0560b14a19c161082ff5fc7a5367385f31b77ae276093219548360b58fe24c3a"
+    },
+    {
+      "path": "bambu_a1/01_graphite_A1_PLA.3mf",
+      "bytes": 1685571,
+      "sha256": "bc0aa3863773e8fb0a22c2d41663fcb1ca424d00b11c3a38266b6efb7b5f2a71"
+    },
+    {
+      "path": "bambu_a1/01_graphite_A1_PLA_preview.png",
+      "bytes": 13909,
+      "sha256": "0f492498961f8545190fc6c074e79809aeb79dd82b1c5deffe3d8e2403ecbc51"
+    },
+    {
+      "path": "bambu_a1/02_orange_A1_PLA.3mf",
+      "bytes": 1660403,
+      "sha256": "b23d619463035945b40ba5799134cb1a3e7c2044b4e85dd423eccfbd28a71327"
+    },
+    {
+      "path": "bambu_a1/02_orange_A1_PLA_preview.png",
+      "bytes": 13317,
+      "sha256": "e314244748136c1486d7cc0e7ce96011883803f43da2a7fee2e709045beb7360"
+    },
+    {
+      "path": "bambu_a1/03_clear_lightguides_A1_PLA.3mf",
+      "bytes": 64132,
+      "sha256": "9e183b5d9c3ac08723762eee4d37880395cfee04e3c4cb3fba81e14f331f37c5"
+    },
+    {
+      "path": "bambu_a1/03_clear_lightguides_A1_PLA_preview.png",
+      "bytes": 5334,
+      "sha256": "c14b47bd41d70ef922408b3db6f8c979874d036301019ba5a64ae71607a6b051"
+    },
+    {
+      "path": "bambu_a1/04_mx_fit_tests_A1_PLA.3mf",
+      "bytes": 647577,
+      "sha256": "d1b15e20286f964791bff20fd724ac51006dd3d0aa703d8b70793d60559ab15c"
+    },
+    {
+      "path": "bambu_a1/04_mx_fit_tests_A1_PLA_preview.png",
+      "bytes": 7378,
+      "sha256": "84510196a5d674975d092976901bccdc5aa7b3eb2a92319c7d24222ee3d89c8c"
+    },
+    {
+      "path": "bambu_a1/06_eyelet_fit_A1_PLA.3mf",
+      "bytes": 958062,
+      "sha256": "720ca0822a2a77c6382c0c4528a28eafde5a818234f099277c9d1e71ed8a1d8b"
+    },
+    {
+      "path": "bambu_a1/06_eyelet_fit_A1_PLA_preview.png",
+      "bytes": 9012,
+      "sha256": "73743a47c11c9ea6b8e670ded2004ca0ebbcf9bdec46a35c8acf519e051585bd"
+    },
+    {
+      "path": "bambu_a1/plate_summary.json",
+      "bytes": 2432,
+      "sha256": "996044a6ed5996a6527b868778a2d2c63ea241e43110e4c15d203b2ec770d438"
+    },
+    {
+      "path": "blender_mesh_validation.json",
+      "bytes": 1418,
+      "sha256": "cd08d0b0db1e93d61cb08d83a17bbd61a85a02ed1e8890e4d8d65e8a536bdbf7"
+    },
+    {
+      "path": "build_pocket_recess.py",
+      "bytes": 18599,
+      "sha256": "f5d6b69ca2facb6c3f5810b6025d8a553c62297ca07523083d90bc76b4fa41a7"
+    },
+    {
+      "path": "cord_path_check.json",
+      "bytes": 335,
+      "sha256": "42e71d3d2afbaf89a8c80f98421f6ffe16d154ffdec2430800e793d63384a044"
+    },
+    {
+      "path": "design-qa.md",
+      "bytes": 1871,
+      "sha256": "8202121f70260bb65874d945b4d5ad92f7404671836a2929fc6fbcb56c95f625"
+    },
+    {
+      "path": "eyelet_coupon_check.json",
+      "bytes": 208,
+      "sha256": "cb11254080963d31c43569b4a54dedfe2a61b47250a8772080384f12e33c8e49"
+    },
+    {
+      "path": "eyelet_detail.png",
+      "bytes": 1577124,
+      "sha256": "e35219288e84fe371a00e77a07e59e595074951d38c782e463130f8365cda949"
+    },
+    {
+      "path": "inspect_toolpaths.py",
+      "bytes": 3747,
+      "sha256": "52a8a448e0a674a891bb0f8800c606a94c264c187bbb99e33ce3fe36e16d5091"
+    },
+    {
+      "path": "make_eyelet_coupon.py",
+      "bytes": 1091,
+      "sha256": "e474cbe11b077e705dfdfc4a7ece8f7f092a48c6711e9446cfda2ee9b49f929e"
+    },
+    {
+      "path": "package_check.json",
+      "bytes": 3063,
+      "sha256": "83dfd0b62365ff568008a07977ecac947b5ce064a4d3adb9a1e6e2026e3850ec"
+    },
+    {
+      "path": "package_delivery.py",
+      "bytes": 3596,
+      "sha256": "ac90b3b08491be0c74c0ee4d5a145d0dd4eacbefdf87aab7cfd49f781ffac7c2"
+    },
+    {
+      "path": "pocket_recess_assembly.blend",
+      "bytes": 6205619,
+      "sha256": "7e72c6e7ea32588605fa02614109dd51e4ea7a7d4cafbe8f9b7372094515df05"
+    },
+    {
+      "path": "pocket_recess_assembly.step",
+      "bytes": 3548469,
+      "sha256": "4163bb9c4bda753979843cf0c66f1860ed46df5f8efee2e32e43ef52e6ec178f"
+    },
+    {
+      "path": "pocket_recess_hero.png",
+      "bytes": 1565822,
+      "sha256": "03c5defb094646d613010c24ce8c3711248e7d889150c88bab7f4b1f06a6cf20"
+    },
+    {
+      "path": "pocket_recess_top.png",
+      "bytes": 1529825,
+      "sha256": "9053ac67e45180e07191138068e2d83de234bc0e7fbd6d9f9f495fb61e61147b"
+    },
+    {
+      "path": "pocket_recess_with_electronics.step",
+      "bytes": 7124108,
+      "sha256": "a8efa210c2f9b22cee4f5f96e51dbd4d3cd73af5eba0e48ef4e7066b3918ef48"
+    },
+    {
+      "path": "prepare_a1.py",
+      "bytes": 4222,
+      "sha256": "8145661ed6fd186c65cd2b03b1981d0da00c6726e165a7522376a93bbbb94a96"
+    },
+    {
+      "path": "print_profiles/PLA.json",
+      "bytes": 7358,
+      "sha256": "4837a82a50de8c2a2b3c77b53d5393cdb9eb98174f85220cce33ca6cffba95a2"
+    },
+    {
+      "path": "print_profiles/machine.json",
+      "bytes": 28767,
+      "sha256": "9543ea404330a7d229f8d7c0f29f8a2d1f2771870dc042cc1a95cf8edea6073c"
+    },
+    {
+      "path": "print_profiles/process.json",
+      "bytes": 7282,
+      "sha256": "5a1ca23fa4a0ad94d944ca9d502799ac3d096c8d2380c1da768bb54a70748a60"
+    },
+    {
+      "path": "reference/Cherry_MX2A.pdf",
+      "bytes": 1509783,
+      "sha256": "b3b81d94ba8b5b9a295ead41d3aa60f8a0bc699cd9c9216da13035eff0f4bd1f"
+    },
+    {
+      "path": "reference/Gateron_MX_reference.pdf",
+      "bytes": 4328585,
+      "sha256": "6cfd5418f70c5550852dca71f4a39d4794074eec3f60a517a4107f591163d0cb"
+    },
+    {
+      "path": "reference/LED_charge_left.stl",
+      "bytes": 684,
+      "sha256": "e27f885db641ae8b8d2f128981206dcd621d1a36cf834d2614ea44b5dd9db6e3"
+    },
+    {
+      "path": "reference/LED_status_right.stl",
+      "bytes": 684,
+      "sha256": "8b0f18ccc251b01c7047629f9d2980b27abbf26daf2604b7db3c6b53d97fb7c4"
+    },
+    {
+      "path": "reference/MX_envelope.stl",
+      "bytes": 13084,
+      "sha256": "6a0ac1698cedfc27e5fb42372b37619905f6874178a1c8258f916008febb994a"
+    },
+    {
+      "path": "reference/Seeed_A02_antenna.pdf",
+      "bytes": 2127154,
+      "sha256": "10a89ebbeab31e97e21f7aa81e3c8cbca87fe249598ff9c9a61028b8edbfa6fb"
+    },
+    {
+      "path": "reference/XIAO_ESP32S3_Seeed.step",
+      "bytes": 1335902,
+      "sha256": "870ad45c7af5d92324cec4c6ae65fbf86e3b049d5a97ab9ffd9039ebd73455dd"
+    },
+    {
+      "path": "reference/XIAO_display_only.stl",
+      "bytes": 492684,
+      "sha256": "583929bec09769753e913e8cb0b57ec5dd6fb7994945e28c061d1826f2de4e94"
+    },
+    {
+      "path": "reference/XIAO_official.kicad_pcb",
+      "bytes": 1281214,
+      "sha256": "d20724aa7198a897871cc1ce87f1a322d0b9cf77521fd2fc4ccda61bc5e4af6c"
+    },
+    {
+      "path": "reference/XIAO_position.stl",
+      "bytes": 6000884,
+      "sha256": "0d7013d6884b728c9a56ae696262dbb55fd1607ddd50619d0c9c280930ba1c85"
+    },
+    {
+      "path": "reference/antenna_envelope.stl",
+      "bytes": 684,
+      "sha256": "b599ad20d3722734526d63b3ecdce6c273bb3beaa2b9079ed46e0a349a18cb67"
+    },
+    {
+      "path": "reference/cord_path_reference.stl",
+      "bytes": 705284,
+      "sha256": "7d7b0ec2c9450712d1090b801d2a503cd3237f657c3aafd1d8a22f27a963023e"
+    },
+    {
+      "path": "render_pocket_recess.py",
+      "bytes": 5391,
+      "sha256": "7db2bbc8625fef1fd3bca718453ac5c8a0741e569529c33837a32e87a5e30f88"
+    },
+    {
+      "path": "requirements.txt",
+      "bytes": 50,
+      "sha256": "3cffd06517d3d8e43f689b21736e576ef82aa450629dcd3611b66938531e0611"
+    },
+    {
+      "path": "selected_concept.png",
+      "bytes": 2295493,
+      "sha256": "286cce003e271d6e4b8adbc1487dbfff3c76f274bea912e913690092f6d2557f"
+    },
+    {
+      "path": "toolpath_inspection.json",
+      "bytes": 341,
+      "sha256": "c7f4f4e5a7917868e8b25a6b8aca64aa9b8d0ad7d43fc73917555899e241829b"
+    },
+    {
+      "path": "toolpath_inspection.png",
+      "bytes": 329543,
+      "sha256": "624e12181379673a0d2bca2bd7b3df505ef606979dc9c1dd177f653d0e19ce94"
+    },
+    {
+      "path": "validation.json",
+      "bytes": 10202,
+      "sha256": "11cba287e8e70f098c7cf69c567d23575280ce30da6c1da7dfb684df5c9c338c"
+    },
+    {
+      "path": "verify_cord_path.py",
+      "bytes": 2050,
+      "sha256": "b16afe561cdd8ce41114451632298faaf147873730e400f831e71b44901ae22c"
+    },
+    {
+      "path": "viewer_data.json",
+      "bytes": 771558,
+      "sha256": "bcaac0aea518ab2807d74ca8b42cc8cdba7a7ffa678580efbaefa9bd97598b19"
+    },
+    {
+      "path": "xiao_usb_led_inspection.png",
+      "bytes": 1606295,
+      "sha256": "f054d2192d799315eb0ccbf6566618f8903c7a31a87610507e408550d92f7573"
+    }
+  ]
+}
