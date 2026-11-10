@@ -12,20 +12,5 @@ export default defineConfig({
       clientFiles: ["./src/main.tsx"],
     },
   },
-  build: {
-    rolldownOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes("node_modules/@codemirror/lang-") || id.includes("node_modules/@codemirror/legacy-modes")) return;
-          if (id.includes("node_modules/@codemirror") || id.includes("node_modules/@uiw") || id.includes("node_modules/codemirror")) {
-            return "codemirror-core";
-          }
-          if (id.includes("node_modules/firebase") || id.includes("node_modules/@firebase")) {
-            return "firebase";
-          }
-        },
-      },
-    },
-  },
   plugins: [react()],
 });
