@@ -5,6 +5,7 @@ webpage/dist/
 webpage/functions/lib/
 webpage/.env.local
 webpage/.firebase/
+firebase-debug*.log
 .playwright-mcp/
 webpage/.playwright-cli/
 webpage/output/

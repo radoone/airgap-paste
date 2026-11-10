@@ -21,12 +21,12 @@ import {
   Warning,
   X,
 } from "@phosphor-icons/react";
-import { getToken } from "firebase/app-check";
-import { appCheck } from "./firebase";
 import { disableGoogleAnalytics, enableGoogleAnalytics } from "./analytics";
 import { brand } from "./brand";
-import productHero from "./assets/airgap-paste-hero-v4.png";
-import transferMark from "./assets/airgap-transfer-mark.png";
+import productHero from "./assets/airgap-paste-hero.webp";
+import productHero480 from "./assets/airgap-paste-hero-480.webp";
+import productHero960 from "./assets/airgap-paste-hero-960.webp";
+import transferMark from "./assets/airgap-transfer-mark.webp";
 import "./styles.css";
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
@@ -59,14 +59,12 @@ function WaitlistForm({ compact = false }: { compact?: boolean }) {
     setMessage("");
 
     try {
-      let appCheckToken: string | undefined;
-      if (appCheck) {
-        const tokenResult = await getToken(appCheck, false);
-        appCheckToken = tokenResult.token;
-      }
+      const { getWaitlistToken } = await import("./firebase");
+      const appCheckToken = await getWaitlistToken();
 
       const response = await fetch(waitlistEndpoint, {
         method: "POST",
+        signal: AbortSignal.timeout(20_000),
         headers: {
           "Content-Type": "application/json",
           ...(appCheckToken ? { "X-Firebase-AppCheck": appCheckToken } : {}),
@@ -88,7 +86,7 @@ function WaitlistForm({ compact = false }: { compact?: boolean }) {
       if (!response.ok) throw new Error(data.error || "Something went wrong. Please try again.");
 
       setStatus("success");
-      setMessage(data.alreadyRegistered ? "You are already on the list." : "You’re on the list. We’ll share early access first.");
+      setMessage("You’re on the list. We’ll share early access first.");
       form.reset();
     } catch (error) {
       setStatus("error");
@@ -168,7 +166,7 @@ function LandingPage() {
           <p className="hero-lede">AirGap Paste is a pocket-sized Bluetooth hardware bridge. Review commands, keys, or scripts on your phone or laptop, then press SEND; it types into any computer, VM console, or terminal as a standard USB keyboard.</p>
         </div>
         <button className="hero-visual" type="button" aria-label="Open an enlarged AirGap Paste prototype render" onClick={() => setIsProductPreviewOpen(true)}>
-          <img src={productHero} alt="AirGap Paste desktop controller with a broad milky-white sculpted SEND button, continuous green halo, silky-black lower enclosure, Wi-Fi-to-USB one-way transfer mark, and embossed AIRGAP PASTE name." />
+          <img src={productHero960} srcSet={`${productHero480} 480w, ${productHero960} 960w, ${productHero} 1698w`} sizes="(max-width: 760px) calc(100vw - 32px), 55vw" width={1698} height={926} fetchPriority="high" alt="AirGap Paste desktop controller with a broad milky-white sculpted SEND button, continuous green halo, silky-black lower enclosure, Wi-Fi-to-USB one-way transfer mark, and embossed AIRGAP PASTE name." />
           <div className="visual-label visual-label--top">Desktop enclosure<br /><strong>Ø 68 × 28 mm · Sculpted 3D Printed</strong></div>
           <div className="visual-label visual-label--bottom"><span className="status-dot status-dot--green status-dot--pulse" /> Green Halo · Blinks when ready to press</div>
           <span className="visual-expand">Click to enlarge</span>
@@ -241,7 +239,7 @@ function LandingPage() {
           </div>
 
           <article className="transfer-node transfer-node--device">
-            <div className="transfer-device-image"><img src={productHero} alt="AirGap Paste prototype render between an online source and an isolated computer." /></div>
+            <div className="transfer-device-image"><img src={productHero480} width={480} height={262} loading="lazy" decoding="async" alt="AirGap Paste prototype render between an online source and an isolated computer." /></div>
             <div className="transfer-node__top"><span>AIRGAP PASTE</span><em>Queued</em></div>
             <strong>Press SEND</strong>
             <span className="transfer-confirm"><Fingerprint size={18} /> Physical confirmation</span>

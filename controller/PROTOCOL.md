@@ -1,4 +1,4 @@
-# AirGap Paste BLE protocol v2
+# AirGap Paste BLE protocol v3
 
 The device exposes one custom service and two encrypted characteristics:
 
@@ -13,31 +13,45 @@ Every GATT value contains exactly one UTF-8 protocol frame.
 When a new client (browser/phone) connects for the first time:
 
 ```text
-client: PAIR <16-hex-client-id>
+client: PAIR3 <16-hex-client-id> <32-hex-client-nonce>
 device: PAIR_WAIT 30
 # Device enters pairing mode; LED blinks rapidly (5 Hz).
 # User physically presses the BOOT or D1/GPIO2 button on AirGap Paste within 30 seconds.
-device: PAIR_OK <32-hex-token>
+device: PAIR_OK3 <32-hex-token> <32-hex-device-nonce> <64-hex-device-proof>
 ```
 
-The browser saves `<16-hex-client-id>` and `<32-hex-token>` in persistent local storage. The device saves them in flash NVS (supporting up to 8 paired clients) and marks the session as authenticated.
+The browser generates the client nonce using Web Crypto and saves the client ID and pairing key in persistent local storage, keyed by the browser's Bluetooth device ID. The device saves the key in flash NVS (supporting up to 8 paired clients) and marks the session as authenticated after physical confirmation and successful storage.
+
+First pairing establishes trust in the hardware selected by the user. The device has no display or factory public-key identity: BLE uses encrypted LE Secure Connections with Just Works, which does not authenticate against an active attacker during this initial enrollment. Pair deliberately in a trusted environment; a button press is not an out-of-band cryptographic identity check. Subsequent connections require mutual proof of the enrolled secret.
 
 ## 2. Reconnecting a Paired Client (Instant 1-Click)
 
 On subsequent connections, the client reconnects automatically without requiring button confirmation:
 
 ```text
-client: HELLO <16-hex-client-id>
-device: CHALLENGE <32 lowercase hex characters>
-client: AUTH <HMAC-SHA256(paired-token, raw-challenge-bytes) as lowercase hex>
-device: OK AUTH
+client: HELLO3 <16-hex-client-id> <32-hex-client-nonce>
+device: CHALLENGE3 <32-hex-device-nonce> <64-hex-device-proof>
+# Browser verifies the device proof before sending AUTH3 or any transfer text.
+client: AUTH3 <64-hex-client-proof>
+device: OK AUTH3
 ```
 
 If the client ID is not recognized (e.g. after a factory reset):
 ```text
 device: ERR UNPAIRED Client not recognized
 ```
-The client can then immediately fall back to the `PAIR` command.
+The browser preserves the saved key and fails closed. It never automatically downgrades to pairing after a bad proof or `UNPAIRED`. Selecting a different device while a pairing is remembered is also rejected. To deliberately enroll different/reset hardware, explicitly forget the saved pairing first.
+
+Both proofs use HMAC-SHA256 with the **32-character lowercase hexadecimal token encoded as ASCII** as the key. The authenticated UTF-8 messages, without trailing newline, are:
+
+```text
+airgap-v3 device <client-id> <client-nonce> <device-nonce>
+airgap-v3 client <client-id> <client-nonce> <device-nonce>
+```
+
+Nonces are fresh 16-byte random values encoded as 32 lowercase hex characters. Including both nonces prevents replay; distinct roles prevent reflecting a device proof back as a client proof. `PAIR_OK3` uses the same device-proof transcript with the newly generated key.
+
+Upgrade the firmware and web app together. Firmware rejects the legacy `HELLO`, `AUTH`, and `PAIR` commands. Existing NVS keys remain usable with v3; the browser migrates an old single-key storage record only after successful mutual verification.
 
 ## 3. Unpairing & Factory Reset
 
@@ -51,7 +65,7 @@ The client can then immediately fall back to the `PAIR` command.
 
 ## 4. Transfer & Typing Session
 
-Once authenticated (`OK AUTH`), the session operates as follows:
+Once authenticated (`OK AUTH3` or `PAIR_OK3`), the session operates as follows:
 
 ```text
 # The browser keeps the authenticated BLE link active while it is open.
@@ -70,3 +84,5 @@ device: ERR ABORTED Typing cancelled on device
 ```
 
 Errors use `ERR <CODE> <detail>`. An authenticated browser sends `PING` every 20 seconds and expects `PONG`; this refreshes the five-minute authentication idle timer and detects a lost GATT link. Every transfer declares a typing mode and target keyboard. `ascii` accepts printable US ASCII only; `linux`, `macos`, and `windows` accept valid printable UTF-8. Linux uses `Ctrl+Shift+U`, macOS uses Unicode Hex Input, and Windows uses the EnableHexNumpad Alt+plus sequence. The host must have the corresponding input method enabled. `text` also accepts LF line breaks and Tab, which are typed as Enter and Tab keys within the transferred text. Both modes accept at most 16 KB per transfer. Neither mode adds an automatic Enter after the payload. DATA chunks must be sequential and the complete payload must match both the declared length and SHA-256 digest.
+
+The browser serializes uploads, sends at most 120 payload bytes per DATA frame and waits for READY before considering an upload verified. READY, TYPING and DONE may arrive before the corresponding write promise settles; the browser must never regress an advanced state. It allows five minutes for physical confirmation, then uses a 90-second inactivity timeout refreshed only by advancing, valid PROGRESS. There is no fixed ten-minute transfer cap. Timeout, upload failure and explicit disconnect close BLE, which clears the firmware session and releases pressed keys. DONE reports completion of the keyboard sequence; it cannot verify the text inside the host application.

@@ -1,5 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { MAX_TRANSFER_BYTES, SimulatedTransport, validateTransferText } from "./transport";
+
+afterEach(() => localStorage.clear());
 
 describe("SimulatedTransport", () => {
   it("requires a connection and progresses through queue and confirmation", async () => {
@@ -54,11 +56,36 @@ describe("SimulatedTransport", () => {
     expect(clientId).toMatch(/^[0-9a-f]{16}$/i);
     expect(getOrCreateClientId()).toBe(clientId);
 
-    savePairingToken("fedcba9876543210fedcba9876543210");
+    savePairingToken("fedcba9876543210fedcba9876543210", "test-device");
     expect(getSavedPairingToken()).toBe("fedcba9876543210fedcba9876543210");
 
     const transport = new SimulatedTransport();
     await transport.unpair();
     expect(getSavedPairingToken()).toBeNull();
+  });
+
+  it("does not report completion after simulator cancellation", async () => {
+    const transport = new SimulatedTransport();
+    await transport.connect();
+    await transport.queue({ text: "echo ready", language: "text", byteLength: 10, mode: "command", keyboardTarget: "ascii" });
+    await transport.awaitConfirmation();
+    const completion = transport.confirm();
+    transport.disconnect();
+    await expect(completion).rejects.toThrow("cancelled");
+    expect(transport.getState()).toBe("disconnected");
+  });
+
+  it("keeps pairing keys isolated by device and supports explicit forgetting", async () => {
+    const { savePairingToken, getSavedPairingToken, clearSavedPairing } = await import("./pairing");
+    const a = "00".repeat(16), b = "11".repeat(16);
+    savePairingToken(a, "device-a");
+    savePairingToken(b, "device-b");
+    expect(getSavedPairingToken("device-a")).toBe(a);
+    expect(getSavedPairingToken("device-b")).toBe(b);
+    expect(getSavedPairingToken("device-c")).toBeNull();
+    clearSavedPairing("device-a");
+    expect(getSavedPairingToken("device-a")).toBeNull();
+    expect(getSavedPairingToken("device-b")).toBe(b);
+    expect(() => savePairingToken("malformed", "device-c")).toThrow("invalid pairing");
   });
 });

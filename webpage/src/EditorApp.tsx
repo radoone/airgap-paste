@@ -1,32 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
-import { javascript } from "@codemirror/lang-javascript";
-import { json } from "@codemirror/lang-json";
-import { markdown } from "@codemirror/lang-markdown";
-import { python } from "@codemirror/lang-python";
-import { yaml } from "@codemirror/lang-yaml";
-import { StreamLanguage } from "@codemirror/language";
-import { shell } from "@codemirror/legacy-modes/mode/shell";
 import { oneDark } from "@codemirror/theme-one-dark";
 import type { Extension } from "@codemirror/state";
 import { ArrowLeft, ArrowRight, CheckCircle, CircleNotch, ClipboardText, Code, CursorClick, Fingerprint, HandTap, Lightning, PaperPlaneTilt, ShieldCheck, Trash, WarningCircle } from "@phosphor-icons/react";
 import { SimulatedTransport, WebBluetoothTransport, clearSavedPairing, getSavedPairingToken, validateTransferText, type KeyboardTarget, type TransferMode, type TransferStage, type TransferTransport } from "./transport";
 import { brand } from "./brand";
-import transferMark from "./assets/airgap-transfer-mark.png";
+import { languageOptions, loadLanguage, type LanguageId } from "./languages";
+import transferMark from "./assets/airgap-transfer-mark.webp";
 
-type LanguageId = "text" | "bash" | "json" | "javascript" | "python" | "yaml" | "markdown";
-type LanguageOption = { id: LanguageId; label: string; extensions: Extension[] };
 type QueuedReview = { firstLine: string; lines: number; bytes: number };
-
-export const languageOptions: LanguageOption[] = [
-  { id: "text", label: "Plain text", extensions: [] },
-  { id: "bash", label: "Bash / shell", extensions: [StreamLanguage.define(shell)] },
-  { id: "json", label: "JSON", extensions: [json()] },
-  { id: "javascript", label: "JavaScript / TypeScript", extensions: [javascript({ typescript: true })] },
-  { id: "python", label: "Python", extensions: [python()] },
-  { id: "yaml", label: "YAML", extensions: [yaml()] },
-  { id: "markdown", label: "Markdown", extensions: [markdown()] },
-];
 
 const stageCopy: Record<TransferStage, { label: string; title: string; detail: string }> = {
   disconnected: { label: "Start here", title: "Connect AirGap Paste", detail: "Connect over Bluetooth. First-time connection requires pressing the button on the device." },
@@ -55,9 +37,11 @@ const deviceStateLabel: Record<TransferStage, string> = {
 export function byteLength(text: string) { return new TextEncoder().encode(text).byteLength; }
 
 export default function EditorApp({ transport: suppliedTransport }: { transport?: TransferTransport }) {
-  const transportRef = useRef<TransferTransport>(suppliedTransport ?? new WebBluetoothTransport());
+  const [initialTransport] = useState(() => suppliedTransport ?? new WebBluetoothTransport());
+  const transportRef = useRef<TransferTransport>(initialTransport);
   const [text, setText] = useState("docker compose up -d --build");
   const [language, setLanguage] = useState<LanguageId>("bash");
+  const [extensions, setExtensions] = useState<Extension[]>([]);
   const [transferMode, setTransferMode] = useState<TransferMode>("command");
   const [unicodeTarget, setUnicodeTarget] = useState<Exclude<KeyboardTarget, "ascii"> | "">("");
   const [stage, setStage] = useState<TransferStage>(transportRef.current.getState());
@@ -67,12 +51,19 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
   const [message, setMessage] = useState("");
   const [validationError, setValidationError] = useState("");
   const [queuedReview, setQueuedReview] = useState<QueuedReview | null>(null);
-  const queuedTimer = useRef<number | undefined>();
-  const isDisconnectingRef = useRef(false);
+  const operationRef = useRef(0);
+  const queueBusyRef = useRef(false);
   const selectedLanguage = languageOptions.find((option) => option.id === language) ?? languageOptions[0];
   const stats = useMemo(() => ({ lines: text ? text.split("\n").length : 0, bytes: byteLength(text) }), [text]);
   const hasUnicode = useMemo(() => Array.from(text).some((character) => (character.codePointAt(0) ?? 0) > 0x7e), [text]);
   const keyboardTarget: KeyboardTarget = hasUnicode && unicodeTarget ? unicodeTarget : "ascii";
+
+  useEffect(() => {
+    let cancelled = false;
+    setExtensions([]);
+    loadLanguage(language).then(value => { if (!cancelled) setExtensions(value); }).catch(() => { /* Plain text editing remains available if a syntax chunk fails to load. */ });
+    return () => { cancelled = true; };
+  }, [language]);
 
   const listenToTransport = (transport: TransferTransport) => {
     transport.setStateListener?.((nextStage, nextMessage) => {
@@ -86,21 +77,27 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
   useEffect(() => {
     listenToTransport(transportRef.current);
     return () => {
-      window.clearTimeout(queuedTimer.current);
+      operationRef.current++;
       transportRef.current.setStateListener?.();
+      transportRef.current.disconnect();
     };
   }, []);
   const fail = (error: unknown) => { setStage("error"); setMessage(error instanceof Error ? error.message : "The transfer could not be completed."); };
 
   async function connectHardware() {
-    isDisconnectingRef.current = false;
+    const operation = ++operationRef.current;
+    queueBusyRef.current = false;
+    transportRef.current.setStateListener?.();
+    transportRef.current.disconnect();
     setMessage(""); setValidationError(""); setQueuedReview(null); setStage("connecting");
     try {
-      if (!suppliedTransport) transportRef.current = listenToTransport(new WebBluetoothTransport());
+      if (!suppliedTransport) transportRef.current = new WebBluetoothTransport();
+      listenToTransport(transportRef.current);
       const device = await transportRef.current.connect();
+      if (operation !== operationRef.current) return;
       setDeviceName(device.name); setIsSimulated(device.simulated); setStage(transportRef.current.getState());
       setHasPairedDevice(Boolean(getSavedPairingToken()));
-    } catch (error) { fail(error); }
+    } catch (error) { if (operation === operationRef.current) fail(error); }
   }
 
   async function forgetDevice() {
@@ -112,80 +109,82 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
     if (stage !== "disconnected" && stage !== "error") {
       disconnect();
     }
-    setHasPairedDevice(false);
+    setHasPairedDevice(Boolean(getSavedPairingToken()));
     setMessage("Paired device forgotten from this browser.");
   }
 
   async function connectSimulator() {
-    isDisconnectingRef.current = false;
+    const operation = ++operationRef.current;
+    queueBusyRef.current = false;
+    transportRef.current.setStateListener?.();
+    transportRef.current.disconnect();
     setMessage(""); setValidationError(""); setQueuedReview(null); setStage("connecting");
     try {
-      if (!suppliedTransport) transportRef.current = listenToTransport(new SimulatedTransport());
+      if (!suppliedTransport) transportRef.current = new SimulatedTransport();
+      listenToTransport(transportRef.current);
       const device = await transportRef.current.connect();
+      if (operation !== operationRef.current) return;
       setDeviceName(device.name); setIsSimulated(device.simulated); setStage(transportRef.current.getState());
-    } catch (error) { fail(error); }
+    } catch (error) { if (operation === operationRef.current) fail(error); }
   }
   async function queue() {
+    if (queueBusyRef.current) return;
     setMessage("");
     setValidationError("");
     if (hasUnicode && !unicodeTarget) {
       setValidationError("Unicode characters were found. Choose the target keyboard system before queuing this transfer.");
       return;
     }
+    let reviewedBytes: Uint8Array<ArrayBuffer>;
     try {
-      validateTransferText(text, transferMode, keyboardTarget);
+      reviewedBytes = validateTransferText(text, transferMode, keyboardTarget);
     } catch (err) {
       setValidationError(err instanceof Error ? err.message : "Invalid transfer text.");
       return;
     }
+    const operation = operationRef.current;
+    const transport = transportRef.current;
+    const reviewedText = new TextDecoder().decode(reviewedBytes);
+    queueBusyRef.current = true;
+    setStage("queued");
+    setQueuedReview({ firstLine: reviewedText.split("\n", 1)[0], lines: reviewedText.split("\n").length, bytes: reviewedBytes.byteLength });
     try {
-      await transportRef.current.queue({ text, language: selectedLanguage.label, byteLength: stats.bytes, mode: transferMode, keyboardTarget });
-      setQueuedReview({
-        firstLine: text.split(/\r?\n/, 1)[0] || "Empty transfer",
-        lines: stats.lines,
-        bytes: stats.bytes,
-      });
-      setStage("queued");
-      window.clearTimeout(queuedTimer.current);
-      queuedTimer.current = window.setTimeout(async () => {
-        try {
-          await transportRef.current.awaitConfirmation();
-          setStage(transportRef.current.getState());
-          if (!isSimulated) {
-            await transportRef.current.confirm();
-            if (!isDisconnectingRef.current) {
-              setStage(transportRef.current.getState());
-            }
-          }
-        } catch (error) {
-          if (!isDisconnectingRef.current) {
-            fail(error);
-          }
-        }
-      }, 500);
+      await transport.queue({ text: reviewedText, language: selectedLanguage.label, byteLength: reviewedBytes.byteLength, mode: transferMode, keyboardTarget });
+      if (operation !== operationRef.current) return;
+      await transport.awaitConfirmation();
+      if (operation !== operationRef.current) return;
+      setStage(transport.getState());
+      if (!isSimulated) {
+        await transport.confirm();
+        if (operation === operationRef.current) setStage(transport.getState());
+      }
     } catch (error) {
-      if (!isDisconnectingRef.current) {
+      if (operation === operationRef.current) {
         fail(error);
       }
+    } finally {
+      if (operation === operationRef.current) queueBusyRef.current = false;
     }
   }
   async function confirm() {
+    const operation = operationRef.current;
+    const transport = transportRef.current;
     setMessage("");
     setValidationError("");
     try {
-      await transportRef.current.confirm();
-      if (!isDisconnectingRef.current) {
-        setStage(transportRef.current.getState());
+      await transport.confirm();
+      if (operation === operationRef.current) {
+        setStage(transport.getState());
       }
     } catch (error) {
-      if (!isDisconnectingRef.current) {
+      if (operation === operationRef.current) {
         fail(error);
       }
     }
   }
   function disconnect() {
-    isDisconnectingRef.current = true;
-    window.clearTimeout(queuedTimer.current);
+    operationRef.current++;
+    queueBusyRef.current = false;
     transportRef.current.disconnect();
     setDeviceName("");
     setIsSimulated(false);
@@ -193,7 +192,6 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
     setValidationError("");
     setQueuedReview(null);
     setStage("disconnected");
-    window.setTimeout(() => { isDisconnectingRef.current = false; }, 100);
   }
 
   const statusCopy = stageCopy[stage];
@@ -222,7 +220,7 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
       </header>
       <section className="editor-intro">
         <div><p className="section-kicker">Reviewed text transfer</p><h1>Queue it. Confirm it. Keep control.</h1><p>Review text, send it over encrypted Bluetooth, then confirm typing physically on AirGap Paste.</p></div>
-        <div className="editor-intro__note"><ShieldCheck size={21} /><span><strong>Local transfer</strong> · the device key and text stay in this browser tab and are never sent to a backend.</span></div>
+        <div className="editor-intro__note"><ShieldCheck size={21} /><span><strong>Local transfer</strong> · text stays in this tab. Pairing keys are saved in this browser until forgotten.</span></div>
       </section>
       <section className={`editor-workspace editor-workspace--${stage}`} aria-label="AirGap Paste transfer workspace">
         <div className="editor-surface">
@@ -232,7 +230,7 @@ export default function EditorApp({ transport: suppliedTransport }: { transport?
           </div>
           <div className="editor-code" aria-labelledby="editor-heading">
             <div className="editor-code__heading"><Code size={17} /><strong id="editor-heading">Review buffer</strong><span>{selectedLanguage.label}</span></div>
-            <CodeMirror aria-label="Transfer text" value={text} height="min(45vh, 400px)" theme={oneDark} extensions={selectedLanguage.extensions} onChange={(value) => { setText(value); if (validationError) setValidationError(""); }} basicSetup={{ lineNumbers: true, highlightActiveLineGutter: true, bracketMatching: true, foldGutter: true }} />
+            <CodeMirror aria-label="Transfer text" value={text} height="min(45vh, 400px)" theme={oneDark} extensions={extensions} onChange={(value) => { setText(value); if (validationError) setValidationError(""); }} basicSetup={{ lineNumbers: true, highlightActiveLineGutter: true, bracketMatching: true, foldGutter: true }} />
           </div>
           <p className="editor-privacy"><ShieldCheck size={16} /> Text is held in this tab only. Clearing or refreshing removes it.</p>
         </div>

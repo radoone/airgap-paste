@@ -10,7 +10,7 @@ vi.mock("@uiw/react-codemirror", () => ({
 
 import EditorApp from "./EditorApp";
 
-afterEach(cleanup);
+afterEach(() => { cleanup(); localStorage.clear(); });
 
 describe("EditorApp", () => {
   it("preserves the editor text when switching syntax language", () => {
@@ -64,7 +64,7 @@ describe("EditorApp", () => {
   });
 
   it("allows forgetting a paired device", async () => {
-    localStorage.setItem("airgap_pairing_token", "test-token-1234");
+    localStorage.setItem("airgap_pairing_token", "0123456789abcdef0123456789abcdef");
     render(<EditorApp />);
 
     const forgetBtn = screen.getByRole("button", { name: "Forget paired device" });

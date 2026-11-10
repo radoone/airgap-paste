@@ -7,6 +7,8 @@
 #include <soc/rtc_cntl_reg.h>
 #include <mbedtls/base64.h>
 #include <mbedtls/md.h>
+#include "halo_indicator.h"
+#include "authentication.h"
 
 #include <array>
 #include <mutex>
@@ -27,6 +29,7 @@ constexpr char kAdvertisedDeviceName[] = "AirGap";
 constexpr uint8_t kExternalSendPin = 2;  // XIAO D1/GPIO2 -> button -> GND
 constexpr uint8_t kBootSendPin = 0;      // On-board BOOT button
 constexpr uint8_t kLedPin = 21;          // On-board user LED, active LOW
+constexpr uint8_t kExternalHaloPin = 1;  // XIAO D0/GPIO1 -> 330 ohm -> LED -> GND
 constexpr size_t kMaxPayloadBytes = 16 * 1024;
 constexpr uint32_t kAuthIdleTimeoutMs = 5 * 60 * 1000UL;
 constexpr uint32_t kPairingTimeoutMs = 30 * 1000UL;
@@ -51,6 +54,7 @@ struct Transfer {
 Preferences preferences;
 std::string activeClientId;
 std::string activeAuthToken;
+std::string clientNonce;
 std::string pendingPairClientId;
 uint32_t pairingStartedAt = 0;
 bool challengePending = false;
@@ -127,8 +131,7 @@ bool savePairedToken(const std::string &clientId, const std::string &token) {
     if (preferences.getString(keyId, "").c_str() == clientId) {
       char keyTok[16];
       snprintf(keyTok, sizeof(keyTok), "tok_%u", i);
-      preferences.putString(keyTok, token.c_str());
-      return true;
+      return preferences.putString(keyTok, token.c_str()) == token.size();
     }
   }
   uint8_t slot = count;
@@ -143,15 +146,13 @@ bool savePairedToken(const std::string &clientId, const std::string &token) {
       preferences.putString(curTok, preferences.getString(nextTok, ""));
     }
     slot = kMaxPairedClients - 1;
-  } else {
-    preferences.putUChar("count", count + 1);
   }
   char keyId[16], keyTok[16];
   snprintf(keyId, sizeof(keyId), "id_%u", slot);
   snprintf(keyTok, sizeof(keyTok), "tok_%u", slot);
-  preferences.putString(keyId, clientId.c_str());
-  preferences.putString(keyTok, token.c_str());
-  return true;
+  if (preferences.putString(keyId, clientId.c_str()) != clientId.size() ||
+      preferences.putString(keyTok, token.c_str()) != token.size()) return false;
+  return count >= kMaxPairedClients || preferences.putUChar("count", count + 1) == 1;
 }
 
 bool removePairedToken(const std::string &clientId) {
@@ -285,6 +286,7 @@ void resetSession() {
   challenge.fill(0);
   activeClientId.clear();
   activeAuthToken.clear();
+  clientNonce.clear();
   pendingPairClientId.clear();
   transfer = {};
   lastAuthenticatedActivity = 0;
@@ -340,34 +342,44 @@ bool requireAuthentication() {
 }
 
 void handleHello(const std::vector<std::string> &parts) {
-  if (parts.size() != 2 || parts[1].empty()) {
-    fail("HELLO_FORMAT", "Expected HELLO <client-id>");
+  if (deviceState == DeviceState::kTyping) {
+    notify("ERR BUSY Device is currently typing");
+    return;
+  }
+  if (parts.size() != 3 || !isLowerHex(parts[1], 16) || !isLowerHex(parts[2], 32)) {
+    fail("HELLO_FORMAT", "Expected HELLO3 <client-id> <client-nonce>");
     return;
   }
   const std::string &clientId = parts[1];
   std::string token;
+  resetSession();
   if (!getPairedToken(clientId, token)) {
-    activeClientId.clear();
-    activeAuthToken.clear();
-    challengePending = false;
     notify("ERR UNPAIRED Client not recognized");
     return;
   }
   esp_fill_random(challenge.data(), challenge.size());
-  authenticated = false;
   challengePending = true;
-  transfer = {};
   activeClientId = clientId;
   activeAuthToken = token;
-  notify("CHALLENGE " + hexEncode(challenge.data(), challenge.size()));
+  clientNonce = parts[2];
+  const std::string deviceNonce = hexEncode(challenge.data(), challenge.size());
+  const std::string message = authenticationMessage("device", activeClientId, clientNonce, deviceNonce);
+  const auto proof = hmacSha256(token, reinterpret_cast<const uint8_t *>(message.data()), message.size());
+  notify("CHALLENGE3 " + deviceNonce + " " + hexEncode(proof.data(), proof.size()));
 }
 
 void handlePair(const std::vector<std::string> &parts) {
-  if (parts.size() != 2 || parts[1].empty() || parts[1].size() > 32) {
-    fail("PAIR_FORMAT", "Expected PAIR <client-id>");
+  if (deviceState == DeviceState::kTyping) {
+    notify("ERR BUSY Device is currently typing");
     return;
   }
+  if (parts.size() != 3 || !isLowerHex(parts[1], 16) || !isLowerHex(parts[2], 32)) {
+    fail("PAIR_FORMAT", "Expected PAIR3 <client-id> <client-nonce>");
+    return;
+  }
+  resetSession();
   pendingPairClientId = parts[1];
+  clientNonce = parts[2];
   pairingStartedAt = millis();
   deviceState = DeviceState::kPairing;
   notify("PAIR_WAIT 30");
@@ -385,17 +397,23 @@ void handleUnpair(const std::vector<std::string> &parts) {
 }
 
 void handleAuth(const std::vector<std::string> &parts) {
-  if (parts.size() != 2 || parts[1].size() != 64) {
+  if (deviceState == DeviceState::kTyping) {
+    notify("ERR BUSY Device is currently typing");
+    return;
+  }
+  if (parts.size() != 2 || !isLowerHex(parts[1], 64)) {
     fail("AUTH_FORMAT", "Invalid authentication response");
     return;
   }
   if (!challengePending || activeAuthToken.empty()) {
-    fail("NOT_INITIALIZED", "Initiate HELLO first");
+    fail("NOT_INITIALIZED", "Initiate HELLO3 first");
     return;
   }
   challengePending = false;
-  const auto expected = hmacSha256(activeAuthToken, challenge.data(), challenge.size());
+  const std::string message = authenticationMessage("client", activeClientId, clientNonce, hexEncode(challenge.data(), challenge.size()));
+  const auto expected = hmacSha256(activeAuthToken, reinterpret_cast<const uint8_t *>(message.data()), message.size());
   challenge.fill(0);
+  clientNonce.clear();
   if (!constantTimeEqual(parts[1], hexEncode(expected.data(), expected.size()))) {
     activeClientId.clear();
     activeAuthToken.clear();
@@ -405,7 +423,7 @@ void handleAuth(const std::vector<std::string> &parts) {
   authenticated = true;
   lastAuthenticatedActivity = millis();
   deviceState = DeviceState::kAuthenticated;
-  notify("OK AUTH");
+  notify("OK AUTH3");
 }
 
 void handlePing() {
@@ -416,7 +434,7 @@ void handlePing() {
 void handleQueue(const std::vector<std::string> &parts) {
   if (!requireAuthentication()) return;
   if (deviceState == DeviceState::kTyping) {
-    fail("BUSY", "Device is currently typing");
+    notify("ERR BUSY Device is currently typing");
     return;
   }
   if (parts.size() != 6 || parts[1].size() != 8 || parts[3].size() != 64 ||
@@ -443,6 +461,10 @@ void handleQueue(const std::vector<std::string> &parts) {
 
 void handleData(const std::vector<std::string> &parts) {
   if (!requireAuthentication()) return;
+  if (deviceState == DeviceState::kTyping) {
+    notify("ERR BUSY Device is currently typing");
+    return;
+  }
   if (parts.size() != 4 || parts[1] != transfer.id) {
     fail("DATA_FORMAT", "Transfer id or DATA frame is invalid");
     return;
@@ -460,6 +482,10 @@ void handleData(const std::vector<std::string> &parts) {
 
 void handleCommit(const std::vector<std::string> &parts) {
   if (!requireAuthentication()) return;
+  if (deviceState == DeviceState::kTyping) {
+    notify("ERR BUSY Device is currently typing");
+    return;
+  }
   if (parts.size() != 2 || parts[1] != transfer.id || transfer.payload.size() != transfer.expectedLength) {
     fail("COMMIT_INVALID", "Transfer is incomplete");
     return;
@@ -495,10 +521,11 @@ void processCommand(const std::string &command) {
   }
   const auto parts = split(command);
   if (parts.empty()) return;
-  if (parts[0] == "HELLO") handleHello(parts);
-  else if (parts[0] == "PAIR") handlePair(parts);
+  if (parts[0] == "HELLO3") handleHello(parts);
+  else if (parts[0] == "PAIR3") handlePair(parts);
   else if (parts[0] == "UNPAIR") handleUnpair(parts);
-  else if (parts[0] == "AUTH") handleAuth(parts);
+  else if (parts[0] == "AUTH3") handleAuth(parts);
+  else if (parts[0] == "HELLO" || parts[0] == "PAIR" || parts[0] == "AUTH") fail("PROTOCOL_VERSION", "Update the web app and firmware to protocol v3");
   else if (parts[0] == "PING") handlePing();
   else if (parts[0] == "QUEUE") handleQueue(parts);
   else if (parts[0] == "DATA") handleData(parts);
@@ -506,7 +533,14 @@ void processCommand(const std::string &command) {
   else fail("UNKNOWN_COMMAND", "Unsupported protocol command");
 }
 
-bool buttonPressed(DebouncedButton &button) {
+struct ButtonEvents {
+  bool pressedDown = false;
+  bool shortReleased = false;
+  bool held5s = false;
+};
+
+ButtonEvents pollButton(DebouncedButton &button) {
+  ButtonEvents events{};
   const bool raw = digitalRead(button.pin);
   const uint32_t now = millis();
   if (raw != button.raw) {
@@ -517,27 +551,27 @@ bool buttonPressed(DebouncedButton &button) {
     button.armed = true;
     button.longPressHandled = false;
   }
-  if (now - button.changedAt < kButtonDebounceMs || raw == button.stable) return false;
+  if (button.armed && button.stable == LOW && !button.longPressHandled &&
+      now - button.pressedAt >= 5000) {
+    button.longPressHandled = true;
+    events.held5s = true;
+  }
+  if (now - button.changedAt < kButtonDebounceMs || raw == button.stable) return events;
   button.stable = raw;
   if (button.stable == HIGH) {
+    if (button.armed && !button.longPressHandled) {
+      events.shortReleased = true;
+    }
     button.armed = true;
     button.longPressHandled = false;
-    return false;
+    return events;
   }
   button.pressedAt = now;
   button.longPressHandled = false;
-  return button.armed;
-}
-
-bool buttonHeld(DebouncedButton &button, uint32_t durationMs) {
-  const uint32_t now = millis();
-  if (button.stable == LOW && !button.longPressHandled) {
-    if (now - button.pressedAt >= durationMs) {
-      button.longPressHandled = true;
-      return true;
-    }
+  if (button.armed) {
+    events.pressedDown = true;
   }
-  return false;
+  return events;
 }
 
 uint32_t humanKeystrokeDelayMs(unsigned char character) {
@@ -566,9 +600,20 @@ uint8_t hidUsageForAscii(char character) {
   return 0;
 }
 
-void enqueueHidKey(uint8_t modifiers, uint8_t usage, uint32_t holdMs, uint32_t settleMs) {
+void enqueueHidKey(uint8_t modifiers, uint8_t usage, uint32_t holdMs, uint32_t settleMs, uint8_t settleModifiers = 0) {
   typingEngine.pendingHidActions.push({modifiers, usage, holdMs});
-  typingEngine.pendingHidActions.push({0, 0, settleMs});
+  typingEngine.pendingHidActions.push({settleModifiers, 0, settleMs});
+}
+
+void enqueueAltHexSequence(uint32_t unit16, bool includeNumpadPlus) {
+  constexpr uint8_t kLeftAlt = 0x04;
+  if (includeNumpadPlus) {
+    enqueueHidKey(kLeftAlt, 0x57, 14, 14, kLeftAlt);
+  }
+  for (const char character : unicodeHex(unit16)) {
+    enqueueHidKey(kLeftAlt, hidUsageForAscii(character), 14, 14, kLeftAlt);
+  }
+  typingEngine.pendingHidActions.push({0, 0, 18});
 }
 
 void typeUnicodeCodepoint(uint32_t codepoint, KeyboardTarget target) {
@@ -582,49 +627,16 @@ void typeUnicodeCodepoint(uint32_t codepoint, KeyboardTarget target) {
       enqueueHidKey(0, hidUsageForAscii(character), 22, 38);
     }
     enqueueHidKey(0, 0x28, 35, 120);  // Enter commits the Unicode input sequence.
-  } else if (target == KeyboardTarget::kMacOS) {
+  } else if (target == KeyboardTarget::kMacOS || target == KeyboardTarget::kWindows) {
+    const bool isWindows = (target == KeyboardTarget::kWindows);
     if (codepoint <= 0xffff) {
-      const std::string hex = unicodeHex(codepoint);
-      keyboard.press(KEY_LEFT_ALT);
-      for (const char character : hex) keyboard.write(character);
-      keyboard.releaseAll();
+      enqueueAltHexSequence(codepoint, isWindows);
     } else {
-      // macOS Unicode Hex Input requires UTF-16 surrogate pairs for characters outside BMP.
+      // macOS Unicode Hex Input and Windows EnableHexNumpad require UTF-16 surrogate pairs outside BMP.
       const uint32_t highSurrogate = 0xd800 + ((codepoint - 0x10000) >> 10);
       const uint32_t lowSurrogate = 0xdc00 + ((codepoint - 0x10000) & 0x3ff);
-      keyboard.press(KEY_LEFT_ALT);
-      for (const char character : unicodeHex(highSurrogate)) keyboard.write(character);
-      keyboard.releaseAll();
-      delay(4);
-      keyboard.press(KEY_LEFT_ALT);
-      for (const char character : unicodeHex(lowSurrogate)) keyboard.write(character);
-      keyboard.releaseAll();
-    }
-  } else if (target == KeyboardTarget::kWindows) {
-    // Windows Unicode input requires EnableHexNumpad. HID usage 0x57 is the
-    // keypad '+' key; the remaining hexadecimal digits are normal key presses.
-    if (codepoint <= 0xffff) {
-      const std::string hex = unicodeHex(codepoint);
-      keyboard.press(KEY_LEFT_ALT);
-      keyboard.pressRaw(0x57);
-      keyboard.releaseRaw(0x57);
-      for (const char character : hex) keyboard.write(character);
-      keyboard.releaseAll();
-    } else {
-      // Windows EnableHexNumpad requires UTF-16 surrogate pairs for characters outside BMP.
-      const uint32_t highSurrogate = 0xd800 + ((codepoint - 0x10000) >> 10);
-      const uint32_t lowSurrogate = 0xdc00 + ((codepoint - 0x10000) & 0x3ff);
-      keyboard.press(KEY_LEFT_ALT);
-      keyboard.pressRaw(0x57);
-      keyboard.releaseRaw(0x57);
-      for (const char character : unicodeHex(highSurrogate)) keyboard.write(character);
-      keyboard.releaseAll();
-      delay(4);
-      keyboard.press(KEY_LEFT_ALT);
-      keyboard.pressRaw(0x57);
-      keyboard.releaseRaw(0x57);
-      for (const char character : unicodeHex(lowSurrogate)) keyboard.write(character);
-      keyboard.releaseAll();
+      enqueueAltHexSequence(highSurrogate, isWindows);
+      enqueueAltHexSequence(lowSurrogate, isWindows);
     }
   }
 }
@@ -652,7 +664,7 @@ void startTyping() {
 void stepTyping() {
   if (!typingEngine.active) return;
   const uint32_t now = millis();
-  if (now < typingEngine.nextActionAt) return;
+  if (static_cast<int32_t>(now - typingEngine.nextActionAt) < 0) return;
   lastAuthenticatedActivity = now;
 
   if (!typingEngine.pendingHidActions.empty()) {
@@ -711,6 +723,15 @@ void updateLed() {
     case DeviceState::kError: on = (now % 180) < 90; break;
   }
   digitalWrite(kLedPin, on ? LOW : HIGH);
+  HaloState halo = HaloState::kOff;
+  switch (deviceState) {
+    case DeviceState::kPairing: halo = HaloState::kPairing; break;
+    case DeviceState::kReady: halo = HaloState::kReady; break;
+    case DeviceState::kTyping: halo = HaloState::kTyping; break;
+    case DeviceState::kError: halo = HaloState::kError; break;
+    default: break;
+  }
+  digitalWrite(kExternalHaloPin, haloIndicatorOn(halo, now) ? HIGH : LOW);
 }
 
 void setupBle() {
@@ -746,6 +767,8 @@ void setup() {
   pinMode(kBootSendPin, INPUT_PULLUP);
   pinMode(kLedPin, OUTPUT);
   digitalWrite(kLedPin, HIGH);
+  digitalWrite(kExternalHaloPin, LOW);
+  pinMode(kExternalHaloPin, OUTPUT);
 
   // Allow entering ROM USB bootloader without opening the enclosure:
   // hold the external SEND button (D1/GPIO2) while plugging in the USB cable.
@@ -768,22 +791,27 @@ void setup() {
 }
 
 void loop() {
+  std::string command;
   {
     std::lock_guard<std::mutex> lock(commandMutex);
     if (!commandQueue.empty()) {
-      const std::string command = commandQueue.front();
+      command = std::move(commandQueue.front());
       commandQueue.pop();
-      processCommand(command);
     }
   }
+  // Flash writes and crypto must not hold the BLE callback queue's mutex.
+  if (!command.empty()) processCommand(command);
 
-  const bool extPressed = buttonPressed(externalButton);
-  const bool bootPressed = buttonPressed(bootButton);
-  const bool anyPressed = extPressed || bootPressed;
+  const ButtonEvents extEvents = pollButton(externalButton);
+  const ButtonEvents bootEvents = pollButton(bootButton);
+  const bool anyPressedDown = extEvents.pressedDown || bootEvents.pressedDown;
+  const bool anyShortReleased = extEvents.shortReleased || bootEvents.shortReleased;
+  const bool anyHeld5s = extEvents.held5s || bootEvents.held5s;
 
-  if (buttonHeld(externalButton, 5000) || buttonHeld(bootButton, 5000)) {
+  if (anyHeld5s) {
     clearAllPairings();
     resetSession();
+    digitalWrite(kExternalHaloPin, LOW);
     for (int i = 0; i < 6; ++i) {
       digitalWrite(kLedPin, LOW);
       delay(40);
@@ -799,23 +827,33 @@ void loop() {
       pendingPairClientId.clear();
       deviceState = connected ? DeviceState::kConnected : DeviceState::kAdvertising;
       fail("PAIR_TIMEOUT", "Pairing timed out without button confirmation");
-    } else if (anyPressed) {
+    } else if (anyShortReleased) {
       std::array<uint8_t, 16> tokenBytes{};
       esp_fill_random(tokenBytes.data(), tokenBytes.size());
       const std::string token = hexEncode(tokenBytes.data(), tokenBytes.size());
-      savePairedToken(pendingPairClientId, token);
+      if (!savePairedToken(pendingPairClientId, token)) {
+        resetSession();
+        fail("PAIR_STORAGE", "Could not save the pairing key");
+        return;
+      }
       activeClientId = pendingPairClientId;
       activeAuthToken = token;
       pendingPairClientId.clear();
       authenticated = true;
       lastAuthenticatedActivity = millis();
       deviceState = DeviceState::kAuthenticated;
-      notify("PAIR_OK " + token);
+      esp_fill_random(challenge.data(), challenge.size());
+      const std::string deviceNonce = hexEncode(challenge.data(), challenge.size());
+      const std::string message = authenticationMessage("device", activeClientId, clientNonce, deviceNonce);
+      const auto proof = hmacSha256(token, reinterpret_cast<const uint8_t *>(message.data()), message.size());
+      challenge.fill(0);
+      clientNonce.clear();
+      notify("PAIR_OK3 " + token + " " + deviceNonce + " " + hexEncode(proof.data(), proof.size()));
     }
-  } else if (deviceState == DeviceState::kReady && anyPressed) {
+  } else if (deviceState == DeviceState::kReady && anyShortReleased) {
     startTyping();
   } else if (deviceState == DeviceState::kTyping) {
-    if (anyPressed) {
+    if (anyPressedDown) {
       fail("ABORTED", "Typing cancelled on device");
     } else {
       stepTyping();

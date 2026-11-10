@@ -16,9 +16,7 @@ export default defineConfig({
     rolldownOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes("node_modules/@codemirror/lang-") || id.includes("node_modules/@codemirror/legacy-modes") || id.includes("node_modules/@lezer")) {
-            return "codemirror-langs";
-          }
+          if (id.includes("node_modules/@codemirror/lang-") || id.includes("node_modules/@codemirror/legacy-modes")) return;
           if (id.includes("node_modules/@codemirror") || id.includes("node_modules/@uiw") || id.includes("node_modules/codemirror")) {
             return "codemirror-core";
           }

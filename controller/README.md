@@ -14,6 +14,18 @@ Do not hold BOOT while powering or resetting the board; that intentionally enter
 
 The on-board orange user LED indicates state: slow pulse while advertising, faster pulse while connected, double-speed blink when text is ready, solid while typing, and fast blink on an error.
 
+Pocket Recess v8 adds an external illuminated button halo on **D0/GPIO1**.
+It is off while idle/connecting, blinks at 2.5 Hz when SEND is required,
+blinks at 5 Hz for pairing confirmation, stays on while typing, and blinks
+quickly on an error. The original on-board LED behavior is unchanged.
+
+One ordinary **5 mm LED** connects directly to **D0/GPIO1** through a
+**330 Ω series resistor**, with the cathode connected to GND. This uses the
+3.3 V GPIO output; no transistor or 5V wire is used. Blue/white LED brightness
+depends on the actual LED forward voltage, so check the optical test first.
+See [v8 wiring instructions](../hardware/enclosure-pocket-recess-v8/WIRING_SK.md)
+for the circuit, component limits and routing/cut lengths.
+
 ## Build and flash
 
 1. Run `./setup-platformio` once. It creates an ignored project-local environment and keeps the ESP32 toolchain in `controller/.platformio-core` for future builds.
@@ -25,10 +37,14 @@ The on-board orange user LED indicates state: slow pulse while advertising, fast
 
 The USB port becomes a HID keyboard after firmware startup. Uploading a later build can require manually entering bootloader mode because the same native USB connection is being used for HID.
 
+Host check for external indicator timing:
+`c++ -std=c++17 tests/halo_indicator_test.cpp -o /tmp/airgap-halo-test && /tmp/airgap-halo-test`
+
 ## Safety profile
 
 - Dynamic Push-to-Pair: physical button confirmation required to authorize new connections.
-- Persistent token exchange with HMAC-SHA256 challenge-response for remembered connections.
+- Protocol v3: mutual HMAC-SHA256 authentication with fresh client/device nonces and pairing keys pinned to browser Bluetooth device IDs.
+- Saved identities fail closed; firmware and web app must be upgraded together. See the initial-enrollment trust boundary in [PROTOCOL.md](./PROTOCOL.md).
 - Hardware factory reset (hold button for 5 seconds) to revoke all paired devices.
 - BLE pairing/bonding with encryption and LE Secure Connections.
 - Full payload length and SHA-256 verification before it becomes ready.
@@ -39,3 +55,6 @@ The USB port becomes a HID keyboard after firmware startup. Uploading a later bu
 - Keyboard targets: `ascii` (printable US ASCII), `linux` (`Ctrl+Shift+U`), `macos` (Unicode Hex Input), and `windows` (`EnableHexNumpad`).
 
 The target computer must use a US keyboard layout for ASCII symbols to match. See [PROTOCOL.md](./PROTOCOL.md) for the wire protocol.
+
+Host check for authentication transcript construction and validation:
+`c++ -std=c++17 tests/authentication_test.cpp -o /tmp/airgap-auth-test && /tmp/airgap-auth-test`

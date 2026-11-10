@@ -1,0 +1,6 @@
+{
+  "indexes": [],
+  "fieldOverrides": [
+    { "collectionGroup": "waitlistRateLimits", "fieldPath": "expiresAt", "ttl": true, "indexes": [] }
+  ]
+}
